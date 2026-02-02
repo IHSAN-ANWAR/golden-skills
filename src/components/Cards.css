@@ -1,0 +1,103 @@
+/* Cards Section Styles */
+.cards-section {
+  /* background-color: var(--background-color); */
+  
+  background: linear-gradient(135deg, #F9F6F2 0%, #F0E8DC 50%, #E8DDD0 100%);
+  padding: 5rem 0;
+  position: relative;
+}
+
+.cards-section .container-fluid {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Section Header */
+.cards-title {
+  font-family: var(--heading-font);
+  font-weight: var(--heading-weight);
+  font-size: 4rem;
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+}
+
+.cards-subtitle {
+  font-family: var(--body-font);
+  font-weight: var(--body-weight);
+  font-size: 1.5rem;
+  color: var(--text-color);
+  margin-bottom: 4rem;
+  opacity: 0.8;
+  line-height: 1.6;
+}
+
+/* Feature Cards */
+.feature-card {
+  background: white;
+  border-radius: 20px;
+  padding: 0;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  max-width: 350px;
+  margin: 0 auto;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+/* Full Width Image Cards */
+.card-full-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 20px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.feature-card:hover .card-full-img {
+  transform: scale(1.02);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .cards-section {
+    padding: 3rem 0;
+  }
+  
+  .cards-title {
+    font-size: 2.5rem;
+  }
+  
+  .cards-subtitle {
+    font-size: 1.1rem;
+    margin-bottom: 3rem;
+  }
+  
+  .feature-card {
+    margin-bottom: 2rem;
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 576px) {
+  .cards-title {
+    font-size: 2rem;
+  }
+  
+  .cards-subtitle {
+    font-size: 1rem;
+  }
+  
+  .feature-card {
+    max-width: 280px;
+  }
+}
