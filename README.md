@@ -136,7 +136,7 @@ frontend/
 ├── src/
 │   ├── assets/
 │   │   ├── bg.jpeg (Hero background)
-│   │   ├── loogo.png (Logo)
+│   │   ├── golden logo.jpeg (Logo)
 │   │   ├── our mission.png (Desktop mission)
 │   │   ├── ourmission mobile.png (Mobile mission)
 │   │   ├── VISION.png (Vision image)
