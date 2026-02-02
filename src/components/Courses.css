@@ -1,0 +1,348 @@
+/* Courses Section */
+.courses-section {
+  margin-top: 4rem;
+  background: linear-gradient(135deg, #F9F6F2 0%, #F0E8DC 50%, #E8DDD0 100%);
+  padding: 5rem 0;
+}
+
+.courses-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Courses Header */
+.courses-title {
+  font-family: var(--heading-font);
+  font-weight: 700;
+  font-size: 3.5rem;
+  color: var(--primary-color);
+  line-height: 1.2;
+  text-align: left;
+}
+
+.courses-description {
+  font-family: var(--body-font);
+  font-size: 1.3rem;
+  color: var(--text-color);
+  line-height: 1.6;
+  opacity: 0.85;
+  text-align: left;
+}
+
+/* Course Card */
+.course-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+}
+
+.course-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+/* Course Image Container */
+.course-image-container {
+  background: linear-gradient(135deg, #390910 0%, #772218 100%);
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  position: relative;
+  overflow: hidden;
+}
+
+.course-image-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 30% 70%, rgba(212, 175, 55, 0.1) 0%, transparent 60%),
+    radial-gradient(circle at 70% 30%, rgba(212, 175, 55, 0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.course-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: relative;
+  z-index: 2;
+  display: block;
+}
+
+/* Course Content */
+.course-content {
+  padding: 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 120px;
+}
+
+.course-description {
+  font-family: var(--body-font);
+  font-size: 1.3rem;
+  color: var(--text-color);
+  line-height: 1.5;
+  opacity: 0.8;
+  flex-grow: 1;
+}
+
+/* Course Button */
+.course-btn {
+  background: linear-gradient(135deg, var(--accent-color), #e6c547);
+  border: none;
+  color: var(--primary-color);
+  font-family: var(--body-font);
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.8rem 2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+  width: 100%;
+  max-width: 200px;
+  margin: 0 auto;
+}
+
+.course-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+  background: linear-gradient(135deg, #e6c547, var(--accent-color));
+  color: var(--primary-color);
+}
+
+/* How It Works Section */
+.how-it-works-section {
+  padding: 4rem 0;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.05) 0%, rgba(57, 9, 16, 0.05) 100%);
+  border-radius: 20px;
+}
+
+.how-it-works-title {
+  font-family: var(--heading-font);
+  font-weight: 700;
+  font-size: 3rem;
+  color: var(--primary-color);
+  margin: 0;
+  line-height: 1.2;
+  text-align: center;
+}
+
+/* Workflow Step */
+.workflow-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.step-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--accent-color), #e6c547);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.step-icon:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(212, 175, 55, 0.4);
+}
+
+.step-icon i {
+  font-size: 2rem;
+  color: var(--primary-color);
+}
+
+.step-title {
+  font-family: var(--heading-font);
+  font-weight: var(--heading-weight);
+  font-size: 1.2rem;
+  color: var(--primary-color);
+  margin: 0;
+  line-height: 1.3;
+}
+
+/* Workflow Arrow */
+.workflow-arrow {
+  color: var(--accent-color);
+  font-size: 1.5rem;
+  opacity: 0.7;
+}
+
+.workflow-arrow i {
+  transition: transform 0.3s ease;
+}
+
+.workflow-arrow:hover i {
+  transform: translateX(5px);
+}
+
+/* Bootstrap Responsive Design */
+
+/* Large screens and up (lg: 992px+) */
+@media (min-width: 992px) {
+  .courses-content {
+    padding: 0 2rem;
+  }
+  
+  .course-image-container {
+    height: 320px;
+  }
+}
+
+/* Medium screens and down (md: 768px-991px) */
+@media (max-width: 991.98px) {
+  .courses-section {
+    padding: 4rem 0;
+  }
+  
+  .courses-title {
+    font-size: 3rem;
+    text-align: left;
+  }
+  
+  .courses-description {
+    font-size: 1.2rem;
+    text-align: left;
+  }
+  
+  .course-image-container {
+    height: 280px;
+  }
+  
+  .how-it-works-title {
+    font-size: 2.5rem;
+    text-align: center;
+  }
+  
+  .step-icon {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .step-icon i {
+    font-size: 1.8rem;
+  }
+  
+  .step-title {
+    font-size: 1.1rem;
+  }
+}
+
+/* Small screens and down (sm: 576px-767px) */
+@media (max-width: 767.98px) {
+  .courses-section {
+    padding: 3rem 0;
+  }
+  
+  .courses-title {
+    font-size: 2.5rem;
+    text-align: left;
+  }
+  
+  .courses-description {
+    font-size: 1.1rem;
+    text-align: left;
+  }
+  
+  .course-image-container {
+    height: 250px;
+  }
+  
+  .course-content {
+    padding: 1.2rem;
+  }
+  
+  .course-description {
+    font-size: 0.95rem;
+  }
+  
+  .how-it-works-section {
+    padding: 3rem 1rem;
+  }
+  
+  .how-it-works-title {
+    font-size: 2.2rem;
+    text-align: center;
+  }
+  
+  .step-icon {
+    width: 65px;
+    height: 65px;
+  }
+  
+  .step-icon i {
+    font-size: 1.6rem;
+  }
+  
+  .step-title {
+    font-size: 1rem;
+  }
+}
+
+/* Extra small screens (xs: <576px) */
+@media (max-width: 575.98px) {
+  .courses-title {
+    font-size: 2.2rem;
+  }
+  
+  .courses-description {
+    font-size: 1rem;
+  }
+  
+  .course-image-container {
+    height: 220px;
+  }
+  
+  .course-content {
+    padding: 1rem;
+  }
+  
+  .course-description {
+    font-size: 0.9rem;
+  }
+  
+  .course-btn {
+    padding: 0.7rem 1.5rem;
+    font-size: 0.95rem;
+  }
+  
+  .how-it-works-section {
+    padding: 2rem 0.5rem;
+  }
+  
+  .how-it-works-title {
+    font-size: 2rem;
+    text-align: center;
+  }
+  
+  .step-icon {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .step-icon i {
+    font-size: 1.4rem;
+  }
+  
+  .step-title {
+    font-size: 0.9rem;
+  }
+}

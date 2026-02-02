@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Golden Skills - Skill Development Platform
 
 A modern, responsive website for Golden Skills - a premium skill-development platform designed to help learners grow through practical experience by completing real-world tasks inside a mobile application.
@@ -324,3 +325,6 @@ For questions or support regarding Golden Skills platform:
 ---
 
 **Golden Skills** - Empowering individuals to learn, apply, and grow with confidence through practical skill development.
+=======
+#golden skills
+>>>>>>> 45fccc0a0cf830ca30e2ecfa86382cf54d47db9a
