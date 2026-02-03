@@ -292,31 +292,6 @@ display: flex;
 }
 
 @media (max-width: 576px) {
-  .footer-content {
-    text-align: center;
-  }
-  
-  .footer-title::after {
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  
-  .app-buttons {
-    align-items: center;
-  }
-  
-  .social-links {
-    justify-content: center;
-  }
-  
-  .footer-links {
-    text-align: center;
-  }
-  
-  .app-buttons {
-    align-items: center;
-  }
-  
   .store-button {
     width: 140px;
     height: 50px;
@@ -339,7 +314,7 @@ display: flex;
 /* Responsive Design Updates */
 @media (max-width: 768px) {
   .app-buttons-horizontal {
-    justify-content: center;
+    justify-content: flex-start;
     gap: 0.8rem;
   }
   
@@ -363,12 +338,12 @@ display: flex;
   }
   
   .social-legal-section {
-    justify-content: center;
-    text-align: center;
+    justify-content: flex-start;
+    text-align: left;
   }
   
   .legal-links {
-    align-items: center;
+    align-items: flex-start;
   }
   
   .social-link.instagram {
@@ -378,20 +353,3 @@ display: flex;
   }
 }
 
-@media (max-width: 576px) {
-  .app-buttons-horizontal {
-    flex-direction: column;
-    align-items: center;
-    gap: 0.8rem;
-  }
-  
-  .store-button {
-    width: 140px;
-    height: 50px;
-  }
-  
-  .social-legal-section {
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-}

@@ -17,8 +17,8 @@
 
 /* Logo */
 .navbar-logo {
-  width: 58px;
-  height: 58px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
   object-fit: cover;
   border: 1px solid #E6C547;
@@ -159,8 +159,8 @@
   }
   
   .navbar-logo {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
   }
   
   .brand-text {
@@ -175,8 +175,8 @@
   }
   
   .navbar-logo {
-    width: 35px;
-    height: 35px;
+    width: 45px;
+    height: 45px;
   }
   
   .brand-text {

@@ -34,11 +34,10 @@ const Courses = () => {
                     </div>
                     <div className="course-content">
                       <p className="course-description mb-3">
-                        Learn this skill inside<br />
-                        and Golden courses<br />
-                        mobile app
+                        Master the art of creating compelling content.<br />
+                        Learn SEO writing, blog posts, and social media content<br />
+                        that engages and converts.
                       </p>
-                      <button className="course-btn">View in App</button>
                     </div>
                   </div>
                 </div>
@@ -55,11 +54,10 @@ const Courses = () => {
                     </div>
                     <div className="course-content">
                       <p className="course-description mb-3">
-                        Learn this skill inside<br />
-                        courses and courses<br />
-                        mobile app
+                        Discover modern marketing strategies.<br />
+                        Learn social media marketing, PPC campaigns,<br />
+                        and analytics to grow businesses online.
                       </p>
-                      <button className="course-btn">View in App</button>
                     </div>
                   </div>
                 </div>
@@ -76,11 +74,10 @@ const Courses = () => {
                     </div>
                     <div className="course-content">
                       <p className="course-description mb-3">
-                        Learn this skill inside<br />
-                        and Golden courses<br />
-                        mobile app
+                        Create stunning visual designs.<br />
+                        Learn design principles, color theory,<br />
+                        and tools to bring your ideas to life.
                       </p>
-                      <button className="course-btn">View in App</button>
                     </div>
                   </div>
                 </div>

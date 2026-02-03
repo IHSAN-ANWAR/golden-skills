@@ -153,7 +153,7 @@
   }
   
   .mission-box {
-    border-radius: 20px;
+    border-radius: 60px;
   }
   
   .mission-img {
@@ -178,7 +178,7 @@
   }
   
   .vision-img {
-    max-width: 350px;
+    max-width: 670px;
   }
 }
 
@@ -209,6 +209,6 @@
   }
   
   .vision-img {
-    max-width: 300px;
+    max-width: 480px;
   }
 }

@@ -6,7 +6,7 @@ const Footer = () => {
   return (
     <footer className="footer-section">
       <div className="container">
-        <div className="row align-items-start">
+        <div className="row align-items-start mx-3">
           {/* About Golden Skills */}
           <div className="col-lg-4 col-md-6 mb-4">
             <div className="footer-content">

@@ -1,15 +1,15 @@
 import React from 'react';
 import './Hero.css';
 import bgImage from '../assets/bg.jpeg';
+import tabletBg from '../assets/tablet bg.png';
+import mobileBg from '../assets/mobile screen.png';
 
 const Hero = () => {
   return (
-    <section 
-      className="hero-section" 
-      style={{
-        backgroundImage: `url(${bgImage})`
-      }}
-    >
+    <section className="hero-section">
+      <div className="hero-background-desktop" style={{ backgroundImage: `url(${bgImage})` }}></div>
+      <div className="hero-background-tablet" style={{ backgroundImage: `url(${tabletBg})` }}></div>
+      <div className="hero-background-mobile" style={{ backgroundImage: `url(${mobileBg})` }}></div>
       <div className="hero-overlay"></div>
       <div className="container-fluid">
         <div className="row align-items-center min-vh-100">
