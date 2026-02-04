@@ -10,7 +10,11 @@ const Cards = () => {
         {/* Section Header */}
         <div className="row">
           <div className="col-12 text-center">
-            <h2 className="cards-title">Learn. <span className="gradient-text">Earn.</span> <span className="gradient-text">Excel.</span></h2>
+            <div className="section-title-with-line">
+              <div className="title-line"></div>
+              <h2 className="cards-title">Learn. <span className="gradient-text">Earn.</span> <span className="gradient-text">Excel.</span></h2>
+              <div className="title-line"></div>
+            </div>
             <p className="cards-subtitle">
               Develop your skills and earn rewards by completing real-world tasks<br />
               inside our mobile application.
@@ -22,33 +26,33 @@ const Cards = () => {
         <div className="row justify-content-center">
           {/* Learn New Skills Card */}
           <div className="col-lg-4 col-md-6 mb-4">
-            <div className="feature-card">
+            <div className="card">
               <img 
                 src={newSkillImg} 
                 alt="Learn New Skills" 
-                className="card-full-img"
+                className="card-img"
               />
             </div>
           </div>
 
           {/* Work on Real Tasks Card */}
           <div className="col-lg-4 col-md-6 mb-4">
-            <div className="feature-card">
+            <div className="card">
               <img 
                 src={workTaskImg} 
                 alt="Work on Real Tasks" 
-                className="card-full-img"
+                className="card-img"
               />
             </div>
           </div>
 
           {/* Earn Rewards Card */}
           <div className="col-lg-4 col-md-6 mb-4">
-            <div className="feature-card">
+            <div className="card">
               <img 
                 src={earnRewardImg} 
                 alt="Earn Rewards" 
-                className="card-full-img"
+                className="card-img"
               />
             </div>
           </div>

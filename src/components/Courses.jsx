@@ -3,11 +3,13 @@ import './Courses.css';
 import contentWritingImg from '../assets/content writing .gif';
 import digitalMarketingImg from '../assets/digital.gif';
 import graphicBasicsImg from '../assets/graphic basic.gif';
+import certificateImg from '../assets/certificate.jpeg';
 
 const Courses = () => {
   return (
     <section className="courses-section">
-      <div className="container-fluid">
+      {/* Courses Header and Grid - Regular Container */}
+      <div className="container">
         <div className="row">
           <div className="col-12">
             <div className="courses-content">
@@ -82,71 +84,199 @@ const Courses = () => {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-              {/* How It Works Section */}
-              <div className="how-it-works-section">
-                <div className="row">
-                  <div className="col-12">
-                    <div className="how-it-works-header text-center mb-5">
-                      <h2 className="how-it-works-title">How It Works</h2>
+      {/* How It Works Section - Regular Container */}
+      <div className="container">
+        <div className="how-it-works-section">
+          <div className="row">
+            <div className="col-12">
+              <div className="how-it-works-header text-center mb-5">
+                <h2 className="how-it-works-title">How It Works</h2>
+                <p className="how-it-works-subtitle">Simple 4-step process:</p>
+              </div>
+              
+              <div className="workflow-steps-container">
+                <div className="workflow-step">
+                  <div className="step-icon">
+                    <i className="fas fa-search"></i>
+                  </div>
+                  <h3 className="step-title">Choose Course</h3>
+                </div>
+                
+                <div className="workflow-arrow">
+                  <i className="fas fa-chevron-right"></i>
+                </div>
+                
+                <div className="workflow-step">
+                  <div className="step-icon">
+                    <i className="fas fa-graduation-cap"></i>
+                  </div>
+                  <h3 className="step-title">Learn & Practice</h3>
+                </div>
+                
+                <div className="workflow-arrow">
+                  <i className="fas fa-chevron-right"></i>
+                </div>
+                
+                <div className="workflow-step">
+                  <div className="step-icon">
+                    <i className="fas fa-award"></i>
+                  </div>
+                  <h3 className="step-title">Get Certified</h3>
+                </div>
+                
+                <div className="workflow-arrow">
+                  <i className="fas fa-chevron-right"></i>
+                </div>
+                
+                <div className="workflow-step">
+                  <div className="step-icon">
+                    <i className="fas fa-rocket"></i>
+                  </div>
+                  <h3 className="step-title">Advance Career</h3>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Horizontal Separator Line */}
+      <div className="section-separator"></div>
+
+      {/* Certificate Banner Section */}
+      <div className="container">
+        <div className="certificate-banner">
+          <div className="row align-items-center">
+            <div className="col-lg-6 col-md-12 mb-4 mb-lg-0">
+              <div className="certificate-content">
+                <h2 className="certificate-title">Official Certification</h2>
+                <p className="certificate-description">
+                  Upon successful completion of our courses, you will receive an 
+                  <strong> official certificate from Golden Skills Company</strong>. 
+                  Our certificates are recognized and validate your newly acquired skills.
+                </p>
+                <div className="certificate-features">
+                  <div className="feature-item">
+                    <i className="fas fa-check-circle"></i>
+                    <span>Officially issued by Golden Skills</span>
+                  </div>
+                  <div className="feature-item">
+                    <i className="fas fa-check-circle"></i>
+                    <span>Completion-based certification</span>
+                  </div>
+                  <div className="feature-item">
+                    <i className="fas fa-check-circle"></i>
+                    <span>Industry-recognized credentials</span>
+                  </div>
+                  <div className="feature-item">
+                    <i className="fas fa-check-circle"></i>
+                    <span>Digital certificate with verification</span>
+                  </div>
+                </div>
+                <button className="btn btn-certificate-cta">
+                  <i className="fas fa-graduation-cap"></i>
+                  Start Learning Today
+                </button>
+              </div>
+            </div>
+            <div className="col-lg-6 col-md-12">
+              <div className="certificate-image">
+                <img 
+                  src={certificateImg} 
+                  alt="Official Golden Skills Certificate" 
+                  className="certificate-img"
+                />
+                <div className="certificate-badge">
+                  <i className="fas fa-award"></i>
+                  <span>Official</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Testimonials Section */}
+      <div className="container">
+        <div className="testimonials-section">
+          <div className="row">
+            <div className="col-12">
+              <div className="testimonials-header text-center mb-5">
+                <div className="section-title-with-line">
+                  <div className="title-line"></div>
+                  <h2 className="testimonials-title">What Our Students Say</h2>
+                  <div className="title-line"></div>
+                </div>
+                <p className="testimonials-subtitle">Real reviews from our course graduates</p>
+              </div>
+              
+              <div className="testimonials-grid">
+                <div className="testimonial-card">
+                  <div className="testimonial-content">
+                    <div className="stars">
+                      <i className="fas fa-star"></i>
+                      <i className="fas fa-star"></i>
+                      <i className="fas fa-star"></i>
+                      <i className="fas fa-star"></i>
+                      <i className="fas fa-star"></i>
                     </div>
-                    
-                    <div className="row justify-content-center align-items-center g-3">
-                      <div className="col-lg-2 col-md-4 col-6">
-                        <div className="workflow-step text-center">
-                          <div className="step-icon mx-auto mb-3">
-                            <i className="fas fa-download"></i>
-                          </div>
-                          <h3 className="step-title">Download the app</h3>
-                        </div>
+                    <p className="testimonial-text">
+                      "The Content Writing course transformed my writing skills completely. 
+                      The practical approach and real projects helped me land my dream job!"
+                    </p>
+                    <div className="testimonial-author">
+                      <div className="author-info">
+                        <h4 className="author-name">Sarah Ahmed</h4>
+                        <p className="author-role">Content Writer at TechCorp</p>
                       </div>
-                      
-                      <div className="col-lg-1 col-md-1 col-12">
-                        <div className="workflow-arrow text-center">
-                          <i className="fas fa-chevron-right d-none d-md-inline"></i>
-                          <i className="fas fa-chevron-down d-md-none"></i>
-                        </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="testimonial-card">
+                  <div className="testimonial-content">
+                    <div className="stars">
+                      <i className="fas fa-star"></i>
+                      <i className="fas fa-star"></i>
+                      <i className="fas fa-star"></i>
+                      <i className="fas fa-star"></i>
+                      <i className="fas fa-star"></i>
+                    </div>
+                    <p className="testimonial-text">
+                      "Digital Marketing course was amazing! The mentors were incredibly helpful 
+                      and the certificate helped me get promoted in my current company."
+                    </p>
+                    <div className="testimonial-author">
+                      <div className="author-info">
+                        <h4 className="author-name">Muhammad Ali</h4>
+                        <p className="author-role">Marketing Manager</p>
                       </div>
-                      
-                      <div className="col-lg-2 col-md-4 col-6">
-                        <div className="workflow-step text-center">
-                          <div className="step-icon mx-auto mb-3">
-                            <i className="fas fa-graduation-cap"></i>
-                          </div>
-                          <h3 className="step-title">Learn skills</h3>
-                        </div>
-                      </div>
-                      
-                      <div className="col-lg-1 col-md-1 col-12">
-                        <div className="workflow-arrow text-center">
-                          <i className="fas fa-chevron-right d-none d-md-inline"></i>
-                          <i className="fas fa-chevron-down d-md-none"></i>
-                        </div>
-                      </div>
-                      
-                      <div className="col-lg-2 col-md-4 col-6">
-                        <div className="workflow-step text-center">
-                          <div className="step-icon mx-auto mb-3">
-                            <i className="fas fa-tasks"></i>
-                          </div>
-                          <h3 className="step-title">Complete tasks</h3>
-                        </div>
-                      </div>
-                      
-                      <div className="col-lg-1 col-md-1 col-12">
-                        <div className="workflow-arrow text-center">
-                          <i className="fas fa-chevron-right d-none d-md-inline"></i>
-                          <i className="fas fa-chevron-down d-md-none"></i>
-                        </div>
-                      </div>
-                      
-                      <div className="col-lg-2 col-md-4 col-6">
-                        <div className="workflow-step text-center">
-                          <div className="step-icon mx-auto mb-3">
-                            <i className="fas fa-gift"></i>
-                          </div>
-                          <h3 className="step-title">Earn rewards</h3>
-                        </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="testimonial-card">
+                  <div className="testimonial-content">
+                    <div className="stars">
+                      <i className="fas fa-star"></i>
+                      <i className="fas fa-star"></i>
+                      <i className="fas fa-star"></i>
+                      <i className="fas fa-star"></i>
+                      <i className="fas fa-star"></i>
+                    </div>
+                    <p className="testimonial-text">
+                      "Graphic Basics course gave me the foundation I needed. The step-by-step 
+                      guidance and affordable pricing made it perfect for beginners like me."
+                    </p>
+                    <div className="testimonial-author">
+                      <div className="author-info">
+                        <h4 className="author-name">Fatima Khan</h4>
+                        <p className="author-role">Freelance Designer</p>
                       </div>
                     </div>
                   </div>

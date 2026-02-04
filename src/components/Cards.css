@@ -1,10 +1,7 @@
 /* Cards Section Styles */
 .cards-section {
-  /* background-color: var(--background-color); */
-  
   background: linear-gradient(135deg, #F9F6F2 0%, #F0E8DC 50%, #E8DDD0 100%);
   padding: 5rem 0;
-  position: relative;
 }
 
 .cards-section .container-fluid {
@@ -14,12 +11,30 @@
 }
 
 /* Section Header */
+.section-title-with-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  gap: 2rem;
+}
+
+.title-line {
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, var(--accent-color) 30%, var(--accent-color) 70%, transparent 100%);
+  border-radius: 1px;
+  opacity: 0.6;
+}
+
 .cards-title {
   font-family: var(--heading-font);
   font-weight: var(--heading-weight);
   font-size: 4rem;
   color: var(--primary-color);
-  margin-bottom: 1.5rem;
+  margin: 0;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .cards-subtitle {
@@ -32,39 +47,25 @@
   line-height: 1.6;
 }
 
-/* Feature Cards */
-.feature-card {
-  background: white;
+/* Bootstrap Cards */
+.card {
+  border: none;
   border-radius: 20px;
-  padding: 0;
-  text-align: center;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(212, 175, 55, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  height: 100%;
-  position: relative;
   overflow: hidden;
-  max-width: 350px;
-  margin: 0 auto;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.feature-card:hover {
+.card:hover {
   transform: translateY(-5px);
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
 }
 
-/* Full Width Image Cards */
-.card-full-img {
+.card-img {
   width: 100%;
-  height: 100%;
-  display: block;
-  border-radius: 20px;
+  height: auto;
   object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.feature-card:hover .card-full-img {
-  transform: scale(1.02);
+  border-radius: 20px;
 }
 
 /* Responsive Design */
@@ -77,14 +78,13 @@
     font-size: 2.5rem;
   }
   
+  .section-title-with-line {
+    gap: 1.5rem;
+  }
+  
   .cards-subtitle {
     font-size: 1.1rem;
     margin-bottom: 3rem;
-  }
-  
-  .feature-card {
-    margin-bottom: 2rem;
-    max-width: 300px;
   }
 }
 
@@ -93,11 +93,17 @@
     font-size: 2rem;
   }
   
-  .cards-subtitle {
-    font-size: 1rem;
+  .section-title-with-line {
+    flex-direction: column;
+    gap: 1rem;
   }
   
-  .feature-card {
-    max-width: 280px;
+  .title-line {
+    width: 100%;
+    max-width: 200px;
+  }
+  
+  .cards-subtitle {
+    font-size: 1rem;
   }
 }

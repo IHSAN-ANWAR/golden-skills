@@ -106,11 +106,16 @@
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-/* Hero CTA Button */
+/* Hero Buttons Container */
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* Hero CTA Buttons */
 .btn-hero-cta {
-  background: linear-gradient(135deg, #D4AF37, #e6c547);
-  border: none;
-  color: var(--primary-color);
   font-family: var(--body-font);
   font-weight: var(--button-weight);
   font-size: 1.1rem;
@@ -118,15 +123,42 @@
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
   text-transform: none;
+  border: none;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  min-width: 160px;
 }
 
-.btn-hero-cta:hover {
+/* Primary Button (Get Started) */
+.btn-hero-cta.btn-primary {
+  background: linear-gradient(135deg, #D4AF37, #e6c547);
+  color: var(--primary-color);
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+
+.btn-hero-cta.btn-primary:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
   background: linear-gradient(135deg, #e6c547, #D4AF37);
   color: var(--primary-color);
+}
+
+/* Secondary Button (Explore Courses) */
+.btn-hero-cta.btn-secondary {
+  background: transparent;
+  color: white;
+  border: 2px solid #D4AF37;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+}
+
+.btn-hero-cta.btn-secondary:hover {
+  transform: translateY(-3px);
+  background: rgba(212, 175, 55, 0.1);
+  border-color: #e6c547;
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.3);
+  color: #e6c547;
 }
 
 /* Bootstrap Responsive Design */
@@ -135,79 +167,139 @@
 @media (min-width: 992px) {
   .hero-content {
     padding: 3rem;
+    max-width: 600px;
   }
   
   .hero-title {
     font-size: 4.5rem;
+    margin-bottom: 1.5rem;
   }
   
   .hero-description {
     font-size: 1.4rem;
+    margin-bottom: 2rem;
+  }
+  
+  .hero-buttons {
+    gap: 1.5rem;
+  }
+  
+  .btn-hero-cta {
+    font-size: 1.2rem;
+    padding: 1.1rem 2.8rem;
+    min-width: 180px;
   }
 }
 
-/* Medium screens and down (md: 768px-991px) */
-@media (max-width: 991.98px) {
+/* Tablet screens (768px - 991px) */
+@media (min-width: 768px) and (max-width: 991.98px) {
   .hero-content {
-    padding: 2rem;
+    padding: 2.5rem;
     text-align: center;
+    max-width: 700px;
+    margin: 0 auto;
   }
   
   .hero-title {
-    font-size: 3.5rem;
+    font-size: 3.8rem;
+    margin-bottom: 1.5rem;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
   }
   
   .hero-description {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
+    margin-bottom: 2rem;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+  }
+  
+  .hero-buttons {
+    gap: 1.2rem;
+    justify-content: center;
+  }
+  
+  .btn-hero-cta {
+    font-size: 1.1rem;
+    padding: 1rem 2.5rem;
+    min-width: 170px;
   }
 }
 
 /* Small screens and down (sm: 576px-767px) */
 @media (max-width: 767.98px) {
   .hero-section {
-    min-height: 80vh;
+    min-height: 85vh;
   }
   
   .hero-content {
-    padding: 1.5rem;
+    padding: 2rem 1.5rem;
     text-align: center;
+    max-width: 100%;
   }
   
   .hero-title {
-    font-size: 2.8rem;
+    font-size: 3rem;
+    margin-bottom: 1.2rem;
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.9);
   }
   
   .hero-description {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
+    margin-bottom: 1.8rem;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.9);
+    line-height: 1.5;
+  }
+  
+  .hero-buttons {
+    gap: 1rem;
+    justify-content: center;
+    flex-direction: column;
   }
   
   .btn-hero-cta {
-    padding: 0.8rem 2rem;
-    font-size: 1rem;
+    padding: 1rem 2.2rem;
+    font-size: 1.1rem;
+    min-width: 200px;
+    width: 100%;
+    max-width: 280px;
   }
 }
 
 /* Extra small screens (xs: <576px) */
 @media (max-width: 575.98px) {
   .hero-section {
-    min-height: 70vh;
+    min-height: 80vh;
   }
   
   .hero-content {
-    padding: 1rem;
+    padding: 1.5rem 1rem;
     text-align: center;
   }
   
   .hero-title {
-    font-size: 2.2rem;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.9);
+    line-height: 1.1;
   }
   
   .hero-description {
-    font-size: 1rem;
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.9);
+    line-height: 1.4;
+  }
+  
+  .hero-buttons {
+    gap: 0.8rem;
+    justify-content: center;
+    flex-direction: column;
   }
   
   .btn-hero-cta {
-    padding: 0.7rem 1.8rem;
-    font-size: 0.95rem;
+    padding: 0.9rem 2rem;
+    font-size: 1rem;
+    min-width: 180px;
+    width: 100%;
+    max-width: 250px;
   }
 }

@@ -16,14 +16,20 @@ const Hero = () => {
           <div className="col-lg-6 col-md-8 col-12">
             <div className="hero-content">
               <h1 className="hero-title mb-4">
-                Learn. <span className="gradient-text">Earn.</span> <span className="gradient-text">Excel.</span>
+            <span className="gradient-text">Golden Skills</span>
               </h1>
               <p className="hero-description mb-4">
                 Develop your skills and earn rewards by completing real-world tasks inside our mobile learning application. Join thousands of learners who are already building their careers through practical experience and skill development.
               </p>
-              <button className="btn btn-hero-cta">
-                Get Started
-              </button>
+              <div className="hero-buttons">
+                <button className="btn btn-hero-cta btn-primary">
+                  Get Started
+                </button>
+                <button className="btn btn-hero-cta btn-secondary">
+                  Explore Courses
+                </button>
+              </div>
+           
             </div>
           </div>
           <div className="col-lg-6 d-none d-lg-block">

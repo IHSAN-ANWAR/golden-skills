@@ -20,6 +20,12 @@ const Navbar = () => {
     return location.pathname === path;
   };
 
+  // Function to handle download app click
+  const handleDownloadApp = () => {
+    alert("This app is under maintenance. Please check back later!");
+    closeNavbar();
+  };
+
   return (
     <nav className="navbar navbar-expand-lg navbar-custom shadow-lg">
       <div className="container px-4">
@@ -85,11 +91,20 @@ const Navbar = () => {
                 Tasks
               </Link>
             </li>
+            <li className="nav-item">
+              <Link 
+                className={`nav-link ${isActive('/contact') ? 'active' : ''}`} 
+                to="/contact" 
+                onClick={closeNavbar}
+              >
+                Contact
+              </Link>
+            </li>
           </ul>
 
           {/* Download App Button */}
           <div className="d-flex">
-            <button className="btn btn-download-app" onClick={closeNavbar}>
+            <button className="btn btn-download-app" onClick={handleDownloadApp}>
               Download App
             </button>
           </div>
