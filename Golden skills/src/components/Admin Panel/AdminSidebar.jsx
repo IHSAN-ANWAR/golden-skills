@@ -114,7 +114,10 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
 
         {/* Logout Button */}
         <div className="sidebar-footer">
-          <button className="logout-btn">
+          <button className="logout-btn" onClick={() => {
+            localStorage.removeItem('adminToken');
+            window.location.href = '/login';
+          }}>
             <FaSignOutAlt className="logout-icon" />
             <span>Logout</span>
           </button>
