@@ -97,13 +97,13 @@ const Footer = () => {
                     <a href="#" className="social-link facebook">
                       <i className="fab fa-facebook-f"></i>
                     </a>
-                    <a href="#" className="social-link instagram">
+                    <a href="https://www.instagram.com/golden.skillscompany?igsh=NTVsNXA3aTdoZHlz" className="social-link instagram" target="_blank" rel="noopener noreferrer">
                       <i className="fab fa-instagram"></i>
                     </a>
-                    <a href="#" className="social-link youtube">
+                    <a href="https://youtube.com/@goldenskillscompanyoffical?si=fJ-6A7GWVqQd6UYh" className="social-link youtube" target="_blank" rel="noopener noreferrer">
                       <i className="fab fa-youtube"></i>
                     </a>
-                    <a href="#" className="social-link tiktok">
+                    <a href="https://www.tiktok.com/@earnwithriya?_r=1&_t=ZS-93v7aSaTZ4u" className="social-link tiktok" target="_blank" rel="noopener noreferrer">
                       <i className="fab fa-tiktok"></i>
                     </a>
                   </div>

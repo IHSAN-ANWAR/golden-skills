@@ -40,6 +40,13 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     
+    // TEMPORARY BYPASS FOR CLIENT DEMO
+    // Just store a fake token and redirect to dashboard
+    localStorage.setItem('adminToken', 'temporary-demo-token');
+    alert('Login successful - Demo access granted!');
+    navigate('/admin/dashboard');
+    return;
+    
     // Mark all fields as touched
     setTouched({ username: true, password: true })
     
