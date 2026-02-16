@@ -40,6 +40,15 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     
+    // TEMPORARY BYPASS - REMOVE LATER
+    // Just store a fake token and redirect to dashboard
+    localStorage.setItem('adminToken', 'temporary-bypass-token');
+    alert('Login bypassed - Temporary access granted!');
+    navigate('/admin/dashboard');
+    return;
+    
+    // ORIGINAL CODE BELOW - COMMENTED OUT FOR TEMPORARY BYPASS
+    /*
     // Mark all fields as touched
     setTouched({ username: true, password: true })
     
@@ -73,6 +82,7 @@ const Login = () => {
         alert('Login failed. Please check your connection.');
       }
     }
+    */
   }
 
   return (
