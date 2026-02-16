@@ -1,0 +1,41 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@400;500;600&display=swap');
+
+/* Import Bootstrap */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+/* CSS Custom Properties (Root Variables) */
+:root {
+  /* Colors */
+  --primary-color: #390910;        /* Dark Red - Left side of gradient */
+  --accent-color: #D4AF37;         /* Gold */
+  --background-color: #F9F6F2;     /* White / Light Cream */
+  --text-color: #2B1B1B;           /* Dark Brown / Black */
+  
+  /* Fonts */
+  --heading-font: 'Poppins', 'Inter', sans-serif;
+  --body-font: 'Inter', 'Poppins', sans-serif;
+  
+  /* Font Weights */
+  --heading-weight: 600;           /* SemiBold */
+  --body-weight: 400;              /* Regular */
+  --button-weight: 500;            /* Medium */
+}
+
+/* Global Styles */
+body {
+  font-family: var(--body-font);
+  font-weight: var(--body-weight);
+  background: linear-gradient(135deg, #F9F6F2 0%, #F0E8DC 50%, #E8DDD0 100%);
+  color: var(--text-color);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+/* Heading Styles */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--heading-font);
+  font-weight: var(--heading-weight);
+  color: var(--text-color);
+}

@@ -1,0 +1,658 @@
+/* Footer Section Styles */
+.footer-section {
+  background: linear-gradient(135deg, #390910 0%, #772218 100%);
+  color: white;
+  padding: 4rem 0 0 0;
+  position: relative;
+  border-top: 3px solid var(--accent-color);
+  box-shadow: 0 -3px 8px rgba(212, 175, 55, 0.4);
+}
+
+/* Add subtle particle effect like hero */
+.footer-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(230, 197, 71, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(230, 197, 71, 0.06) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.footer-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* Footer Titles */
+.footer-title {
+  font-family: var(--heading-font);
+  font-weight: var(--heading-weight);
+  font-size: 1.4rem;
+  color: var(--accent-color);
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.footer-title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 40px;
+  height: 2px;
+  background: var(--accent-color);
+  border-radius: 1px;
+}
+
+/* Footer Description */
+.footer-description {
+  font-family: var(--body-font);
+  font-weight: var(--body-weight);
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+/* Footer Links */
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  margin-bottom: 0.8rem;
+}
+
+.footer-links a {
+  font-family: var(--body-font);
+  font-weight: var(--body-weight);
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-size: 1rem;
+  transition: color 0.3s ease, padding-left 0.3s ease;
+  display: inline-block;
+}
+
+.footer-links a:hover {
+  color: var(--accent-color);
+  padding-left: 5px;
+}
+
+/* Social Media - Removed old styles */
+
+/* App Store & Social Section */
+.app-social-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* App Store Buttons - Horizontal Layout */
+.app-buttons-horizontal {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.app-store-btn {
+  display: inline-block;
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+.app-store-btn:hover {
+  transform: translateY(-2px);
+}
+
+.store-button {
+  display: flex;
+  align-items: center;
+  background: #000;
+  color: white;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  width: 140px;
+  height: 50px;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.store-button:hover {
+  background: #333;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.store-button i {
+  font-size: 1.4rem;
+  margin-right: 0.6rem;
+  color: white;
+}
+
+.store-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.store-small {
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 400;
+}
+
+.store-large {
+  font-size: 0.9rem;
+  color: white;
+  font-weight: 600;
+  margin-top: 1px;
+}
+
+/* Social & Legal Section */
+.social-legal-section {
+display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6rem;
+}
+/* Legal Links */
+.legal-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.legal-links a {
+  font-family: var(--body-font);
+  font-weight: var(--body-weight);
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.legal-links a:hover {
+  color: var(--accent-color);
+}
+
+/* Legal Link Button (for Privacy Policy and Terms modals) */
+.legal-link-button {
+  font-family: var(--body-font);
+  font-weight: var(--body-weight);
+  color: rgba(255, 255, 255, 0.8);
+  background: none;
+  border: none;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  padding: 0;
+  text-decoration: none;
+  text-align: left;
+}
+
+.legal-link-button:hover {
+  color: var(--accent-color);
+}
+
+/* Privacy Policy Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 20px;
+  max-width: 600px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  border: 2px solid var(--accent-color);
+  position: relative;
+}
+
+.modal-header {
+  background: linear-gradient(135deg, #390910 0%, #772218 100%);
+  color: white;
+  padding: 1.5rem 2rem;
+  border-radius: 18px 18px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.modal-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(230, 197, 71, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(230, 197, 71, 0.06) 0%, transparent 50%);
+  pointer-events: none;
+  border-radius: 18px 18px 0 0;
+}
+
+.modal-title {
+  font-family: var(--heading-font);
+  font-weight: 700;
+  font-size: 1.8rem;
+  color: var(--accent-color);
+  margin: 0;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.modal-title i {
+  font-size: 1.5rem;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--accent-color);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.modal-close:hover {
+  background: rgba(212, 175, 55, 0.2);
+  transform: rotate(90deg);
+}
+
+.modal-body {
+  padding: 2rem;
+  color: var(--text-color);
+}
+
+.modal-section {
+  margin-bottom: 1.5rem;
+}
+
+.modal-section:last-child {
+  margin-bottom: 0;
+}
+
+.modal-company {
+  font-family: var(--heading-font);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-bottom: 0.3rem;
+}
+
+.modal-date {
+  font-family: var(--body-font);
+  font-size: 0.9rem;
+  color: var(--accent-color);
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.modal-intro {
+  font-family: var(--body-font);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--primary-color);
+  font-weight: 500;
+  margin-bottom: 0;
+}
+
+.modal-section h3 {
+  font-family: var(--heading-font);
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: var(--primary-color);
+  margin-bottom: 0.8rem;
+  border-bottom: 2px solid var(--accent-color);
+  padding-bottom: 0.3rem;
+  display: inline-block;
+}
+
+.modal-section p {
+  font-family: var(--body-font);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+.modal-section p strong {
+  color: var(--primary-color);
+}
+
+.modal-section p strong i {
+  color: var(--accent-color);
+  margin-right: 0.3rem;
+}
+
+.modal-section ul {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.modal-section li {
+  font-family: var(--body-font);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 0.5rem;
+  color: var(--text-color);
+}
+
+.modal-section li:last-child {
+  margin-bottom: 0;
+}
+
+.modal-footer-note {
+  text-align: center;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(212, 175, 55, 0.3);
+  margin-top: 1.5rem;
+}
+
+.modal-footer-note p {
+  font-family: var(--body-font);
+  font-size: 0.9rem;
+  color: var(--accent-color);
+  margin: 0;
+}
+
+/* Modal Responsive Design */
+@media (max-width: 768px) {
+  .modal-overlay {
+    padding: 0.5rem;
+  }
+  
+  .modal-content {
+    max-height: 90vh;
+    border-radius: 15px;
+  }
+  
+  .modal-header {
+    padding: 1.2rem 1.5rem;
+    border-radius: 13px 13px 0 0;
+  }
+  
+  .modal-title {
+    font-size: 1.5rem;
+  }
+  
+  .modal-close {
+    font-size: 1.3rem;
+  }
+  
+  .modal-body {
+    padding: 1.5rem;
+  }
+  
+  .modal-section h3 {
+    font-size: 1.2rem;
+  }
+  
+  .modal-section p,
+  .modal-section li {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .modal-header {
+    padding: 1rem;
+  }
+  
+  .modal-title {
+    font-size: 1.3rem;
+  }
+  
+  .modal-body {
+    padding: 1.2rem;
+  }
+  
+  .modal-section h3 {
+    font-size: 1.1rem;
+  }
+  
+  .modal-section p,
+  .modal-section li {
+    font-size: 0.9rem;
+  }
+}
+
+/* Social Media - Multiple Icons */
+.social-media {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  color: white;
+  font-size: 1.5rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.social-link.facebook {
+  background: #1877f2;
+  box-shadow: 0 4px 15px rgba(24, 119, 242, 0.3);
+}
+
+.social-link.facebook:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(24, 119, 242, 0.4);
+}
+
+.social-link.instagram {
+  background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+  box-shadow: 0 4px 15px rgba(188, 24, 136, 0.3);
+}
+
+.social-link.instagram:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(188, 24, 136, 0.4);
+}
+
+.social-link.youtube {
+  background: #ff0000;
+  box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
+}
+
+.social-link.youtube:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(255, 0, 0, 0.4);
+}
+
+.social-link.tiktok {
+  background: #000000;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.social-link.tiktok:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Footer Bottom */
+.footer-bottom {
+  margin-top: 3rem;
+  padding: 2rem 0;
+  border-top: 1px solid rgba(230, 197, 71, 0.2);
+  position: relative;
+  z-index: 2;
+}
+
+.footer-bottom-content {
+  text-align: center;
+}
+
+/* Copyright */
+.copyright {
+  font-family: var(--body-font);
+  font-weight: var(--body-weight);
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .footer-section {
+    padding: 3rem 0 0 0;
+  }
+  
+  .footer-title {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+  
+  .footer-description {
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .footer-links a {
+    font-size: 0.95rem;
+  }
+  
+  .app-buttons {
+    align-items: center;
+  }
+  
+  .store-button {
+    width: 160px;
+    height: 55px;
+    padding: 0.7rem 1rem;
+  }
+  
+  .store-button i {
+    font-size: 1.6rem;
+    margin-right: 0.7rem;
+  }
+  
+  .store-small {
+    font-size: 0.7rem;
+  }
+  
+  .store-large {
+    font-size: 1rem;
+  }
+  
+  .social-links {
+    justify-content: center;
+  }
+  
+  .social-link {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+  }
+  
+  .footer-bottom {
+    margin-top: 2rem;
+    padding: 1.5rem 0;
+  }
+  
+  .copyright {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .store-button {
+    width: 140px;
+    height: 50px;
+    padding: 0.6rem 0.8rem;
+  }
+  
+  .store-button i {
+    font-size: 1.4rem;
+    margin-right: 0.6rem;
+  }
+  
+  .store-small {
+    font-size: 0.65rem;
+  }
+  
+  .store-large {
+    font-size: 0.9rem;
+  }
+}
+/* Responsive Design Updates */
+@media (max-width: 768px) {
+  .app-buttons-horizontal {
+    justify-content: flex-start;
+    gap: 0.8rem;
+  }
+  
+  .store-button {
+    width: 130px;
+    height: 45px;
+    padding: 0.5rem 0.8rem;
+  }
+  
+  .store-button i {
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+  }
+  
+  .store-small {
+    font-size: 0.6rem;
+  }
+  
+  .store-large {
+    font-size: 0.8rem;
+  }
+  
+  .social-legal-section {
+    justify-content: flex-start;
+    text-align: left;
+    gap: 2rem;
+  }
+  
+  .legal-links {
+    align-items: flex-start;
+  }
+  
+  .social-media {
+    gap: 0.8rem;
+  }
+  
+  .social-link {
+    width: 45px;
+    height: 45px;
+    font-size: 1.3rem;
+  }
+}
+

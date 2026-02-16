@@ -1,0 +1,60 @@
+.login-wrapper {
+  background: linear-gradient(135deg, #F9F6F2 0%, #F0E8DC 50%, #E8DDD0 100%);
+  position: relative;
+}
+
+/* Add subtle particle effect like footer */
+.login-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(230, 197, 71, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(230, 197, 71, 0.06) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.login-wrapper .container {
+  position: relative;
+  z-index: 2;
+}
+
+.text-golden {
+  color: #D4AF37 !important;
+}
+
+.btn-golden {
+  background: linear-gradient(135deg, #D4AF37, #e6c547);
+  border: none;
+  color: #390910;
+  font-weight: 700;
+  font-size: 1.1rem;
+  padding: 0.75rem 1.5rem !important;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+}
+
+.btn-golden:hover {
+  background: linear-gradient(135deg, #e6c547, #D4AF37);
+  color: #390910;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+}
+
+/* Validation styles */
+.is-invalid {
+  border-color: #dc3545 !important;
+}
+
+.is-valid {
+  border-color: #28a745 !important;
+}
+
+.text-danger {
+  color: #dc3545 !important;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}

@@ -1,0 +1,117 @@
+/* Dashboard Component Styles */
+
+/* Dashboard Grid */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+  margin-top: 20px;
+}
+
+/* Category Cards */
+.category-card {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e9ecef;
+  position: relative;
+  overflow: hidden;
+}
+
+.category-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.category-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #390910, #772218);
+}
+
+/* Card Icons */
+.card-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  color: white;
+  font-size: 1.8rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Card Content */
+.category-card h3 {
+  color: #390910;
+  margin: 0 0 15px 0;
+  font-size: 1.4rem;
+  font-weight: 600;
+  font-family: var(--heading-font);
+}
+
+.category-card p {
+  color: #6c757d;
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Responsive Design */
+@media (max-width: 991.98px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  
+  .category-card {
+    padding: 25px;
+  }
+  
+  .card-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .category-card {
+    padding: 20px;
+  }
+  
+  .category-card h3 {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .card-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.3rem;
+  }
+  
+  .category-card h3 {
+    font-size: 1.1rem;
+  }
+  
+  .category-card p {
+    font-size: 0.9rem;
+  }
+}

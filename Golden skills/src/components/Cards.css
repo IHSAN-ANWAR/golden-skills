@@ -1,0 +1,109 @@
+/* Cards Section Styles */
+.cards-section {
+  background: linear-gradient(135deg, #F9F6F2 0%, #F0E8DC 50%, #E8DDD0 100%);
+  padding: 5rem 0;
+}
+
+.cards-section .container-fluid {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Section Header */
+.section-title-with-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  gap: 2rem;
+}
+
+.title-line {
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, var(--accent-color) 30%, var(--accent-color) 70%, transparent 100%);
+  border-radius: 1px;
+  opacity: 0.6;
+}
+
+.cards-title {
+  font-family: var(--heading-font);
+  font-weight: var(--heading-weight);
+  font-size: 4rem;
+  color: var(--primary-color);
+  margin: 0;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.cards-subtitle {
+  font-family: var(--body-font);
+  font-weight: var(--body-weight);
+  font-size: 1.5rem;
+  color: var(--text-color);
+  margin-bottom: 4rem;
+  opacity: 0.8;
+  line-height: 1.6;
+}
+
+/* Bootstrap Cards */
+.card {
+  border: none;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.card-img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .cards-section {
+    padding: 3rem 0;
+  }
+  
+  .cards-title {
+    font-size: 2.5rem;
+  }
+  
+  .section-title-with-line {
+    gap: 1.5rem;
+  }
+  
+  .cards-subtitle {
+    font-size: 1.1rem;
+    margin-bottom: 3rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .cards-title {
+    font-size: 2rem;
+  }
+  
+  .section-title-with-line {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .title-line {
+    width: 100%;
+    max-width: 200px;
+  }
+  
+  .cards-subtitle {
+    font-size: 1rem;
+  }
+}

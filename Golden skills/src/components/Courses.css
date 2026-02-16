@@ -1,0 +1,894 @@
+/* Courses Section */
+.courses-section {
+  margin-top: 4rem;
+  background: linear-gradient(135deg, #F9F6F2 0%, #F0E8DC 50%, #E8DDD0 100%);
+  padding: 5rem 0;
+}
+
+.courses-content {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Courses Header */
+.courses-title {
+  font-family: var(--heading-font);
+  font-weight: 700;
+  font-size: 3.5rem;
+  color: var(--primary-color);
+  line-height: 1.2;
+  text-align: left;
+}
+
+.courses-description {
+  font-family: var(--body-font);
+  font-size: 1.3rem;
+  color: var(--text-color);
+  line-height: 1.6;
+  opacity: 0.85;
+  text-align: left;
+}
+
+/* Course Card */
+.course-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(212, 175, 55, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+}
+
+.course-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+/* Course Image Container */
+.course-image-container {
+  height: 250px;
+  overflow: hidden;
+  border-radius: 20px 20px 0 0;
+  background: #f8f9fa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.course-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform 0.3s ease;
+}
+
+.course-card:hover .course-image {
+  transform: scale(1.05);
+}
+
+/* Course Content */
+.course-content {
+  padding: 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 120px;
+}
+
+.course-description {
+  font-family: var(--body-font);
+  font-size: 1.3rem;
+  color: var(--text-color);
+  line-height: 1.5;
+  opacity: 0.8;
+  flex-grow: 1;
+}
+
+/* Course Button */
+.course-btn {
+  background: linear-gradient(135deg, var(--accent-color), #e6c547);
+  border: none;
+  color: var(--primary-color);
+  font-family: var(--body-font);
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.8rem 2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+  width: 100%;
+  max-width: 200px;
+  margin: 0 auto;
+}
+
+.course-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+  background: linear-gradient(135deg, #e6c547, var(--accent-color));
+  color: var(--primary-color);
+}
+
+/* How It Works Section */
+.how-it-works-section {
+  padding: 4rem 2rem;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.05) 0%, rgba(57, 9, 16, 0.05) 100%);
+  border-radius: 20px;
+  margin: 2rem 0;
+}
+
+.how-it-works-title {
+  font-family: var(--heading-font);
+  font-weight: 700;
+  font-size: 3rem;
+  color: var(--primary-color);
+  margin: 0;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.how-it-works-subtitle {
+  font-family: var(--body-font);
+  font-size: 1.2rem;
+  color: var(--text-color);
+  margin: 0.5rem 0 0 0;
+  opacity: 0.8;
+}
+
+/* Workflow Steps Container - Arrow Layout */
+.workflow-steps-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.workflow-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex-shrink: 0;
+  min-width: 140px;
+}
+
+.step-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--accent-color), #e6c547);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-bottom: 1rem;
+}
+
+.step-icon:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(212, 175, 55, 0.4);
+}
+
+.step-icon i {
+  font-size: 2rem;
+  color: var(--primary-color);
+}
+
+.step-title {
+  font-family: var(--heading-font);
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: var(--primary-color);
+  margin: 0;
+  line-height: 1.3;
+}
+
+/* Workflow Arrow */
+.workflow-arrow {
+  color: var(--accent-color);
+  font-size: 1.8rem;
+  opacity: 0.7;
+  flex-shrink: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.workflow-arrow:hover {
+  opacity: 1;
+  transform: translateX(5px);
+}
+
+/* Bootstrap Responsive Design */
+
+/* Large screens and up (lg: 992px+) */
+@media (min-width: 992px) {
+  .courses-content {
+    padding: 0 2rem;
+  }
+  
+  .course-image-container {
+    height: 280px;
+  }
+}
+
+/* Medium screens and down (md: 768px-991px) */
+@media (max-width: 991.98px) {
+  .courses-section {
+    padding: 4rem 0;
+  }
+  
+  .courses-title {
+    font-size: 3rem;
+    text-align: left;
+  }
+  
+  .courses-description {
+    font-size: 1.2rem;
+    text-align: left;
+  }
+  
+  .course-image-container {
+    height: 260px;
+  }
+  
+  .course-image {
+    object-fit: contain;
+    object-position: center;
+  }
+  
+  .how-it-works-title {
+    font-size: 2.5rem;
+  }
+  
+  .how-it-works-section {
+    padding: 3rem 1.5rem;
+  }
+  
+  .workflow-steps-container {
+    gap: 1rem;
+  }
+  
+  .workflow-step {
+    min-width: 120px;
+  }
+  
+  .step-icon {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .step-icon i {
+    font-size: 1.8rem;
+  }
+  
+  .step-title {
+    font-size: 1.1rem;
+  }
+  
+  .workflow-arrow {
+    font-size: 1.5rem;
+  }
+}
+
+/* Small screens and down (sm: 576px-767px) */
+@media (max-width: 767.98px) {
+  .courses-section {
+    padding: 3rem 0;
+  }
+  
+  .courses-title {
+    font-size: 2.5rem;
+    text-align: left;
+  }
+  
+  .courses-description {
+    font-size: 1.1rem;
+    text-align: left;
+  }
+  
+  .course-image-container {
+    height: 240px;
+  }
+  
+  .course-image {
+    object-fit: contain;
+    object-position: center;
+  }
+  
+  .course-content {
+    padding: 1.2rem;
+  }
+  
+  .course-description {
+    font-size: 0.95rem;
+  }
+  
+  .how-it-works-section {
+    padding: 2.5rem 1rem;
+  }
+  
+  .how-it-works-title {
+    font-size: 2.2rem;
+  }
+  
+  .workflow-steps-container {
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .workflow-step {
+    min-width: auto;
+  }
+  
+  .step-icon {
+    width: 65px;
+    height: 65px;
+  }
+  
+  .step-icon i {
+    font-size: 1.6rem;
+  }
+  
+  .step-title {
+    font-size: 1.1rem;
+  }
+  
+  .workflow-arrow {
+    transform: rotate(90deg);
+    font-size: 1.3rem;
+  }
+  
+  .workflow-arrow:hover {
+    transform: rotate(90deg) translateX(5px);
+  }
+}
+
+/* Extra small screens (xs: <576px) */
+@media (max-width: 575.98px) {
+  .courses-title {
+    font-size: 2.2rem;
+  }
+  
+  .courses-description {
+    font-size: 1rem;
+  }
+  
+  .course-image-container {
+    height: 220px;
+  }
+  
+  .course-image {
+    object-fit: contain;
+    object-position: center;
+  }
+  
+  .course-content {
+    padding: 1rem;
+  }
+  
+  .course-description {
+    font-size: 0.9rem;
+  }
+  
+  .course-btn {
+    padding: 0.7rem 1.5rem;
+    font-size: 0.95rem;
+  }
+  
+  .how-it-works-section {
+    padding: 2rem 0.5rem;
+  }
+  
+  .how-it-works-title {
+    font-size: 2rem;
+  }
+  
+  .workflow-steps-container {
+    gap: 1.5rem;
+  }
+  
+  .step-icon {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .step-icon i {
+    font-size: 1.4rem;
+  }
+  
+  .step-title {
+    font-size: 1rem;
+  }
+  
+  .workflow-arrow {
+    font-size: 1.2rem;
+  }
+}
+
+/* Section Separator Line */
+.section-separator {
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, var(--accent-color) 20%, var(--accent-color) 80%, transparent 100%);
+  margin: 3rem auto 0 auto;
+  border-radius: 1px;
+  opacity: 0.6;
+}
+
+/* Responsive separator */
+@media (max-width: 768px) {
+  .section-separator {
+    margin: 2rem auto 0 auto;
+    height: 1.5px;
+  }
+}
+
+@media (max-width: 576px) {
+  .section-separator {
+    margin: 1.5rem auto 0 auto;
+    height: 1px;
+  }
+}
+/* Certificate Banner Section */
+.certificate-banner {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.05) 0%, rgba(57, 9, 16, 0.05) 100%);
+  border-radius: 20px;
+  padding: 4rem 2rem;
+  margin: 4rem 0;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* Certificate Content */
+.certificate-content {
+  padding-right: 2rem;
+}
+
+.certificate-title {
+  font-family: var(--heading-font);
+  font-weight: 700;
+  font-size: 2.8rem;
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+
+.certificate-description {
+  font-family: var(--body-font);
+  font-size: 1.2rem;
+  color: var(--text-color);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+.certificate-description strong {
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
+/* Certificate Features */
+.certificate-features {
+  margin-bottom: 2rem;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.8rem;
+  font-family: var(--body-font);
+  font-size: 1rem;
+  color: var(--text-color);
+}
+
+.feature-item:last-child {
+  margin-bottom: 0;
+}
+
+.feature-item i {
+  color: var(--accent-color);
+  font-size: 1.1rem;
+  margin-right: 0.8rem;
+  flex-shrink: 0;
+}
+
+.feature-item span {
+  line-height: 1.5;
+}
+
+/* Certificate CTA Button */
+.btn-certificate-cta {
+  background: linear-gradient(135deg, var(--accent-color), #e6c547);
+  border: none;
+  color: var(--primary-color);
+  font-family: var(--body-font);
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 1rem 2.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-certificate-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+  background: linear-gradient(135deg, #e6c547, var(--accent-color));
+  color: var(--primary-color);
+}
+
+.btn-certificate-cta i {
+  font-size: 1rem;
+}
+
+/* Certificate Image */
+.certificate-image {
+  position: relative;
+  text-align: center;
+}
+
+.certificate-img {
+  width: 100%;
+  max-width: 450px;
+  height: auto;
+  border-radius: 15px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  border: 3px solid var(--accent-color);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.certificate-img:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Certificate Badge */
+.certificate-badge {
+  position: absolute;
+  top: -10px;
+  right: 20px;
+  background: linear-gradient(135deg, var(--accent-color), #e6c547);
+  color: var(--primary-color);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-family: var(--body-font);
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.certificate-badge i {
+  font-size: 1rem;
+}
+
+/* Responsive Design for Certificate Banner */
+@media (max-width: 991px) {
+  .certificate-banner {
+    padding: 3rem 1.5rem;
+    margin: 3rem 0;
+  }
+  
+  .certificate-content {
+    padding-right: 0;
+    text-align: center;
+  }
+  
+  .certificate-title {
+    font-size: 2.5rem;
+  }
+  
+  .certificate-description {
+    font-size: 1.1rem;
+  }
+  
+  .certificate-image {
+    margin-top: 2rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .certificate-banner {
+    padding: 2rem 1rem;
+    margin: 2rem 0;
+  }
+  
+  .certificate-title {
+    font-size: 2.2rem;
+  }
+  
+  .certificate-description {
+    font-size: 1rem;
+  }
+  
+  .feature-item {
+    font-size: 0.95rem;
+  }
+  
+  .btn-certificate-cta {
+    font-size: 1rem;
+    padding: 0.9rem 2rem;
+  }
+  
+  .certificate-badge {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+    top: -8px;
+    right: 15px;
+  }
+}
+
+@media (max-width: 576px) {
+  .certificate-title {
+    font-size: 2rem;
+  }
+  
+  .certificate-description {
+    font-size: 0.95rem;
+  }
+  
+  .feature-item {
+    font-size: 0.9rem;
+  }
+  
+  .btn-certificate-cta {
+    font-size: 0.95rem;
+    padding: 0.8rem 1.8rem;
+  }
+}
+
+/* Testimonials Section */
+.testimonials-section {
+  padding: 4rem 0 2rem 0;
+  margin-top: 3rem;
+}
+
+.testimonials-header {
+  margin-bottom: 3rem;
+}
+
+.testimonials-section .section-title-with-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  gap: 2rem;
+}
+
+.testimonials-section .title-line {
+  flex: 1;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, var(--accent-color) 30%, var(--accent-color) 70%, transparent 100%);
+  border-radius: 1px;
+  opacity: 0.6;
+}
+
+.testimonials-title {
+  font-family: var(--heading-font);
+  font-weight: 700;
+  font-size: 3rem;
+  color: var(--primary-color);
+  margin: 0;
+  line-height: 1.2;
+  text-align: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.testimonials-subtitle {
+  font-family: var(--body-font);
+  font-size: 1.2rem;
+  color: var(--text-color);
+  margin: 0;
+  opacity: 0.8;
+}
+
+/* Testimonials Grid */
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.testimonial-card {
+  background: white;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(212, 175, 55, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+}
+
+.testimonial-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+}
+
+.testimonial-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Stars Rating */
+.stars {
+  display: flex;
+  gap: 0.3rem;
+  margin-bottom: 1.5rem;
+}
+
+.stars i {
+  color: var(--accent-color);
+  font-size: 1.2rem;
+}
+
+/* Testimonial Text */
+.testimonial-text {
+  font-family: var(--body-font);
+  font-size: 1.1rem;
+  color: var(--text-color);
+  line-height: 1.6;
+  margin: 0 0 2rem 0;
+  flex-grow: 1;
+  font-style: italic;
+  opacity: 0.9;
+}
+
+/* Author Info */
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  margin-top: auto;
+}
+
+.author-info {
+  flex-grow: 1;
+}
+
+.author-name {
+  font-family: var(--heading-font);
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: var(--primary-color);
+  margin: 0 0 0.3rem 0;
+  line-height: 1.3;
+}
+
+.author-role {
+  font-family: var(--body-font);
+  font-size: 0.95rem;
+  color: var(--accent-color);
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Responsive Design for Testimonials */
+@media (max-width: 991.98px) {
+  .testimonials-title {
+    font-size: 2.5rem;
+  }
+  
+  .testimonials-section .section-title-with-line {
+    gap: 1.5rem;
+  }
+  
+  .testimonials-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+  
+  .testimonial-card {
+    padding: 1.5rem;
+  }
+  
+  .testimonial-text {
+    font-size: 1rem;
+  }
+  
+  .author-name {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .testimonials-section {
+    padding: 3rem 0 1rem 0;
+    margin-top: 2rem;
+  }
+  
+  .testimonials-title {
+    font-size: 2.2rem;
+  }
+  
+  .testimonials-section .section-title-with-line {
+    gap: 1rem;
+  }
+  
+  .testimonials-subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    max-width: 500px;
+  }
+  
+  .testimonial-card {
+    padding: 1.5rem;
+  }
+  
+  .testimonial-text {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .stars i {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .testimonials-section {
+    padding: 2rem 0 1rem 0;
+  }
+  
+  .testimonials-title {
+    font-size: 2rem;
+  }
+  
+  .testimonials-section .section-title-with-line {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .testimonials-section .title-line {
+    width: 100%;
+    max-width: 200px;
+  }
+  
+  .testimonials-subtitle {
+    font-size: 1rem;
+  }
+  
+  .testimonials-grid {
+    max-width: 400px;
+    gap: 1rem;
+  }
+  
+  .testimonial-card {
+    padding: 1.2rem;
+  }
+  
+  .testimonial-text {
+    font-size: 0.95rem;
+  }
+  
+  .author-name {
+    font-size: 1rem;
+  }
+  
+  .author-role {
+    font-size: 0.9rem;
+  }
+  
+  .stars i {
+    font-size: 1rem;
+  }
+}
