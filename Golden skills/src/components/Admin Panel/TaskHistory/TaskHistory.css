@@ -1,0 +1,598 @@
+/* Task History Component Styles - Table Layout */
+
+.task-history-container {
+  padding: 20px;
+}
+
+/* Header */
+.history-header {
+  margin-bottom: 30px;
+}
+
+.history-header h1 {
+  font-size: 2rem;
+  color: #390910;
+  margin-bottom: 10px;
+}
+
+.history-header p {
+  color: #6c757d;
+  font-size: 1rem;
+}
+
+/* Loading State */
+.loading {
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 1.2rem;
+  color: #6c757d;
+}
+
+/* Search Section */
+.search-section {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 25px;
+  border: 1px solid #e9ecef;
+}
+
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 15px;
+  color: #6c757d;
+  font-size: 1.1rem;
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 45px 12px 45px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background: #f8fafc;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #390910;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(57, 9, 16, 0.1);
+}
+
+.clear-search-btn {
+  position: absolute;
+  right: 15px;
+  background: none;
+  border: none;
+  color: #6c757d;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.clear-search-btn:hover {
+  background: #e9ecef;
+  color: #390910;
+}
+
+.search-results-info {
+  margin-top: 12px;
+  padding: 8px 15px;
+  background: #f0f9ff;
+  border-left: 3px solid #390910;
+  border-radius: 6px;
+  color: #390910;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Date Filter Section */
+.date-filter-section {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 25px;
+  border: 1px solid #e9ecef;
+}
+
+.date-filter-section h3 {
+  font-size: 1.1rem;
+  color: #390910;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.date-filter-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.date-filter-buttons button {
+  padding: 10px 20px;
+  border: 2px solid #e9ecef;
+  background: white;
+  color: #495057;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+}
+
+.date-filter-buttons button:hover {
+  border-color: #390910;
+  color: #390910;
+  transform: translateY(-2px);
+}
+
+.date-filter-buttons button.active {
+  background: linear-gradient(135deg, #390910, #772218);
+  color: white;
+  border-color: #390910;
+  box-shadow: 0 4px 8px rgba(57, 9, 16, 0.2);
+}
+
+/* Filter Section */
+.time-filter {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 25px;
+  border: 1px solid #e9ecef;
+}
+
+.time-filter h3 {
+  font-size: 1.1rem;
+  color: #390910;
+  margin-bottom: 15px;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.filter-buttons button {
+  padding: 10px 20px;
+  border: 2px solid #e9ecef;
+  background: white;
+  color: #495057;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.filter-buttons button:hover {
+  border-color: #390910;
+  color: #390910;
+}
+
+.filter-buttons button.active {
+  background: linear-gradient(135deg, #390910, #772218);
+  color: white;
+  border-color: #390910;
+}
+
+/* Submissions Table Container */
+.submissions-table-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  border: 1px solid #e9ecef;
+}
+
+.submissions-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.submissions-table thead {
+  background: linear-gradient(135deg, #390910, #772218);
+  color: white;
+}
+
+.submissions-table th {
+  padding: 18px 15px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #5a0f15;
+}
+
+.submissions-table tbody tr {
+  border-bottom: 1px solid #e9ecef;
+  transition: all 0.2s ease;
+}
+
+.submissions-table tbody tr:hover {
+  background-color: #f8f9fa;
+  transform: scale(1.01);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.submissions-table td {
+  padding: 15px;
+  vertical-align: middle;
+}
+
+/* User ID Badge */
+.user-id-badge {
+  background: linear-gradient(135deg, #390910, #772218);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* User Name Cell */
+.user-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-avatar-small {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #390910, #772218);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.user-fullname {
+  font-weight: 600;
+  color: #390910;
+  font-size: 1.05rem;
+}
+
+/* Email Cell */
+.email-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.email-icon {
+  color: #390910;
+  font-size: 0.9rem;
+}
+
+/* Phone Cell */
+.phone-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.phone-icon {
+  color: #390910;
+  font-size: 0.9rem;
+}
+
+/* Payment Image Cell */
+.payment-image-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.payment-thumbnail {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid #e9ecef;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.payment-thumbnail:hover {
+  transform: scale(1.1);
+  border-color: #390910;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.no-image-text {
+  color: #adb5bd;
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+/* Plan Title */
+.plan-title {
+  font-weight: 600;
+  color: #495057;
+}
+
+/* Price Cell */
+.price-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #28a745;
+  font-weight: 600;
+}
+
+.price-icon {
+  font-size: 0.9rem;
+}
+
+/* Status Badge */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.status-pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-badge.status-approved {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-badge.status-rejected {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.view-btn {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.view-btn:hover {
+  background: #bbdefb;
+  transform: translateY(-2px);
+}
+
+.approve-btn {
+  background: #e8f5e8;
+  color: #2e7d32;
+}
+
+.approve-btn:hover {
+  background: #c8e6c9;
+  transform: translateY(-2px);
+}
+
+.reject-btn {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.reject-btn:hover {
+  background: #ffe0b2;
+  transform: translateY(-2px);
+}
+
+.delete-btn {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.delete-btn:hover {
+  background: #ffcdd2;
+  transform: translateY(-2px);
+}
+
+/* No Submissions Row */
+.no-submissions-row {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.no-submissions-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.no-submissions-icon {
+  font-size: 3rem;
+  color: #ced4da;
+}
+
+.no-submissions-content h3 {
+  color: #495057;
+  margin: 0;
+}
+
+.no-submissions-content p {
+  color: #6c757d;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1199px) {
+  .submissions-table th,
+  .submissions-table td {
+    padding: 12px 10px;
+    font-size: 0.9rem;
+  }
+  
+  .user-avatar-small {
+    width: 35px;
+    height: 35px;
+    font-size: 0.9rem;
+  }
+  
+  .action-buttons {
+    gap: 5px;
+  }
+  
+  .action-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .submissions-table th,
+  .submissions-table td {
+    padding: 10px 8px;
+    font-size: 0.85rem;
+  }
+  
+  .user-fullname {
+    font-size: 0.95rem;
+  }
+  
+  .filter-buttons,
+  .date-filter-buttons {
+    gap: 8px;
+  }
+  
+  .filter-buttons button,
+  .date-filter-buttons button {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+
+  .search-input {
+    padding: 10px 40px 10px 40px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .submissions-table {
+    font-size: 0.8rem;
+  }
+  
+  .submissions-table th,
+  .submissions-table td {
+    padding: 8px 6px;
+  }
+  
+  .user-name-cell {
+    flex-direction: column;
+    gap: 5px;
+    text-align: center;
+  }
+  
+  .user-avatar-small {
+    width: 30px;
+    height: 30px;
+    font-size: 0.8rem;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    gap: 3px;
+  }
+  
+  .action-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 0.7rem;
+  }
+  
+  .status-badge {
+    font-size: 0.7rem;
+    padding: 4px 8px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .task-history-container {
+    padding: 15px;
+  }
+  
+  .history-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .filter-buttons,
+  .date-filter-buttons {
+    flex-direction: column;
+  }
+  
+  .filter-buttons button,
+  .date-filter-buttons button {
+    width: 100%;
+  }
+
+  .search-input {
+    padding: 10px 40px 10px 40px;
+    font-size: 0.85rem;
+  }
+  
+  /* Hide some columns on mobile, keep image visible */
+  .submissions-table th:nth-child(4),
+  .submissions-table td:nth-child(4),
+  .submissions-table th:nth-child(5),
+  .submissions-table td:nth-child(5) {
+    display: none;
+  }
+  
+  .payment-thumbnail {
+    width: 50px;
+    height: 50px;
+  }
+}

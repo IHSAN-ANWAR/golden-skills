@@ -1,0 +1,590 @@
+/* Course History Container */
+.course-history-container {
+  padding: 20px;
+  background: #f8fafc;
+  min-height: 100vh;
+}
+
+/* Header */
+.history-header {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.history-header h1 {
+  font-size: 2rem;
+  color: #390910;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.history-header p {
+  color: #6c757d;
+  font-size: 1rem;
+}
+
+/* Loading */
+.loading {
+  text-align: center;
+  padding: 60px 20px;
+  font-size: 1.2rem;
+  color: #6c757d;
+}
+
+/* Statistics Section */
+.statistics-section {
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  margin-bottom: 25px;
+}
+
+.statistics-section h2 {
+  font-size: 1.5rem;
+  color: #390910;
+  margin-bottom: 20px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.stat-card {
+  background: #f8fafc;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  transition: all 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: white;
+}
+
+.stat-icon.premium {
+  background: linear-gradient(135deg, #D4AF37, #E6C547);
+}
+
+.stat-icon.pro {
+  background: linear-gradient(135deg, #390910, #772218);
+}
+
+.stat-icon.lite {
+  background: linear-gradient(135deg, #6c757d, #495057);
+}
+
+.stat-details h3 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #390910;
+  margin: 0;
+}
+
+.stat-details p {
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin: 0;
+}
+
+/* Search Section */
+.search-section {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 25px;
+  border: 1px solid #e9ecef;
+}
+
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 15px;
+  color: #6c757d;
+  font-size: 1.1rem;
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 45px 12px 45px;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  background: #f8fafc;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #390910;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(57, 9, 16, 0.1);
+}
+
+.clear-search-btn {
+  position: absolute;
+  right: 15px;
+  background: none;
+  border: none;
+  color: #6c757d;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.clear-search-btn:hover {
+  background: #e9ecef;
+  color: #390910;
+}
+
+.search-results-info {
+  margin-top: 12px;
+  padding: 8px 15px;
+  background: #f0f9ff;
+  border-left: 3px solid #390910;
+  border-radius: 6px;
+  color: #390910;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Date Filter Section */
+.date-filter-section {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 25px;
+  border: 1px solid #e9ecef;
+}
+
+.date-filter-section h3 {
+  font-size: 1.1rem;
+  color: #390910;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.date-filter-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.date-filter-buttons button {
+  padding: 10px 20px;
+  border: 2px solid #e9ecef;
+  background: white;
+  color: #495057;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+}
+
+.date-filter-buttons button:hover {
+  border-color: #390910;
+  color: #390910;
+  transform: translateY(-2px);
+}
+
+.date-filter-buttons button.active {
+  background: linear-gradient(135deg, #390910, #772218);
+  color: white;
+  border-color: #390910;
+  box-shadow: 0 4px 8px rgba(57, 9, 16, 0.2);
+}
+
+/* Category Filter Section */
+.category-filter-section {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 25px;
+  border: 1px solid #e9ecef;
+}
+
+.category-filter-section h3 {
+  font-size: 1.1rem;
+  color: #390910;
+  margin-bottom: 15px;
+}
+
+.category-filter-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.category-filter-buttons button {
+  padding: 10px 20px;
+  border: 2px solid #e9ecef;
+  background: white;
+  color: #495057;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.category-filter-buttons button:hover {
+  border-color: #390910;
+  color: #390910;
+}
+
+.category-filter-buttons button.active {
+  background: linear-gradient(135deg, #390910, #772218);
+  color: white;
+  border-color: #390910;
+}
+
+/* No Assignments */
+.no-assignments {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.no-assignments svg {
+  color: #cbd5e1;
+  margin-bottom: 20px;
+}
+
+.no-assignments h3 {
+  color: #475569;
+  margin: 0 0 10px 0;
+}
+
+.no-assignments p {
+  color: #94a3b8;
+  margin: 0;
+}
+
+/* Assignments Table */
+.assignments-table-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  border: 1px solid #e9ecef;
+  margin-bottom: 30px;
+}
+
+.assignments-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.assignments-table thead {
+  background: linear-gradient(135deg, #390910, #772218);
+  color: white;
+}
+
+.assignments-table th {
+  padding: 18px 15px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.assignments-table tbody tr {
+  border-bottom: 1px solid #e9ecef;
+  transition: all 0.2s ease;
+}
+
+.assignments-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.assignments-table td {
+  padding: 15px;
+  vertical-align: middle;
+}
+
+/* User ID Badge */
+.user-id-badge {
+  background: linear-gradient(135deg, #390910, #772218);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* User Name Cell */
+.user-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-avatar-small {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #390910, #772218);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.user-fullname {
+  font-weight: 600;
+  color: #390910;
+  font-size: 1.05rem;
+}
+
+/* Email Cell */
+.email-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.email-icon {
+  color: #390910;
+  font-size: 0.9rem;
+}
+
+/* Category Badge */
+.category-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.category-badge.category-premium {
+  background: linear-gradient(135deg, #D4AF37, #E6C547);
+  color: #390910;
+}
+
+.category-badge.category-pro {
+  background: linear-gradient(135deg, #390910, #772218);
+  color: white;
+}
+
+.category-badge.category-lite {
+  background: linear-gradient(135deg, #6c757d, #495057);
+  color: white;
+}
+
+/* Course Link Cell */
+.course-link-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 400px;
+}
+
+.link-icon {
+  color: #390910;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.course-link {
+  color: #1976d2;
+  text-decoration: none;
+  font-size: 0.9rem;
+  word-break: break-all;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: color 0.2s ease;
+}
+
+.course-link:hover {
+  color: #1565c0;
+  text-decoration: underline;
+}
+
+.external-link-icon {
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+/* Date Cell */
+.date-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.date-icon {
+  color: #390910;
+  font-size: 0.85rem;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.view-btn {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.view-btn:hover {
+  background: #bbdefb;
+  transform: translateY(-2px);
+}
+
+.delete-btn {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.delete-btn:hover {
+  background: #ffcdd2;
+  transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 1199px) {
+  .assignments-table th,
+  .assignments-table td {
+    padding: 12px 10px;
+    font-size: 0.9rem;
+  }
+  
+  .user-avatar-small {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .assignments-table th,
+  .assignments-table td {
+    padding: 10px 8px;
+    font-size: 0.85rem;
+  }
+  
+  .filter-buttons,
+  .date-filter-buttons,
+  .category-filter-buttons {
+    gap: 8px;
+  }
+  
+  .filter-buttons button,
+  .date-filter-buttons button,
+  .category-filter-buttons button {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+
+  .search-input {
+    padding: 10px 40px 10px 40px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .course-history-container {
+    padding: 15px;
+  }
+  
+  .assignments-table {
+    font-size: 0.8rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .history-header h1 {
+    font-size: 1.5rem;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .date-filter-buttons,
+  .category-filter-buttons {
+    flex-direction: column;
+  }
+  
+  .date-filter-buttons button,
+  .category-filter-buttons button {
+    width: 100%;
+  }
+  
+  .search-input {
+    padding: 10px 40px 10px 40px;
+    font-size: 0.85rem;
+  }
+  
+  /* Hide some columns on mobile */
+  .assignments-table th:nth-child(3),
+  .assignments-table td:nth-child(3) {
+    display: none;
+  }
+}

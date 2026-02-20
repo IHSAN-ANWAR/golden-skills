@@ -64,13 +64,13 @@ const Courses = () => {
                   </div>
                 </div>
 
-                {/* Graphic Basics Course */}
+                {/* Graphic Lite Course */}
                 <div className="col-lg-4 col-md-6 col-12">
                   <div className="course-card h-100">
                     <div className="course-image-container">
                       <img 
                         src={graphicBasicsImg} 
-                        alt="Graphic Basics Course" 
+                        alt="Graphic Lite Course" 
                         className="course-image"
                       />
                     </div>
@@ -270,7 +270,7 @@ const Courses = () => {
                       <i className="fas fa-star"></i>
                     </div>
                     <p className="testimonial-text">
-                      "Graphic Basics course gave me the foundation I needed. The step-by-step 
+                      "Graphic Lite course gave me the foundation I needed. The step-by-step 
                       guidance and affordable pricing made it perfect for beginners like me."
                     </p>
                     <div className="testimonial-author">

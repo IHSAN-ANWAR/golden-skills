@@ -1,13 +1,12 @@
-import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   FaTachometerAlt, 
   FaUsers, 
   FaBook, 
   FaTasks, 
-  FaMoneyBillWave, 
-  FaChartBar, 
-  FaCog, 
+  FaCheckCircle,
+  FaHistory,
+  FaClipboardList,
   FaSignOutAlt
 } from 'react-icons/fa';
 import logo from '../../assets/golden logo.jpeg';
@@ -40,24 +39,6 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
       title: 'Tasks',
       icon: FaTasks,
       path: '/admin/tasks'
-    },
-    {
-      id: 5,
-      title: 'Transactions',
-      icon: FaMoneyBillWave,
-      path: '/admin/transactions'
-    },
-    {
-      id: 6,
-      title: 'Reports',
-      icon: FaChartBar,
-      path: '/admin/reports'
-    },
-    {
-      id: 7,
-      title: 'Settings',
-      icon: FaCog,
-      path: '/admin/settings'
     }
   ];
 

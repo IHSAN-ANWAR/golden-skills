@@ -63,10 +63,11 @@
   text-align: center;
   box-shadow: 0 8px 25px rgba(109, 27, 59, 0.15);
   border: 1px solid rgba(212, 175, 55, 0.2);
+  border-left: none;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  max-width: 350px;
+  max-width: 280px;
   flex: 1;
-  min-width: 280px;
+  min-width: 220px;
   position: relative;
   overflow: hidden;
 }

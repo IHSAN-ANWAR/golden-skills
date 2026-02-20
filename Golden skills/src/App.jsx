@@ -1,15 +1,16 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 
-// Pages
+// Public Pages
 import Home from './pages/Home';
-import About from './pages/About';
-import Courses from './pages/Courses';
-import Tasks from './pages/Tasks';
-import Contact from './pages/Contact';
+import About from './components/About';
+import Courses from './components/Courses';
+import PublicTasks from './components/Tasks';
+import Contact from './components/Contact';
+import UserTaskSubmission from './pages/UserTaskSubmission';
+import UserTaskData from './pages/UserTaskData';
 
-// Components
+// Shared Components
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 
@@ -20,7 +21,7 @@ import ResetPassword from './components/Admin Panel/ResetPassword/ResetPassword'
 import AdminLayout from './components/Admin Panel/AdminLayout';
 import Dashboard from './components/Admin Panel/Dashboard/Dashboard';
 import AdminCourses from './components/Admin Panel/Courses/Courses';
-import AdminTasks from './components/Admin Panel/Tasks/Tasks';
+import TasksManager from './components/Admin Panel/TasksManager/TasksManager';
 import Users from './components/Admin Panel/Users/Users';
 
 function App() {
@@ -52,7 +53,7 @@ function App() {
         <Route path="/tasks" element={
           <>
             <Navbar />
-            <Tasks />
+            <PublicTasks />
             <Footer />
           </>
         } />
@@ -60,6 +61,20 @@ function App() {
           <>
             <Navbar />
             <Contact />
+            <Footer />
+          </>
+        } />
+        <Route path="/submit-task" element={
+          <>
+            <Navbar />
+            <UserTaskSubmission />
+            <Footer />
+          </>
+        } />
+        <Route path="/my-tasks" element={
+          <>
+            <Navbar />
+            <UserTaskData />
             <Footer />
           </>
         } />
@@ -74,7 +89,7 @@ function App() {
         <Route path="/admin" element={<AdminLayout />}>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="courses" element={<AdminCourses />} />
-          <Route path="tasks" element={<AdminTasks />} />
+          <Route path="tasks" element={<TasksManager />} />
           <Route path="users" element={<Users />} />
         </Route>
       </Routes>

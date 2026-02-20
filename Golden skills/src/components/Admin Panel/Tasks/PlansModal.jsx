@@ -1,15 +1,11 @@
 import { useState, useEffect } from 'react';
 import './Tasks.css';
 import { API_ENDPOINTS } from '../../../config/apiConfig';
-import { FaTasks, FaPlus, FaTrash, FaCheckCircle, FaBox, FaClipboardList } from 'react-icons/fa';
+import { FaTasks, FaPlus, FaTrash, FaCheckCircle, FaBox } from 'react-icons/fa';
 
-// Initial plan data with prices
-const INITIAL_PLANS = [];
-
-const Tasks = () => {
-  const [showCustomModal, setShowCustomModal] = useState(false);
+const PlansModal = ({ onClose }) => {
   const [customPlan, setCustomPlan] = useState({ title: '', price: '' });
-  const [allPlans, setAllPlans] = useState(INITIAL_PLANS);
+  const [allPlans, setAllPlans] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // Fetch plans from API on component mount
@@ -57,7 +53,6 @@ const Tasks = () => {
           // Refresh plans list
           await fetchPlans();
           alert(`Plan created successfully: ${data.plan.title}`);
-          setShowCustomModal(false);
           setCustomPlan({ title: '', price: '' });
         } else {
           alert(data.message || 'Failed to create plan');
@@ -97,46 +92,29 @@ const Tasks = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="simple-tasks-container">
-        <div className="loading">Loading plans...</div>
-      </div>
-    );
-  }
-
   return (
-    <div className="simple-tasks-container">
-      {/* Floating Plans Button - Right Corner */}
-      <button 
-        className="floating-plans-button"
-        onClick={() => setShowCustomModal(true)}
-        title="Manage Plans"
-      >
-        <FaClipboardList className="floating-icon" />
-        <span className="floating-badge">{allPlans.length}</span>
-      </button>
-
-      {/* Full Plans Management Modal */}
-      {showCustomModal && (
-        <div className="modal-overlay" onClick={() => setShowCustomModal(false)}>
-          <div className="plans-management-modal" onClick={(e) => e.stopPropagation()}>
-            {/* Modal Header */}
-            <div className="modal-header">
-              <div className="modal-title-section">
-                <span className="modal-icon">
-                  <FaTasks />
-                </span>
-                <div>
-                  <h2>Plans Manager</h2>
-                  <p className="modal-subtitle">View and manage all plans</p>
-                </div>
-              </div>
-              <button className="modal-close" onClick={() => setShowCustomModal(false)}>×</button>
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="plans-management-modal" onClick={(e) => e.stopPropagation()}>
+        {/* Modal Header */}
+        <div className="modal-header">
+          <div className="modal-title-section">
+            <span className="modal-icon">
+              <FaTasks />
+            </span>
+            <div>
+              <h2>Plans Manager</h2>
+              <p className="modal-subtitle">View and manage all plans</p>
             </div>
+          </div>
+          <button className="modal-close" onClick={onClose}>×</button>
+        </div>
 
-            {/* Modal Body */}
-            <div className="modal-body-full">
+        {/* Modal Body */}
+        <div className="modal-body-full">
+          {loading ? (
+            <div className="loading">Loading plans...</div>
+          ) : (
+            <>
               {/* Create New Plan Section */}
               <div className="create-plan-section">
                 <h3><FaPlus /> Create New Plan</h3>
@@ -219,22 +197,22 @@ const Tasks = () => {
                   </div>
                 )}
               </div>
-            </div>
-
-            {/* Modal Footer */}
-            <div className="modal-footer">
-              <button 
-                className="btn-close-modal"
-                onClick={() => setShowCustomModal(false)}
-              >
-                Close
-              </button>
-            </div>
-          </div>
+            </>
+          )}
         </div>
-      )}
+
+        {/* Modal Footer */}
+        <div className="modal-footer">
+          <button 
+            className="btn-close-modal"
+            onClick={onClose}
+          >
+            Close
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default Tasks;
+export default PlansModal;

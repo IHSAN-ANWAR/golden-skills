@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FaUser, FaEnvelope, FaCalendar, FaMapMarkerAlt, FaIdCard, FaEdit, FaTrash, FaEye } from 'react-icons/fa';
+import { useState, useEffect } from 'react';
+import { FaUsers, FaEnvelope, FaMapMarkerAlt, FaIdCard, FaEdit, FaTrash, FaEye } from 'react-icons/fa';
 import { API_ENDPOINTS } from '../../../config/apiConfig';
 import './Users.css';
 
 const Users = () => {
-  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -129,7 +127,7 @@ const Users = () => {
       <div className="users-stats">
         <div className="stat-card">
           <div className="stat-icon-wrapper" style={{ background: 'linear-gradient(135deg, #390910 0%, #772218 100%)' }}>
-            <FaUser className="stat-icon" />
+            <FaUsers className="stat-icon" />
           </div>
           <div className="stat-details">
             <h3 className="stat-number">{totalUsers}</h3>
@@ -138,7 +136,7 @@ const Users = () => {
         </div>
         <div className="stat-card">
           <div className="stat-icon-wrapper" style={{ background: 'linear-gradient(135deg, #D4AF37 0%, #E6C547 100%)' }}>
-            <FaUser className="stat-icon" />
+            <FaUsers className="stat-icon" />
           </div>
           <div className="stat-details">
             <h3 className="stat-number">{users.filter(u => u.isActive !== false).length}</h3>
@@ -167,7 +165,7 @@ const Users = () => {
               <tr>
                 <td colSpan="9" className="no-users-row">
                   <div className="no-users-content">
-                    <FaUser className="no-users-icon" />
+                    <FaUsers className="no-users-icon" />
                     <h3>No users found</h3>
                     <p>Users registered through the mobile app will appear here</p>
                   </div>
@@ -179,7 +177,7 @@ const Users = () => {
                   <td>
                     <div className="user-name-cell">
                       <div className="user-avatar-small">
-                        <FaUser />
+                        <FaUsers />
                       </div>
                       <span className="user-fullname">{user.fullName}</span>
                     </div>

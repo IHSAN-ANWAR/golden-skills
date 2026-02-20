@@ -1,0 +1,138 @@
+/* Tasks Manager Container */
+.tasks-manager-container {
+  min-height: 100vh;
+  background: #f8fafc;
+}
+
+/* Tabs Navigation */
+.tabs-navigation {
+  background: white;
+  border-bottom: 2px solid #e9ecef;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.tabs-header {
+  padding: 25px 30px 15px 30px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.tabs-header h1 {
+  font-size: 2rem;
+  color: #390910;
+  margin: 0 0 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.tabs-header p {
+  color: #6c757d;
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* Tabs Buttons */
+.tabs-buttons {
+  display: flex;
+  gap: 8px;
+  padding: 0 30px 12px 30px;
+  overflow-x: auto;
+}
+
+.tab-button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 30px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: #64748b;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.tab-button:hover {
+  color: #390910;
+  background: rgba(57, 9, 16, 0.05);
+  border-radius: 8px 8px 0 0;
+}
+
+.tab-button.active {
+  color: #390910;
+  border-bottom-color: #D4AF37;
+  background: linear-gradient(to bottom, rgba(212, 175, 55, 0.1), transparent);
+  border-radius: 8px 8px 0 0;
+}
+
+.tab-button svg {
+  font-size: 1.2rem;
+}
+
+/* Tab Content */
+.tab-content {
+  animation: fadeIn 0.3s ease;
+  padding: 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Floating Plans Button - Right Corner */
+.floating-plans-button {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #390910 0%, #772218 100%);
+  color: #E6C547;
+  border: none;
+  box-shadow: 0 8px 25px rgba(57, 9, 16, 0.4);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  z-index: 999;
+}
+
+.floating-plans-button:hover {
+  transform: translateY(-5px) scale(1.1);
+  box-shadow: 0 12px 35px rgba(57, 9, 16, 0.6);
+  background: linear-gradient(135deg, #5a0f15 0%, #8b2a1f 100%);
+}
+
+.floating-icon {
+  font-size: 2rem;
+  color: #E6C547;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .floating-plans-button {
+    width: 60px;
+    height: 60px;
+    bottom: 20px;
+    right: 20px;
+  }
+  
+  .floating-icon {
+    font-size: 1.5rem;
+  }
+}

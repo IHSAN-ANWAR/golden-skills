@@ -24,27 +24,27 @@ const Dashboard = () => {
     },
     {
       id: 3,
-      title: 'Task Management',
-      description: 'Create and manage tasks',
+      title: 'Tasks Management',
+      description: 'Manage verifications, plans & tasks',
       icon: FaTasks,
       color: '#772218',
       path: '/admin/tasks'
     },
     {
       id: 4,
-      title: 'Earnings & Rewards',
-      description: 'Track user earnings and rewards',
-      icon: FaMoneyBillWave,
-      color: '#E6C547',
-      path: '/admin/earnings'
-    },
-    {
-      id: 5,
       title: 'Analytics',
       description: 'View platform statistics',
       icon: FaChartLine,
       color: '#5A0F15',
       path: '/admin/analytics'
+    },
+    {
+      id: 5,
+      title: 'Earnings & Rewards',
+      description: 'Track user earnings',
+      icon: FaMoneyBillWave,
+      color: '#E6C547',
+      path: '/admin/earnings'
     },
     {
       id: 6,

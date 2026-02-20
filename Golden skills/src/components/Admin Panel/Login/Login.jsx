@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import "bootstrap/dist/css/bootstrap.min.css"
 import "./Login.css"
 import { FaUser, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa'
-import { API_ENDPOINTS } from '@/config/apiConfig'
+import { API_ENDPOINTS } from '../../../config/apiConfig'
 
 const Login = () => {
   const navigate = useNavigate()
@@ -39,13 +39,6 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    
-    // TEMPORARY BYPASS FOR CLIENT DEMO
-    // Just store a fake token and redirect to dashboard
-    localStorage.setItem('adminToken', 'temporary-demo-token');
-    alert('Login successful - Demo access granted!');
-    navigate('/admin/dashboard');
-    return;
     
     // Mark all fields as touched
     setTouched({ username: true, password: true })
@@ -86,8 +79,8 @@ const Login = () => {
     <div className='login-wrapper min-vh-100 d-flex align-items-center justify-content-center'>
         <div className="container">
             <div className="row justify-content-center">
-                <div className="col-12 col-sm-8 col-md-6 col-lg-4">
-                    <div className="card shadow-lg border-0">
+                <div className="col-12 col-sm-10 col-md-8 col-lg-5 col-xl-4">
+                    <div className="card shadow-lg border-0" style={{maxWidth: '450px', margin: '0 auto'}}>
                         <div className="card-body p-4 p-md-5">
                             <div className="text-center mb-4">
                                 <h1 className="h2 mb-2 text-golden">ADMIN LOGIN</h1>
@@ -117,7 +110,7 @@ const Login = () => {
                                 </div>
 
                                 <div className="mb-4">
-                                    <div className="input-group">
+                                    <div className="input-group password-input-group">
                                         <span className="input-group-text bg-light border-end-0">
                                             <FaLock className='text-muted' />
                                         </span>
@@ -129,20 +122,15 @@ const Login = () => {
                                         onChange={(e) => setPassword(e.target.value)}
                                         onBlur={() => handleBlur('password')}
                                         />
-                                        <span className="input-group-text bg-light border-start-0">
-                                        {showPassword ? 
-                                        <FaEyeSlash 
-                                        className='text-muted' 
-                                        style={{cursor: 'pointer'}} 
-                                        onClick={() => setShowPassword(!showPassword)} /> 
-                                        : 
-                                        <FaEye 
-                                        className='text-muted' 
-                                        style={{cursor: 'pointer'}} 
-                                        onClick={() => setShowPassword(!showPassword)} 
-                                        />
-                                        }
-                                        </span>
+                                        {/* Floating password toggle button */}
+                                        <button 
+                                          type="button"
+                                          className={`password-toggle-btn ${showPassword ? 'visible' : ''}`}
+                                          onClick={() => setShowPassword(!showPassword)}
+                                          aria-label={showPassword ? "Hide password" : "Show password"}
+                                        >
+                                          {showPassword ? <FaEyeSlash /> : <FaEye />}
+                                        </button>
                                     </div>
                                     {touched.password && errors.password && (
                                         <div className="invalid-feedback d-block">
