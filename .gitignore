@@ -3,4 +3,10 @@ node_modules/
 .DS_Store
 *.log
 .vscode/
-.qoder/
+dist/
+build/
+*.local
+coverage/
+.cache
+.vercel
+temp-*.ps1

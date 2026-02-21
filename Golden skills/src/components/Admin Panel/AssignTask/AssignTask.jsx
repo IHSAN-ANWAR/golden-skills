@@ -23,49 +23,42 @@ const AssignTask = () => {
       id: 'social-media',
       title: 'Social Media Post',
       message: 'Please create and post content on your social media accounts about our services. Include relevant hashtags and tag our official page. Share the screenshot of your post as proof of completion.',
-      points: 10,
       deadline: 3
     },
     {
       id: 'profile-complete',
       title: 'Complete Your Profile',
       message: 'Please complete your profile by adding all required information including your bio, profile picture, and contact details. This will help us serve you better.',
-      points: 5,
       deadline: 2
     },
     {
       id: 'referral',
       title: 'Refer Friends',
       message: 'Refer 5 friends to join our platform using your unique referral code. Each successful referral will earn you bonus points. Share your referral link on social media or directly with friends.',
-      points: 20,
       deadline: 7
     },
     {
       id: 'review',
       title: 'Write a Review',
       message: 'Please write a detailed review about your experience with our platform. Share what you liked and any suggestions for improvement. Post it on Google Reviews or Trustpilot.',
-      points: 15,
       deadline: 5
     },
     {
       id: 'survey',
       title: 'Complete Survey',
       message: 'Fill out our feedback survey to help us improve our services. Your honest feedback is valuable to us. The survey will take approximately 5-10 minutes to complete.',
-      points: 8,
       deadline: 3
     },
     {
       id: 'video-testimonial',
       title: 'Video Testimonial',
       message: 'Record a short video testimonial (30-60 seconds) sharing your experience with our platform. Upload it to YouTube or Instagram and share the link with us.',
-      points: 25,
       deadline: 7
     },
     {
       id: 'custom',
       title: 'Custom Message',
       message: '',
-      points: 10,
       deadline: 7
     }
   ];
@@ -109,7 +102,6 @@ const AssignTask = () => {
     setSelectedTemplate('');
     setTaskTitle('');
     setTaskMessage('');
-    setTaskPoints(10);
     setTaskDeadline(7);
   };
 
@@ -122,13 +114,11 @@ const AssignTask = () => {
       if (template) {
         setTaskTitle(template.title);
         setTaskMessage(template.message);
-        setTaskPoints(template.points);
         setTaskDeadline(template.deadline);
       }
     } else {
       setTaskTitle('');
       setTaskMessage('');
-      setTaskPoints(10);
       setTaskDeadline(7);
     }
   };
@@ -367,28 +357,15 @@ const AssignTask = () => {
                   />
                 </div>
 
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Points</label>
-                    <input
-                      type="number"
-                      value={taskPoints}
-                      onChange={(e) => setTaskPoints(e.target.value)}
-                      min="1"
-                      max="100"
-                    />
-                  </div>
-
-                  <div className="form-group">
-                    <label>Deadline (Days)</label>
-                    <input
-                      type="number"
-                      value={taskDeadline}
-                      onChange={(e) => setTaskDeadline(e.target.value)}
-                      min="1"
-                      max="30"
-                    />
-                  </div>
+                <div className="form-group">
+                  <label>Deadline (Days)</label>
+                  <input
+                    type="number"
+                    value={taskDeadline}
+                    onChange={(e) => setTaskDeadline(e.target.value)}
+                    min="1"
+                    max="30"
+                  />
                 </div>
 
                 <div className="modal-actions">

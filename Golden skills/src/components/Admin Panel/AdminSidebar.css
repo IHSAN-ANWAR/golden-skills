@@ -139,8 +139,8 @@
 }
 
 .admin-nav-icon {
-  font-size: 1.2rem;
-  min-width: 24px;
+  font-size: 1.4rem;
+  min-width: 28px;
   text-align: center;
 }
 
@@ -179,7 +179,7 @@
 }
 
 .logout-icon {
-  font-size: 1.2rem;
+  font-size: 1.4rem;
 }
 
 /* Overlay for mobile */

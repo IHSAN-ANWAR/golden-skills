@@ -5,6 +5,7 @@ import { FaTasks, FaPaperPlane, FaHistory, FaClipboardList, FaCheckCircle, FaClo
 import AssignTask from '../AssignTask/AssignTask';
 import UserTaskHistory from '../UserTaskHistory/UserTaskHistory';
 import TaskHistory from '../TaskHistory/TaskHistory';
+import SubmittedTasks from '../SubmittedTasks/SubmittedTasks';
 import PlansModal from '../Tasks/PlansModal';
 
 const TasksManager = () => {
@@ -54,13 +55,13 @@ const TasksManager = () => {
       id: 'review-tasks',
       title: 'Submitted Tasks',
       icon: <FaCheckCircle />,
-      component: <UserTaskHistory initialFilter="completed" mode="review" />
+      component: <SubmittedTasks />
     },
     {
       id: 'history',
-      title: 'All Tasks',
+      title: 'Task History',
       icon: <FaHistory />,
-      component: <UserTaskHistory initialFilter="all" mode="history" />
+      component: <UserTaskHistory initialFilter="approved" mode="history" />
     }
   ];
 

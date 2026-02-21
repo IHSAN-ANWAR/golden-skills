@@ -427,7 +427,7 @@
 }
 
 .stat-icon {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   color: white;
 }
 
@@ -625,8 +625,8 @@
 }
 
 .action-btn {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   border-radius: 8px;
   border: none;
   display: flex;
@@ -634,7 +634,7 @@
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-size: 0.875rem;
+  font-size: 1.1rem;
 }
 
 .view-btn {
@@ -645,6 +645,7 @@
 .view-btn:hover {
   background: linear-gradient(135deg, #bae6fd 0%, #7dd3fc 100%);
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(3, 105, 161, 0.3);
 }
 
 .edit-btn {
@@ -655,6 +656,7 @@
 .edit-btn:hover {
   background: linear-gradient(135deg, #c4b5fd 0%, #a78bfa 100%);
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(109, 40, 217, 0.3);
 }
 
 .delete-btn {
@@ -665,6 +667,7 @@
 .delete-btn:hover {
   background: linear-gradient(135deg, #fca5a5 0%, #f87171 100%);
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
 }
 
 /* No Courses State */

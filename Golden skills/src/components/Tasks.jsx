@@ -81,43 +81,10 @@ const Tasks = () => {
             </p>
           </div>
 
-          {/* Plans Section */}
-          {plans.length > 0 && (
-            <div className="plans-section" style={{ marginTop: '4rem' }}>
-              <h2 className="tasks-title" style={{ marginBottom: '2rem' }}>Available Plans</h2>
-              <div className="tasks-grid">
-                {plans.map((plan) => (
-                  <div key={plan._id} className="task-card" style={{ padding: '2rem' }}>
-                    <h3 style={{ 
-                      color: '#390910', 
-                      fontSize: '1.5rem', 
-                      marginBottom: '1rem',
-                      fontWeight: '700'
-                    }}>
-                      {plan.title}
-                    </h3>
-                    <div style={{
-                      fontSize: '2rem',
-                      fontWeight: '800',
-                      color: '#D4AF37',
-                      margin: '1.5rem 0'
-                    }}>
-                      {plan.price}
-                    </div>
-                    {plan.description && (
-                      <p style={{
-                        color: '#6c757d',
-                        fontSize: '1rem',
-                        lineHeight: '1.5'
-                      }}>
-                        {plan.description}
-                      </p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+            
+            
+            
+
         </div>
       </div>
     </section>

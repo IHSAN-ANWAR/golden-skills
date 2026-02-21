@@ -115,15 +115,15 @@
 }
 
 .user-avatar-small {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: linear-gradient(135deg, #390910, #772218);
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  font-size: 1rem;
+  font-size: 1.3rem;
   flex-shrink: 0;
 }
 
@@ -171,7 +171,7 @@
 
 .email-icon {
   color: #390910;
-  font-size: 0.9rem;
+  font-size: 1.2rem;
 }
 
 /* Phone Cell */
@@ -183,7 +183,7 @@
 
 .phone-icon {
   color: #390910;
-  font-size: 0.9rem;
+  font-size: 1.2rem;
 }
 
 /* Plan Title */
@@ -239,7 +239,7 @@
 }
 
 .price-icon {
-  font-size: 0.9rem;
+  font-size: 1.2rem;
 }
 
 /* Date Cell */
@@ -253,7 +253,7 @@
 
 .date-icon {
   color: #390910;
-  font-size: 0.85rem;
+  font-size: 1.1rem;
 }
 
 /* Send Message Button */

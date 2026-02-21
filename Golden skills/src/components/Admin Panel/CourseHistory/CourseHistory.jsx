@@ -220,7 +220,6 @@ const CourseHistory = forwardRef((props, ref) => {
       {/* Search Section */}
       <div className="search-section">
         <div className="search-container">
-          <FaSearch className="search-icon" />
           <input
             type="text"
             className="search-input"

@@ -261,15 +261,15 @@
 }
 
 .user-avatar-small {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: linear-gradient(135deg, #390910, #772218);
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  font-size: 1rem;
+  font-size: 1.3rem;
   flex-shrink: 0;
 }
 
@@ -288,7 +288,7 @@
 
 .email-icon {
   color: #390910;
-  font-size: 0.9rem;
+  font-size: 1.2rem;
 }
 
 /* Phone Cell */
@@ -387,16 +387,16 @@
 }
 
 .action-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 6px;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-size: 0.9rem;
+  font-size: 1.1rem;
 }
 
 .view-btn {
@@ -407,6 +407,7 @@
 .view-btn:hover {
   background: #bbdefb;
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
 }
 
 .approve-btn {
@@ -417,6 +418,7 @@
 .approve-btn:hover {
   background: #c8e6c9;
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
 }
 
 .reject-btn {
@@ -427,6 +429,7 @@
 .reject-btn:hover {
   background: #ffe0b2;
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(230, 81, 0, 0.3);
 }
 
 .delete-btn {
@@ -437,6 +440,7 @@
 .delete-btn:hover {
   background: #ffcdd2;
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(198, 40, 40, 0.3);
 }
 
 /* No Submissions Row */

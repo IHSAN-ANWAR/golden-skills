@@ -29,7 +29,23 @@ const UserTaskHistory = ({ initialFilter = 'all', mode = 'history' }) => {
       const data = await response.json();
 
       if (data.success) {
-        const tasks = data.userTasks || [];
+        let tasks = data.userTasks || [];
+        
+        // For pending mode, ONLY show assigned and overdue tasks
+        if (mode === 'pending') {
+          tasks = tasks.filter(task => task.status === 'assigned' || task.status === 'overdue');
+        }
+        
+        // For review mode, ONLY show completed tasks (submitted by users)
+        if (mode === 'review') {
+          tasks = tasks.filter(task => task.status === 'completed');
+        }
+        
+        // For history mode, ONLY show approved tasks
+        if (mode === 'history') {
+          tasks = tasks.filter(task => task.status === 'approved');
+        }
+        
         setAllTaskHistory(tasks);
       }
       
@@ -98,9 +114,11 @@ const UserTaskHistory = ({ initialFilter = 'all', mode = 'history' }) => {
 
   const getStatusBadge = (status) => {
     const statusConfig = {
-      assigned: { icon: <FaClock />, text: 'Assigned', className: 'status-assigned' },
+      assigned: { icon: <FaClock />, text: 'Pending', className: 'status-assigned' },
       'in-progress': { icon: <FaHourglassHalf />, text: 'In Progress', className: 'status-in-progress' },
-      completed: { icon: <FaCheckCircle />, text: 'Completed', className: 'status-completed' },
+      completed: { icon: <FaCheckCircle />, text: 'Submitted', className: 'status-completed' },
+      approved: { icon: <FaCheckCircle />, text: 'Approved', className: 'status-approved' },
+      rejected: { icon: <FaTimesCircle />, text: 'Rejected', className: 'status-rejected' },
       overdue: { icon: <FaTimesCircle />, text: 'Overdue', className: 'status-overdue' }
     };
     
@@ -141,8 +159,8 @@ const UserTaskHistory = ({ initialFilter = 'all', mode = 'history' }) => {
       filtered = filtered.filter(task => task.status === filter);
     }
 
-    // Apply search filter
-    if (searchQuery.trim()) {
+    // Apply search filter (only in history mode, not in pending or review mode)
+    if (mode === 'history' && searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(task => 
         task.userName?.toLowerCase().includes(query) ||
@@ -152,8 +170,9 @@ const UserTaskHistory = ({ initialFilter = 'all', mode = 'history' }) => {
       );
     }
 
+    console.log('Filter applied:', { mode, filter, totalTasks: allTaskHistory.length, filteredTasks: filtered.length });
     setTaskHistory(filtered);
-  }, [filter, searchQuery, allTaskHistory]);
+  }, [filter, searchQuery, allTaskHistory, mode]);
 
   if (loading) {
     return <div className="loading">Loading task history...</div>;
@@ -170,18 +189,19 @@ const UserTaskHistory = ({ initialFilter = 'all', mode = 'history' }) => {
         ) : mode === 'review' ? (
           <>
             <h1><FaHistory /> Submitted Tasks Review</h1>
-            <p>Review completed tasks and approve or send back to the user</p>
+            <p>Review tasks submitted by users - approve or reject them</p>
           </>
         ) : (
           <>
-            <h1><FaHistory /> User Task History</h1>
-            <p>View and manage all assigned tasks and their completion status</p>
+            <h1><FaHistory /> Task History</h1>
+            <p>View all approved tasks that have been completed successfully</p>
           </>
         )}
       </div>
 
-      {/* Statistics */}
-      <div className="statistics-section">
+      {/* Statistics - Hidden for pending, review, and history modes */}
+      {mode !== 'pending' && mode !== 'review' && mode !== 'history' && (
+        <div className="statistics-section">
         <h2>Task Statistics</h2>
         <div className="stats-grid">
           <div className="stat-card">
@@ -190,7 +210,7 @@ const UserTaskHistory = ({ initialFilter = 'all', mode = 'history' }) => {
             </div>
             <div className="stat-details">
               <h3>{allTaskHistory.filter(t => t.status === 'assigned').length}</h3>
-              <p>Assigned</p>
+              <p>Pending</p>
             </div>
           </div>
           <div className="stat-card">
@@ -208,7 +228,16 @@ const UserTaskHistory = ({ initialFilter = 'all', mode = 'history' }) => {
             </div>
             <div className="stat-details">
               <h3>{allTaskHistory.filter(t => t.status === 'completed').length}</h3>
-              <p>Completed</p>
+              <p>Submitted</p>
+            </div>
+          </div>
+          <div className="stat-card">
+            <div className="stat-icon approved">
+              <FaCheckCircle />
+            </div>
+            <div className="stat-details">
+              <h3>{allTaskHistory.filter(t => t.status === 'approved').length}</h3>
+              <p>Approved</p>
             </div>
           </div>
           <div className="stat-card">
@@ -222,9 +251,11 @@ const UserTaskHistory = ({ initialFilter = 'all', mode = 'history' }) => {
           </div>
         </div>
       </div>
+      )}
 
-      {/* Search Section */}
-      <div className="search-section">
+      {/* Search Section - Only show for history mode */}
+      {mode === 'history' && (
+        <div className="search-section">
         <div className="search-container">
           <FaSearch className="search-icon" />
           <input
@@ -250,9 +281,11 @@ const UserTaskHistory = ({ initialFilter = 'all', mode = 'history' }) => {
           </div>
         )}
       </div>
+      )}
 
-      {/* Status Filter */}
-      <div className="filter-section">
+      {/* Status Filter - Hidden for pending, review, and history modes */}
+      {mode !== 'pending' && mode !== 'review' && mode !== 'history' && (
+        <div className="filter-section">
         <h3>Filter by Status</h3>
         <div className="filter-buttons">
           {mode === 'pending' ? (
@@ -261,13 +294,13 @@ const UserTaskHistory = ({ initialFilter = 'all', mode = 'history' }) => {
                 className={filter === 'assigned' ? 'active' : ''}
                 onClick={() => setFilter('assigned')}
               >
-                Assigned (Pending)
+                Pending
               </button>
               <button 
                 className={filter === 'overdue' ? 'active' : ''}
                 onClick={() => setFilter('overdue')}
               >
-                Overdue (Pending)
+                Overdue
               </button>
             </>
           ) : mode === 'review' ? (
@@ -276,13 +309,7 @@ const UserTaskHistory = ({ initialFilter = 'all', mode = 'history' }) => {
                 className={filter === 'completed' ? 'active' : ''}
                 onClick={() => setFilter('completed')}
               >
-                Completed
-              </button>
-              <button 
-                className={filter === 'in-progress' ? 'active' : ''}
-                onClick={() => setFilter('in-progress')}
-              >
-                In Progress
+                Submitted
               </button>
             </>
           ) : (
@@ -297,7 +324,7 @@ const UserTaskHistory = ({ initialFilter = 'all', mode = 'history' }) => {
                 className={filter === 'assigned' ? 'active' : ''}
                 onClick={() => setFilter('assigned')}
               >
-                Assigned
+                Pending
               </button>
               <button 
                 className={filter === 'in-progress' ? 'active' : ''}
@@ -309,7 +336,13 @@ const UserTaskHistory = ({ initialFilter = 'all', mode = 'history' }) => {
                 className={filter === 'completed' ? 'active' : ''}
                 onClick={() => setFilter('completed')}
               >
-                Completed
+                Submitted
+              </button>
+              <button 
+                className={filter === 'approved' ? 'active' : ''}
+                onClick={() => setFilter('approved')}
+              >
+                Approved
               </button>
               <button 
                 className={filter === 'overdue' ? 'active' : ''}
@@ -321,6 +354,7 @@ const UserTaskHistory = ({ initialFilter = 'all', mode = 'history' }) => {
           )}
         </div>
       </div>
+      )}
 
       {/* Task History Table */}
       {taskHistory.length === 0 ? (
@@ -330,7 +364,9 @@ const UserTaskHistory = ({ initialFilter = 'all', mode = 'history' }) => {
           <p>
             {mode === 'pending' 
               ? 'No pending tasks assigned by admin at the moment' 
-              : 'No task assignments found for the selected filter'}
+              : mode === 'review'
+              ? 'No submitted tasks waiting for review'
+              : 'No approved tasks in history yet'}
           </p>
         </div>
       ) : (
@@ -342,7 +378,6 @@ const UserTaskHistory = ({ initialFilter = 'all', mode = 'history' }) => {
                 <th>User Name</th>
                 <th>Email</th>
                 <th>Task Title</th>
-                <th>Points</th>
                 <th>Assigned By Admin</th>
                 <th>Deadline</th>
                 {mode !== 'pending' && <th>Completed Date</th>}
@@ -387,9 +422,6 @@ const UserTaskHistory = ({ initialFilter = 'all', mode = 'history' }) => {
                     </div>
                   </td>
                   <td>
-                    <span className="points-badge">{task.taskPoints} pts</span>
-                  </td>
-                  <td>
                     <div className="date-cell">
                       <span className="admin-assigned-badge">
                         <FaUserShield /> Admin Assigned
@@ -424,37 +456,135 @@ const UserTaskHistory = ({ initialFilter = 'all', mode = 'history' }) => {
                       {mode === 'review' && task.status === 'completed' && (
                         <>
                           <button
+                            className="btn-view-submission"
+                            title="View user submission details"
+                            onClick={() => {
+                              const submissionDetails = `
+═══════════════════════════════════════
+📋 TASK SUBMISSION DETAILS
+═══════════════════════════════════════
+
+👤 User: ${task.userName}
+📧 Email: ${task.userEmail}
+🎯 Task: ${task.taskTitle}
+
+📝 Task Description:
+${task.taskDescription}
+
+${task.customTaskMessage ? `📌 Custom Instructions:\n${task.customTaskMessage}\n\n` : ''}
+📤 User Submission:
+${task.submissionData || 'No submission data provided'}
+
+💬 User Notes:
+${task.userNotes || 'No notes provided'}
+
+📅 Assigned: ${new Date(task.assignedAt).toLocaleString()}
+⏰ Deadline: ${new Date(task.taskDeadline).toLocaleString()}
+✅ Submitted: ${task.completedAt ? new Date(task.completedAt).toLocaleString() : 'Not completed'}
+
+═══════════════════════════════════════
+                              `.trim();
+                              
+                              // Create a better modal for viewing submission
+                              const modal = document.createElement('div');
+                              modal.className = 'submission-modal-overlay';
+                              modal.innerHTML = `
+                                <div class="submission-modal-content">
+                                  <div class="submission-modal-header">
+                                    <h2>📋 Task Submission Review</h2>
+                                    <button class="submission-modal-close">✕</button>
+                                  </div>
+                                  <div class="submission-modal-body">
+                                    <div class="submission-section">
+                                      <h3>👤 User Information</h3>
+                                      <p><strong>Name:</strong> ${task.userName}</p>
+                                      <p><strong>Email:</strong> ${task.userEmail}</p>
+                                      <p><strong>User ID:</strong> #${task.userPlanSubmissionId?.userId || 'N/A'}</p>
+                                    </div>
+                                    
+                                    <div class="submission-section">
+                                      <h3>🎯 Task Details</h3>
+                                      <p><strong>Title:</strong> ${task.taskTitle}</p>
+                                      <p><strong>Description:</strong></p>
+                                      <div class="submission-text">${task.taskDescription}</div>
+                                      ${task.customTaskMessage ? `<p><strong>Custom Instructions:</strong></p><div class="submission-text">${task.customTaskMessage}</div>` : ''}
+                                    </div>
+                                    
+                                    <div class="submission-section highlight">
+                                      <h3>📤 User Submission</h3>
+                                      <div class="submission-text">${task.submissionData || 'No submission data provided'}</div>
+                                    </div>
+                                    
+                                    <div class="submission-section">
+                                      <h3>💬 User Notes</h3>
+                                      <div class="submission-text">${task.userNotes || 'No notes provided'}</div>
+                                    </div>
+                                    
+                                    <div class="submission-section">
+                                      <h3>📅 Timeline</h3>
+                                      <p><strong>Assigned:</strong> ${new Date(task.assignedAt).toLocaleString()}</p>
+                                      <p><strong>Deadline:</strong> ${new Date(task.taskDeadline).toLocaleString()}</p>
+                                      <p><strong>Submitted:</strong> ${task.completedAt ? new Date(task.completedAt).toLocaleString() : 'Not completed'}</p>
+                                    </div>
+                                  </div>
+                                  <div class="submission-modal-footer">
+                                    <button class="btn-modal-close">Close</button>
+                                  </div>
+                                </div>
+                              `;
+                              
+                              document.body.appendChild(modal);
+                              
+                              const closeModal = () => {
+                                document.body.removeChild(modal);
+                              };
+                              
+                              modal.querySelector('.submission-modal-close').onclick = closeModal;
+                              modal.querySelector('.btn-modal-close').onclick = closeModal;
+                              modal.onclick = (e) => {
+                                if (e.target === modal) closeModal();
+                              };
+                            }}
+                          >
+                            <FaTasks /> View Submission
+                          </button>
+                          <button
                             className="btn-approve-task"
                             title="Approve task"
                             onClick={() => {
                               const notes = window.prompt('Add approval notes (optional):', '');
-                              updateTaskStatus(task._id, 'completed', notes || '');
+                              if (notes !== null) {
+                                updateTaskStatus(task._id, 'approved', notes || 'Task approved by admin');
+                              }
                             }}
                           >
                             <FaCheckCircle /> Approve
                           </button>
                           <button
                             className="btn-reject-task"
-                            title="Send back to user (task not correct)"
+                            title="Reject and send back to pending"
                             onClick={() => {
-                              const reason = window.prompt('Explain why the task is not correct (this will be sent to the user):', '');
-                              if (reason !== null) {
-                                // Move task back to assigned so it appears in pending list again
-                                updateTaskStatus(task._id, 'assigned', reason || '');
+                              const reason = window.prompt('Explain why the task is rejected (this will be sent to the user):', '');
+                              if (reason !== null && reason.trim()) {
+                                updateTaskStatus(task._id, 'rejected', reason);
+                              } else if (reason !== null) {
+                                alert('Please provide a reason for rejection');
                               }
                             }}
                           >
-                            <FaTimesCircle /> Send Back
+                            <FaTimesCircle /> Reject
                           </button>
                         </>
                       )}
-                      <button 
-                        className="btn-delete"
-                        onClick={() => handleDeleteTask(task._id)}
-                        title="Delete Task"
-                      >
-                        <FaTrash />
-                      </button>
+                      {mode !== 'review' && (
+                        <button 
+                          className="btn-delete"
+                          onClick={() => handleDeleteTask(task._id)}
+                          title="Delete Task"
+                        >
+                          <FaTrash />
+                        </button>
+                      )}
                     </div>
                   </td>
                 </tr>
