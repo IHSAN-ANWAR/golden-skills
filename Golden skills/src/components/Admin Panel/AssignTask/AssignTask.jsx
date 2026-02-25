@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import './AssignTask.css';
 import { API_ENDPOINTS } from '../../../config/apiConfig';
-import { FaUser, FaPaperPlane, FaEnvelope, FaPhone, FaRupeeSign, FaCalendarAlt, FaTimes } from 'react-icons/fa';
+import { FaUser, FaPaperPlane, FaEnvelope, FaPhone, FaCalendarAlt, FaTimes } from 'react-icons/fa';
 
 const AssignTask = () => {
   const [approvedUsers, setApprovedUsers] = useState([]);
@@ -199,7 +199,6 @@ const AssignTask = () => {
           <table className="users-table">
             <thead>
               <tr>
-                <th>User ID</th>
                 <th>Name</th>
                 <th>Payment Proof</th>
                 <th>Email</th>
@@ -213,9 +212,6 @@ const AssignTask = () => {
             <tbody>
               {approvedUsers.map((user) => (
                 <tr key={user._id} className="user-row">
-                  <td>
-                    <span className="user-id-badge">#{user.userId}</span>
-                  </td>
                   <td>
                     <div className="user-name-cell">
                       <div className="user-avatar-small">
@@ -260,7 +256,7 @@ const AssignTask = () => {
                   </td>
                   <td>
                     <div className="price-cell">
-                      <FaRupeeSign className="price-icon" />
+                      <span className="price-currency">Rs</span>
                       <span>{user.planPrice}</span>
                     </div>
                   </td>
@@ -298,10 +294,6 @@ const AssignTask = () => {
 
             <div className="modal-body">
               <div className="user-info-card">
-                <div className="info-row">
-                  <span className="info-label">User ID:</span>
-                  <span className="info-value">#{selectedUser.userId}</span>
-                </div>
                 <div className="info-row">
                   <span className="info-label">Email:</span>
                   <span className="info-value">{selectedUser.userEmail || 'N/A'}</span>

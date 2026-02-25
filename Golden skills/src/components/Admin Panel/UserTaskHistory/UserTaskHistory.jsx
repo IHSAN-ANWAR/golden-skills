@@ -165,8 +165,7 @@ const UserTaskHistory = ({ initialFilter = 'all', mode = 'history' }) => {
       filtered = filtered.filter(task => 
         task.userName?.toLowerCase().includes(query) ||
         task.userEmail?.toLowerCase().includes(query) ||
-        task.taskTitle?.toLowerCase().includes(query) ||
-        task.userPlanSubmissionId?.userId?.toString().includes(query)
+        task.taskTitle?.toLowerCase().includes(query)
       );
     }
 
@@ -257,11 +256,10 @@ const UserTaskHistory = ({ initialFilter = 'all', mode = 'history' }) => {
       {mode === 'history' && (
         <div className="search-section">
         <div className="search-container">
-          <FaSearch className="search-icon" />
           <input
             type="text"
             className="search-input"
-            placeholder="Search by user name, email, task title, or user ID..."
+            placeholder="Search by user name, email, or task title..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -374,7 +372,6 @@ const UserTaskHistory = ({ initialFilter = 'all', mode = 'history' }) => {
           <table className="tasks-table">
             <thead>
               <tr>
-                <th>User ID</th>
                 <th>User Name</th>
                 <th>Email</th>
                 <th>Task Title</th>
@@ -391,11 +388,6 @@ const UserTaskHistory = ({ initialFilter = 'all', mode = 'history' }) => {
                   key={task._id} 
                   className={`task-row ${mode === 'pending' && (task.status === 'assigned' || task.status === 'overdue') ? 'pending-highlight' : ''}`}
                 >
-                  <td>
-                    <span className="user-id-badge">
-                      #{task.userPlanSubmissionId?.userId || 'N/A'}
-                    </span>
-                  </td>
                   <td>
                     <div className="user-name-cell">
                       <div className="user-avatar-small">
@@ -499,7 +491,6 @@ ${task.userNotes || 'No notes provided'}
                                       <h3>👤 User Information</h3>
                                       <p><strong>Name:</strong> ${task.userName}</p>
                                       <p><strong>Email:</strong> ${task.userEmail}</p>
-                                      <p><strong>User ID:</strong> #${task.userPlanSubmissionId?.userId || 'N/A'}</p>
                                     </div>
                                     
                                     <div class="submission-section">

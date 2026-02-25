@@ -213,7 +213,7 @@
 }
 
 .submissions-table thead {
-  background: linear-gradient(135deg, #390910, #772218);
+  background: linear-gradient(135deg, #390910 0%, #772218 100%);
   color: white;
 }
 
@@ -349,6 +349,12 @@
 
 .price-icon {
   font-size: 0.9rem;
+}
+
+.price-currency {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #28a745;
 }
 
 /* Status Badge */

@@ -1,7 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
-import { FaPlus, FaEdit, FaTrash, FaEye, FaBook, FaClock, FaDollarSign, FaStar, FaUsers, FaSearch, FaLink, FaPaperPlane, FaTimes, FaHistory } from 'react-icons/fa';
+import { FaPlus, FaEdit, FaTrash, FaEye, FaBook, FaClock, FaDollarSign, FaStar, FaUsers, FaSearch, FaLink, FaPaperPlane, FaTimes, FaHistory, FaCheckCircle, FaQuestionCircle, FaCalendarAlt, FaEnvelope, FaExternalLinkAlt, FaClipboardList } from 'react-icons/fa';
 import { API_ENDPOINTS } from '../../../config/apiConfig';
 import CourseHistory from '../CourseHistory/CourseHistory';
+import SubmittedCourses from '../SubmittedCourses/SubmittedCourses';
+import CoursePlansModal from './CoursePlansModal';
+import CourseVerifications from '../CourseVerifications/CourseVerifications';
 import './Courses.css';
 
 const COURSE_CATEGORIES = [
@@ -11,33 +14,51 @@ const COURSE_CATEGORIES = [
 ];
 
 const Courses = () => {
-  const [activeTab, setActiveTab] = useState('list');
-  const [courses, setCourses] = useState([]);
+  const [activeTab, setActiveTab] = useState('verifications');
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState('add');
   const [selectedCourse, setSelectedCourse] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+
+  // Course Plans Modal state
+  const [showCoursePlansModal, setShowCoursePlansModal] = useState(false);
 
   // Send Course Link tab state
   const [approvedUsers, setApprovedUsers] = useState([]);
   const [linkLoading, setLinkLoading] = useState(false);
+  const [showPlanModal, setShowPlanModal] = useState(false);
   const [showLinkModal, setShowLinkModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [coursePlans, setCoursePlans] = useState([]);
+  const [selectedCoursePlan, setSelectedCoursePlan] = useState(null);
   const [courseCategory, setCourseCategory] = useState('premium');
   const [courseLink, setCourseLink] = useState('');
   const [sending, setSending] = useState(false);
 
-  useEffect(() => {
-    fetchCourses();
-  }, []);
+  // Pending and Completed courses state
+  const [pendingCourses, setPendingCourses] = useState([]);
+  const [submittedCourses, setSubmittedCourses] = useState([]);
+  const [completedCourses, setCompletedCourses] = useState([]);
+  const [coursesLoading, setCoursesLoading] = useState(false);
+
+  // Quiz questions modal state
+  const [showQuizModal, setShowQuizModal] = useState(false);
+  const [selectedPendingCourse, setSelectedPendingCourse] = useState(null);
+  const [quizQuestions, setQuizQuestions] = useState([
+    { question: '', options: ['', ''], correctAnswer: '' }
+  ]);
 
   useEffect(() => {
     if (activeTab === 'send-link') {
       fetchApprovedUsers();
-    } else if (activeTab === 'history' && courseHistoryRef.current) {
-      // Refresh course history when switching to history tab
-      courseHistoryRef.current.refresh();
+      fetchCoursePlans(); // Fetch plans when opening send-link tab
+    } else if (activeTab === 'pending') {
+      fetchPendingCourses();
+    } else if (activeTab === 'submitted') {
+      fetchSubmittedCourses();
+    } else if (activeTab === 'completed') {
+      fetchCompletedCourses();
     }
   }, [activeTab]);
 
@@ -52,7 +73,7 @@ const Courses = () => {
         window.location.href = '/admin/login';
         return;
       }
-      const res = await fetch(`${API_ENDPOINTS.SUBMISSIONS.GET_ALL}?status=approved`, {
+      const res = await fetch(`${API_ENDPOINTS.COURSE_PLAN_SUBMISSIONS.GET_ALL}?status=approved`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await res.json();
@@ -65,11 +86,229 @@ const Courses = () => {
     }
   };
 
+  const fetchCoursePlans = async () => {
+    try {
+      const token = localStorage.getItem('adminToken');
+      const res = await fetch(API_ENDPOINTS.COURSE_PLANS.GET_ALL, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+      if (data.success) {
+        setCoursePlans(data.plans || []);
+      }
+    } catch (err) {
+      console.error('Failed to fetch course plans:', err);
+    }
+  };
+
+  const fetchPendingCourses = async () => {
+    try {
+      setCoursesLoading(true);
+      const token = localStorage.getItem('adminToken');
+      if (!token) {
+        window.location.href = '/admin/login';
+        return;
+      }
+      const res = await fetch(`${API_ENDPOINTS.USER_COURSE_COMPLETIONS.GET_PENDING}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+      if (data.success) setPendingCourses(data.pendingCourses || []);
+    } catch (err) {
+      console.error(err);
+      alert('Failed to load pending courses');
+    } finally {
+      setCoursesLoading(false);
+    }
+  };
+
+  const fetchSubmittedCourses = async () => {
+    try {
+      setCoursesLoading(true);
+      const token = localStorage.getItem('adminToken');
+      console.log('Fetching submitted courses, token:', token ? 'exists' : 'missing');
+      if (!token) {
+        window.location.href = '/admin/login';
+        return;
+      }
+      const url = `${API_ENDPOINTS.USER_COURSE_COMPLETIONS.GET_SUBMITTED}`;
+      console.log('Fetching from:', url);
+      const res = await fetch(url, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      console.log('Response status:', res.status);
+      const data = await res.json();
+      console.log('Response data:', data);
+      if (data.success) {
+        console.log('Submitted courses:', data.submissions);
+        setSubmittedCourses(data.submissions || []);
+      } else {
+        console.error('API returned success=false:', data.message);
+      }
+    } catch (err) {
+      console.error('Error fetching submitted courses:', err);
+      alert('Failed to load submitted courses');
+    } finally {
+      setCoursesLoading(false);
+    }
+  };
+
+  const fetchCompletedCourses = async () => {
+    try {
+      setCoursesLoading(true);
+      const token = localStorage.getItem('adminToken');
+      if (!token) {
+        window.location.href = '/admin/login';
+        return;
+      }
+      const res = await fetch(`${API_ENDPOINTS.USER_COURSE_COMPLETIONS.GET_ALL}?status=approved`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+      if (data.success) setCompletedCourses(data.completions || []);
+    } catch (err) {
+      console.error(err);
+      alert('Failed to load completed courses');
+    } finally {
+      setCoursesLoading(false);
+    }
+  };
+
+  const handleSendQuizQuestions = (course) => {
+    setSelectedPendingCourse(course);
+    // Start with one empty question
+    setQuizQuestions([
+      { question: '', options: ['', ''], correctAnswer: '' }
+    ]);
+    setShowQuizModal(true);
+  };
+
+  const handleAddQuestion = () => {
+    setQuizQuestions([...quizQuestions, { question: '', options: ['', ''], correctAnswer: '' }]);
+  };
+
+  const handleRemoveQuestion = (index) => {
+    if (quizQuestions.length > 1) {
+      setQuizQuestions(quizQuestions.filter((_, i) => i !== index));
+    }
+  };
+
+  const handleQuestionChange = (index, field, value) => {
+    const updated = [...quizQuestions];
+    updated[index][field] = value;
+    setQuizQuestions(updated);
+  };
+
+  const handleOptionChange = (qIndex, oIndex, value) => {
+    const updated = [...quizQuestions];
+    updated[qIndex].options[oIndex] = value;
+    setQuizQuestions(updated);
+  };
+
+  const handleAddOption = (qIndex) => {
+    const updated = [...quizQuestions];
+    updated[qIndex].options.push('');
+    setQuizQuestions(updated);
+  };
+
+  const handleRemoveOption = (qIndex, oIndex) => {
+    const updated = [...quizQuestions];
+    if (updated[qIndex].options.length > 2) {
+      updated[qIndex].options.splice(oIndex, 1);
+      setQuizQuestions(updated);
+    }
+  };
+
+  const handleSaveQuizQuestions = async () => {
+    // Validate questions
+    const validQuestions = quizQuestions.filter(q => q.question.trim() !== '');
+    if (validQuestions.length === 0) {
+      alert('Please add at least one question');
+      return;
+    }
+
+    // In a real implementation, you would save these questions to the database
+    // For now, we'll just show a success message
+    alert(`Quiz questions prepared for ${selectedPendingCourse.userName}!\n\nThe user will see these questions when they click "Complete Course" on their dashboard.`);
+    setShowQuizModal(false);
+  };
+
+  const handleApproveCourse = async (completionId) => {
+    if (!window.confirm('Are you sure you want to approve this course completion?')) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('adminToken');
+      const res = await fetch(API_ENDPOINTS.USER_COURSE_COMPLETIONS.UPDATE_STATUS(completionId), {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ status: 'approved' })
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        alert('Course completion approved successfully!');
+        fetchSubmittedCourses(); // Refresh the list
+      } else {
+        alert(data.message || 'Failed to approve course completion');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Failed to approve course completion');
+    }
+  };
+
+  const handleRejectCourse = async (completionId) => {
+    if (!window.confirm('Are you sure you want to reject this course completion?')) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('adminToken');
+      const res = await fetch(API_ENDPOINTS.USER_COURSE_COMPLETIONS.UPDATE_STATUS(completionId), {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ status: 'rejected' })
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        alert('Course completion rejected');
+        fetchSubmittedCourses(); // Refresh the list
+      } else {
+        alert(data.message || 'Failed to reject course completion');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Failed to reject course completion');
+    }
+  };
+
   const openLinkModal = (user) => {
     setSelectedUser(user);
-    setCourseCategory('premium');
+    // User already has a plan selected, use it directly
+    setSelectedCoursePlan({
+      category: user.planCategory,
+      title: user.planTitle,
+      price: user.planPrice
+    });
+    setCourseCategory(user.planCategory);
     setCourseLink('');
-    setShowLinkModal(true);
+    setShowLinkModal(true); // Go directly to link input
+  };
+
+  const handlePlanSelected = (plan) => {
+    setSelectedCoursePlan(plan);
+    setCourseCategory(plan.category);
+    setShowPlanModal(false);
+    setShowLinkModal(true); // Then show link input
   };
 
   const handleSendCourseLink = async (e) => {
@@ -304,26 +543,32 @@ const Courses = () => {
     setShowModal(false);
   };
 
-  const filteredCourses = courses.filter(course =>
-    course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    course.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    course.description.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  if (loading) {
-    return <div className="loading">Loading courses...</div>;
-  }
-
   return (
-    <>
+    <div className="courses-container">
+      {/* Floating Plans Button - Right Corner */}
+      <button 
+        className="floating-plans-button"
+        onClick={() => setShowCoursePlansModal(true)}
+        title="Manage Course Plans"
+      >
+        <FaClipboardList className="floating-icon" />
+      </button>
+
+      {/* Course Plans Modal */}
+      {showCoursePlansModal && (
+        <CoursePlansModal 
+          onClose={() => setShowCoursePlansModal(false)} 
+        />
+      )}
+
       {/* Tabs */}
       <div className="courses-tabs-nav">
         <button
           type="button"
-          className={`courses-tab-btn ${activeTab === 'list' ? 'active' : ''}`}
-          onClick={() => setActiveTab('list')}
+          className={`courses-tab-btn ${activeTab === 'verifications' ? 'active' : ''}`}
+          onClick={() => setActiveTab('verifications')}
         >
-          <FaBook /> Course List
+          <FaCheckCircle /> Verifications
         </button>
         <button
           type="button"
@@ -334,198 +579,30 @@ const Courses = () => {
         </button>
         <button
           type="button"
-          className={`courses-tab-btn ${activeTab === 'history' ? 'active' : ''}`}
-          onClick={() => setActiveTab('history')}
+          className={`courses-tab-btn ${activeTab === 'pending' ? 'active' : ''}`}
+          onClick={() => setActiveTab('pending')}
         >
-          <FaHistory /> Course History
+          <FaClock /> Pending Courses
+        </button>
+        <button
+          type="button"
+          className={`courses-tab-btn ${activeTab === 'submitted' ? 'active' : ''}`}
+          onClick={() => setActiveTab('submitted')}
+        >
+          <FaPaperPlane /> Submitted Courses
+        </button>
+        <button
+          type="button"
+          className={`courses-tab-btn ${activeTab === 'completed' ? 'active' : ''}`}
+          onClick={() => setActiveTab('completed')}
+        >
+          <FaCheckCircle /> Completed Courses
         </button>
       </div>
 
-      {activeTab === 'list' && (
-        <>
-          {/* Header Section */}
-          <div className="courses-header-section">
-            <div className="search-add-container">
-              <div className="search-box">
-                <input
-                  type="text"
-                  placeholder="Search courses..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="search-input"
-                />
-              </div>
-              <button className="btn-add-course" onClick={handleAddCourse}>
-                <FaPlus /> Add Course
-              </button>
-            </div>
-          </div>
-
-          {/* Stats Cards */}
-          <div className="courses-stats">
-        <div className="stat-card">
-          <div className="stat-icon-wrapper" style={{ background: 'linear-gradient(135deg, #390910 0%, #772218 100%)' }}>
-            <FaBook className="stat-icon" />
-          </div>
-          <div className="stat-details">
-            <h3 className="stat-number">{courses.length}</h3>
-            <p className="stat-label">Total Courses</p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon-wrapper" style={{ background: 'linear-gradient(135deg, #D4AF37 0%, #E6C547 100%)' }}>
-            <FaUsers className="stat-icon" />
-          </div>
-          <div className="stat-details">
-            <h3 className="stat-number">{courses.reduce((sum, c) => sum + c.students, 0).toLocaleString()}</h3>
-            <p className="stat-label">Total Students</p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon-wrapper" style={{ background: 'linear-gradient(135deg, #B8860B 0%, #DAA520 100%)' }}>
-            <FaStar className="stat-icon" />
-          </div>
-          <div className="stat-details">
-            <h3 className="stat-number">
-              {courses.length > 0 ? (courses.reduce((sum, c) => sum + c.rating, 0) / courses.length).toFixed(1) : '0.0'}
-            </h3>
-            <p className="stat-label">Avg Rating</p>
-          </div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-icon-wrapper" style={{ background: 'linear-gradient(135deg, #772218 0%, #8b2a1f 100%)' }}>
-            <FaDollarSign className="stat-icon" />
-          </div>
-          <div className="stat-details">
-            <h3 className="stat-number">${courses.reduce((sum, c) => sum + c.price, 0).toFixed(0)}</h3>
-            <p className="stat-label">Total Revenue</p>
-          </div>
-        </div>
-      </div>
-
-      {/* Courses Table */}
-      <div className="courses-table-container">
-        <table className="courses-table">
-          <thead>
-            <tr>
-              <th>Course</th>
-              <th>Category</th>
-              <th>Level</th>
-              <th>Duration</th>
-              <th>Price</th>
-              <th>Students</th>
-              <th>Rating</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredCourses.length === 0 ? (
-              <tr>
-                <td colSpan="9" className="no-courses-row">
-                  <div className="no-courses-content">
-                    <FaBook className="no-courses-icon" />
-                    <h3>No courses found</h3>
-                    <p>Start by adding your first course</p>
-                    <button className="btn-add-first" onClick={handleAddCourse}>
-                      <FaPlus /> Add Course
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ) : (
-              filteredCourses.map(course => (
-                <tr key={course.id} className="course-row">
-                  <td>
-                    <div className="course-info">
-                      <div className="course-icon-box">
-                        <FaBook />
-                      </div>
-                      <div className="course-text">
-                        <div className="course-title">{course.title}</div>
-                        <div className="course-description">{course.description}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>
-                    <span className="category-badge">{course.category}</span>
-                  </td>
-                  <td>
-                    <span className={`level-badge level-${course.level.toLowerCase()}`}>
-                      {course.level}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="duration-cell">
-                      <FaClock className="cell-icon" />
-                      <span>{course.duration}h</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="price-cell">
-                      <FaDollarSign className="cell-icon" />
-                      <span>${course.price}</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="students-cell">
-                      <FaUsers className="cell-icon" />
-                      <span>{course.students.toLocaleString()}</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="rating-cell">
-                      <FaStar className="cell-icon star-icon" />
-                      <span>{course.rating}</span>
-                    </div>
-                  </td>
-                  <td>
-                    <span className={`status-badge ${course.published ? 'published' : 'draft'}`}>
-                      {course.published ? 'Published' : 'Draft'}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="action-buttons">
-                      <button 
-                        className="action-btn view-btn"
-                        onClick={() => alert('View course details')}
-                        title="View Details"
-                      >
-                        <FaEye />
-                      </button>
-                      <button 
-                        className="action-btn edit-btn"
-                        onClick={() => handleEditCourse(course)}
-                        title="Edit Course"
-                      >
-                        <FaEdit />
-                      </button>
-                      <button 
-                        className="action-btn delete-btn"
-                        onClick={() => handleDeleteCourse(course.id)}
-                        title="Delete Course"
-                      >
-                        <FaTrash />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
-
-          {/* Modal */}
-          {showModal && (
-            <CourseModal
-              mode={modalMode}
-              course={selectedCourse}
-              onSave={handleSaveCourse}
-              onCancel={() => setShowModal(false)}
-            />
-          )}
-        </>
+      {/* Verifications Tab */}
+      {activeTab === 'verifications' && (
+        <CourseVerifications />
       )}
 
       {/* Send Course Link Tab */}
@@ -541,14 +618,13 @@ const Courses = () => {
             <div className="no-users-box">
               <FaUsers size={60} />
               <h3>No Approved Users</h3>
-              <p>Approve users in the Tasks → Verifications section first</p>
+              <p>Approve users in the Courses → Verifications section first</p>
             </div>
           ) : (
             <div className="users-table-container send-link-table">
               <table className="users-table">
                 <thead>
                   <tr>
-                    <th>User ID</th>
                     <th>Name</th>
                     <th>Email</th>
                     <th>Phone</th>
@@ -560,7 +636,6 @@ const Courses = () => {
                 <tbody>
                   {approvedUsers.map((user) => (
                     <tr key={user._id}>
-                      <td><span className="user-id-badge">#{user.userId}</span></td>
                       <td>
                         <div className="user-name-cell">
                           <div className="user-avatar-small"><FaUsers /></div>
@@ -585,13 +660,13 @@ const Courses = () => {
         </div>
       )}
 
-      {/* Send Course Link Modal */}
-      {showLinkModal && selectedUser && (
-        <div className="modal-overlay send-link-modal-overlay" onClick={() => setShowLinkModal(false)}>
-          <div className="modal-content send-link-modal" onClick={(e) => e.stopPropagation()}>
+      {/* Course Plan Selection Modal */}
+      {showPlanModal && selectedUser && (
+        <div className="modal-overlay send-link-modal-overlay" onClick={() => setShowPlanModal(false)}>
+          <div className="modal-content send-link-modal plan-selection-modal" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2>Send Course Link to {selectedUser.userName}</h2>
-              <button type="button" className="modal-close" onClick={() => setShowLinkModal(false)}>
+              <h2>Select Course Plan for {selectedUser.userName}</h2>
+              <button type="button" className="modal-close" onClick={() => setShowPlanModal(false)}>
                 <FaTimes />
               </button>
             </div>
@@ -606,41 +681,84 @@ const Courses = () => {
                   <span className="info-value">{selectedUser.userEmail || 'N/A'}</span>
                 </div>
                 <div className="info-row">
-                  <span className="info-label">Plan:</span>
+                  <span className="info-label">Task Plan:</span>
                   <span className="info-value">{selectedUser.planTitle} – {selectedUser.planPrice}</span>
                 </div>
               </div>
-              <form onSubmit={handleSendCourseLink} className="message-form">
-                <div className="form-group">
-                  <label>Course Category *</label>
-                  <select
-                    name="courseCategory"
-                    value={courseCategory || 'premium'}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      console.log('Category selected from dropdown:', {
-                        value: value,
-                        type: typeof value,
-                        length: value?.length,
-                        charCodes: value ? Array.from(value).map(c => c.charCodeAt(0)) : []
-                      });
-                      // Ensure we're setting the exact value from the option
-                      setCourseCategory(value);
-                    }}
-                    className="template-select"
-                    required
-                  >
-                    {COURSE_CATEGORIES.map((cat) => (
-                      <option key={cat.id} value={cat.id}>{cat.label}</option>
+              
+              <div className="plan-selection-section">
+                <h3>Choose a Course Plan</h3>
+                <p className="plan-selection-desc">Select the course plan category for this user</p>
+                
+                {coursePlans.length === 0 ? (
+                  <div className="no-plans-message">
+                    <p>No course plans available. Please create course plans first.</p>
+                  </div>
+                ) : (
+                  <div className="course-plans-grid">
+                    {coursePlans.filter(plan => plan.isActive).map((plan) => (
+                      <div 
+                        key={plan._id} 
+                        className={`course-plan-card ${plan.category}`}
+                        onClick={() => handlePlanSelected(plan)}
+                      >
+                        <div className="plan-badge">{plan.category.toUpperCase()}</div>
+                        <h4>{plan.title}</h4>
+                        <div className="plan-price">{plan.price}</div>
+                        {plan.description && <p className="plan-description">{plan.description}</p>}
+                        {plan.features && plan.features.length > 0 && (
+                          <ul className="plan-features">
+                            {plan.features.slice(0, 3).map((feature, idx) => (
+                              <li key={idx}>{feature}</li>
+                            ))}
+                          </ul>
+                        )}
+                        <button type="button" className="btn-select-plan">
+                          Select {plan.category}
+                        </button>
+                      </div>
                     ))}
-                  </select>
-                  {/* Debug info - remove in production */}
-                  {process.env.NODE_ENV === 'development' && (
-                    <small style={{ display: 'block', marginTop: '5px', color: '#666', fontSize: '12px' }}>
-                      Current category: "{courseCategory}" (type: {typeof courseCategory})
-                    </small>
-                  )}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Send Course Link Modal */}
+      {showLinkModal && selectedUser && (
+        <div className="modal-overlay send-link-modal-overlay" onClick={() => setShowLinkModal(false)}>
+          <div className="modal-content send-link-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Send Course Link to {selectedUser.userName}</h2>
+              <button type="button" className="modal-close" onClick={() => setShowLinkModal(false)}>
+                <FaTimes />
+              </button>
+            </div>
+            <div className="modal-body">
+              <div className="user-info-card">
+                <div className="info-row">
+                  <span className="info-label">Email:</span>
+                  <span className="info-value">{selectedUser.userEmail || 'N/A'}</span>
                 </div>
+                <div className="info-row">
+                  <span className="info-label">Phone:</span>
+                  <span className="info-value">{selectedUser.userPhone || 'N/A'}</span>
+                </div>
+                {selectedCoursePlan && (
+                  <div className="info-row selected-course-plan">
+                    <span className="info-label">Course Plan:</span>
+                    <span className="info-value">
+                      <span className={`plan-badge-inline ${selectedCoursePlan.category}`}>
+                        {selectedCoursePlan.title}
+                      </span>
+                      {' – '}{selectedCoursePlan.price}
+                    </span>
+                  </div>
+                )}
+              </div>
+              <form onSubmit={handleSendCourseLink} className="message-form">
                 <div className="form-group">
                   <label>Course Link *</label>
                   <input
@@ -665,12 +783,333 @@ const Courses = () => {
         </div>
       )}
 
-      {/* Course History Tab */}
-      {activeTab === 'history' && (
-        <CourseHistory ref={courseHistoryRef} />
+      {/* Pending Courses Tab */}
+      {activeTab === 'pending' && (
+        <div className="pending-courses-section">
+          <div className="section-header">
+            <h1><FaClock /> Pending Courses</h1>
+            <p>Courses assigned to users but not yet completed</p>
+          </div>
+
+          {coursesLoading ? (
+            <div className="loading">Loading pending courses...</div>
+          ) : pendingCourses.length === 0 ? (
+            <div className="no-courses-message">
+              <FaClock size={60} />
+              <h3>No Pending Courses</h3>
+              <p>All assigned courses have been completed</p>
+            </div>
+          ) : (
+            <div className="courses-table-wrapper">
+              <table className="courses-data-table">
+                <thead>
+                  <tr>
+                    <th>User Name</th>
+                    <th>Email</th>
+                    <th>Category</th>
+                    <th>Course Link</th>
+                    <th>Sent Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {pendingCourses.map((course) => (
+                    <tr key={course._id}>
+                      <td>
+                        <div className="user-name-cell">
+                          <div className="user-avatar-small"><FaUsers /></div>
+                          <span>{course.userName}</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="email-cell">
+                          <FaEnvelope className="email-icon" />
+                          <span>{course.userEmail || 'N/A'}</span>
+                        </div>
+                      </td>
+                      <td>
+                        <span className={`category-badge-${course.category}`}>
+                          {course.category}
+                        </span>
+                      </td>
+                      <td>
+                        <div className="link-cell">
+                          <FaLink className="link-icon" />
+                          <a href={course.courseLink} target="_blank" rel="noopener noreferrer">
+                            {course.courseLink.length > 40 
+                              ? `${course.courseLink.substring(0, 40)}...` 
+                              : course.courseLink}
+                          </a>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="date-cell">
+                          <FaCalendarAlt className="date-icon" />
+                          <span>{new Date(course.sentAt).toLocaleDateString()}</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="action-buttons">
+                          <button 
+                            className="action-btn view-btn"
+                            onClick={() => window.open(course.courseLink, '_blank')}
+                            title="Open Course Link"
+                          >
+                            <FaExternalLinkAlt />
+                          </button>
+                          <button 
+                            className="action-btn edit-btn"
+                            onClick={() => handleSendQuizQuestions(course)}
+                            title="Send Quiz Questions"
+                          >
+                            <FaQuestionCircle />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
       )}
 
-    </>
+      {/* Submitted Courses Tab */}
+      {activeTab === 'submitted' && (
+        <SubmittedCourses />
+      )}
+
+      {/* Completed Courses Tab */}
+      {activeTab === 'completed' && (
+        <div className="completed-courses-section">
+          <div className="section-header">
+            <h1><FaCheckCircle /> Completed Courses</h1>
+            <p>Courses completed by users with quiz answers</p>
+          </div>
+
+          {coursesLoading ? (
+            <div className="loading">Loading completed courses...</div>
+          ) : completedCourses.length === 0 ? (
+            <div className="no-courses-message">
+              <FaCheckCircle size={60} />
+              <h3>No Completed Courses</h3>
+              <p>No users have completed courses yet</p>
+            </div>
+          ) : (
+            <div className="courses-table-wrapper">
+              <table className="courses-data-table">
+                <thead>
+                  <tr>
+                    <th>User Name</th>
+                    <th>Email</th>
+                    <th>Category</th>
+                    <th>Course Link</th>
+                    <th>Score</th>
+                    <th>Status</th>
+                    <th>Completed Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {completedCourses.map((completion) => (
+                    <tr key={completion._id}>
+                      <td>
+                        <div className="user-name-cell">
+                          <div className="user-avatar-small"><FaUsers /></div>
+                          <span>{completion.userName}</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="email-cell">
+                          <FaEnvelope className="email-icon" />
+                          <span>{completion.userEmail || 'N/A'}</span>
+                        </div>
+                      </td>
+                      <td>
+                        <span className={`category-badge-${completion.category}`}>
+                          {completion.category}
+                        </span>
+                      </td>
+                      <td>
+                        <div className="link-cell">
+                          <FaLink className="link-icon" />
+                          <a href={completion.courseLink} target="_blank" rel="noopener noreferrer">
+                            {completion.courseLink.length > 40 
+                              ? `${completion.courseLink.substring(0, 40)}...` 
+                              : completion.courseLink}
+                          </a>
+                        </div>
+                      </td>
+                      <td>
+                        <span className="score-badge">
+                          {completion.score}/{completion.totalQuestions}
+                        </span>
+                      </td>
+                      <td>
+                        <span className={`status-badge status-${completion.status}`}>
+                          {completion.status}
+                        </span>
+                      </td>
+                      <td>
+                        <div className="date-cell">
+                          <FaCalendarAlt className="date-icon" />
+                          <span>{new Date(completion.completedAt).toLocaleDateString()}</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="action-buttons">
+                          <button 
+                            className="action-btn view-btn"
+                            onClick={() => window.open(completion.courseLink, '_blank')}
+                            title="Open Course Link"
+                          >
+                            <FaExternalLinkAlt />
+                          </button>
+                          <button 
+                            className="action-btn info-btn"
+                            onClick={() => {
+                              const answers = completion.quizAnswers.map((a, i) => 
+                                `Q${i+1}: ${a.question}\nAnswer: ${a.userAnswer}\n${a.isCorrect !== undefined ? (a.isCorrect ? '✓ Correct' : '✗ Incorrect') : ''}`
+                              ).join('\n\n');
+                              alert(`Quiz Answers:\n\n${answers}`);
+                            }}
+                            title="View Quiz Answers"
+                          >
+                            <FaQuestionCircle />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Quiz Questions Modal */}
+      {showQuizModal && selectedPendingCourse && (
+        <div className="modal-overlay quiz-modal-overlay" onClick={() => setShowQuizModal(false)}>
+          <div className="modal-content quiz-modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2><FaQuestionCircle /> Quiz Questions for {selectedPendingCourse.userName}</h2>
+              <button type="button" className="modal-close" onClick={() => setShowQuizModal(false)}>
+                <FaTimes />
+              </button>
+            </div>
+            <div className="modal-body quiz-modal-body">
+              <p className="quiz-info">
+                Create quiz questions that the user will answer when they complete the course. 
+                These questions will help verify course completion.
+              </p>
+
+              {quizQuestions.map((q, qIndex) => (
+                <div key={qIndex} className="quiz-question-editor">
+                  <div className="question-header">
+                    <h4>Question {qIndex + 1}</h4>
+                    {quizQuestions.length > 1 && (
+                      <button 
+                        type="button"
+                        className="btn-remove-question"
+                        onClick={() => handleRemoveQuestion(qIndex)}
+                      >
+                        <FaTrash /> Remove
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="form-group">
+                    <label>Question Text *</label>
+                    <input
+                      type="text"
+                      value={q.question}
+                      onChange={(e) => handleQuestionChange(qIndex, 'question', e.target.value)}
+                      placeholder="Enter your question"
+                      className="form-control"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Answer Options</label>
+                    <div className="options-list">
+                      {q.options.map((option, oIndex) => (
+                        <div key={oIndex} className="option-row">
+                          <input
+                            type="text"
+                            value={option}
+                            onChange={(e) => handleOptionChange(qIndex, oIndex, e.target.value)}
+                            placeholder={`Option ${oIndex + 1}`}
+                            className="form-control option-input"
+                          />
+                          {q.options.length > 2 && (
+                            <button
+                              type="button"
+                              className="btn-remove-option"
+                              onClick={() => handleRemoveOption(qIndex, oIndex)}
+                              title="Remove option"
+                            >
+                              <FaTimes />
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                      <button
+                        type="button"
+                        className="btn-add-option"
+                        onClick={() => handleAddOption(qIndex)}
+                      >
+                        <FaPlus /> Add Option
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="form-group">
+                    <label>Correct Answer (Optional)</label>
+                    <select
+                      value={q.correctAnswer}
+                      onChange={(e) => handleQuestionChange(qIndex, 'correctAnswer', e.target.value)}
+                      className="form-select"
+                    >
+                      <option value="">No correct answer</option>
+                      {q.options.filter(o => o.trim()).map((option, oIndex) => (
+                        <option key={oIndex} value={option}>{option}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              ))}
+
+              <button 
+                type="button"
+                className="btn-add-question"
+                onClick={handleAddQuestion}
+              >
+                <FaPlus /> Add Another Question
+              </button>
+            </div>
+            <div className="modal-footer">
+              <button 
+                type="button"
+                className="btn-cancel"
+                onClick={() => setShowQuizModal(false)}
+              >
+                Cancel
+              </button>
+              <button 
+                type="button"
+                className="btn-submit"
+                onClick={handleSaveQuizQuestions}
+              >
+                <FaPaperPlane /> Save Quiz Questions
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+    </div>
   );
 };
 

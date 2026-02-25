@@ -116,7 +116,7 @@ const Login = () => {
                                         </span>
                                         <input
                                         type={showPassword ? "text" : "password"}
-                                        className={`form-control border-start-0 border-end-0 ${touched.password && errors.password ? 'is-invalid' : ''} ${touched.password && !errors.password && password ? 'is-valid' : ''}`}
+                                        className={`form-control border-start-0 ${touched.password && errors.password ? 'is-invalid' : ''} ${touched.password && !errors.password && password ? 'is-valid' : ''}`}
                                         placeholder='Password'
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}

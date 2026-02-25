@@ -81,7 +81,7 @@
 
 .stat-icon {
   font-size: 1.8rem;
-  color: white;
+  color: #E6C547;
 }
 
 .stat-details {
@@ -118,7 +118,8 @@
 }
 
 .tasks-table thead {
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  background: linear-gradient(135deg, #390910 0%, #772218 100%);
+  color: white;
 }
 
 .tasks-table th {
@@ -126,7 +127,7 @@
   text-align: left;
   font-weight: 600;
   font-size: 0.875rem;
-  color: #475569;
+  color: white;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   border-bottom: 2px solid #e2e8f0;
@@ -264,7 +265,7 @@
 }
 
 .cell-icon {
-  color: #94a3b8;
+  color: #772218;
   font-size: 0.875rem;
 }
 

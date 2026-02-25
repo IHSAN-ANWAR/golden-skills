@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import './SubmittedTasks.css';
 import { API_ENDPOINTS } from '../../../config/apiConfig';
-import { FaUser, FaEnvelope, FaTasks, FaCalendarAlt, FaCheckCircle, FaTimesCircle, FaEye, FaClipboardList, FaCommentDots, FaClock, FaInfoCircle } from 'react-icons/fa';
+import { FaUser, FaEnvelope, FaTasks, FaCalendarAlt, FaCheckCircle, FaTimesCircle, FaEye, FaClipboardList, FaInfoCircle } from 'react-icons/fa';
 
 const SubmittedTasks = () => {
   const [submittedTasks, setSubmittedTasks] = useState([]);
@@ -54,7 +54,6 @@ const SubmittedTasks = () => {
             <h3><i class="fas fa-user"></i> User Information</h3>
             <p><strong>Name:</strong> ${task.userName}</p>
             <p><strong>Email:</strong> ${task.userEmail}</p>
-            <p><strong>User ID:</strong> #${task.userPlanSubmissionId?.userId || 'N/A'}</p>
           </div>
           
           <div class="submission-section">
@@ -237,7 +236,6 @@ const SubmittedTasks = () => {
           <table className="submitted-tasks-table">
             <thead>
               <tr>
-                <th>User ID</th>
                 <th>User Name</th>
                 <th>Email</th>
                 <th>Task Title</th>
@@ -249,9 +247,6 @@ const SubmittedTasks = () => {
             <tbody>
               {submittedTasks.map((task) => (
                 <tr key={task._id} className="submitted-task-row">
-                  <td>
-                    <span className="user-id-badge">#{task.userPlanSubmissionId?.userId || 'N/A'}</span>
-                  </td>
                   <td>
                     <div className="user-name-cell">
                       <div className="user-avatar">
@@ -292,21 +287,21 @@ const SubmittedTasks = () => {
                         onClick={() => viewSubmission(task)}
                         title="View submission details"
                       >
-                        <FaEye /> View
+                        <FaEye />
                       </button>
                       <button
                         className="btn-approve"
                         onClick={() => handleApprove(task._id)}
                         title="Approve task"
                       >
-                        <FaCheckCircle /> Approve
+                        <FaCheckCircle />
                       </button>
                       <button
                         className="btn-reject"
                         onClick={() => handleReject(task._id)}
                         title="Reject and send back"
                       >
-                        <FaTimesCircle /> Reject
+                        <FaTimesCircle />
                       </button>
                     </div>
                   </td>

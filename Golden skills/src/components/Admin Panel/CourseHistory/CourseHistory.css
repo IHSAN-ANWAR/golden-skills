@@ -588,3 +588,91 @@
     display: none;
   }
 }
+
+
+/* View Mode Toggle */
+.view-mode-section {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.view-mode-section button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border: 2px solid #e0e0e0;
+  background: white;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.view-mode-section button:hover {
+  border-color: #667eea;
+  background: #f5f7ff;
+}
+
+.view-mode-section button.active {
+  border-color: #667eea;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+/* Score Badge */
+.score-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, #4caf50, #45a049);
+  color: white;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* Status Badge */
+.status-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: capitalize;
+}
+
+.status-completed {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.status-passed {
+  background: #e8f5e9;
+  color: #4caf50;
+}
+
+.status-failed {
+  background: #ffebee;
+  color: #f44336;
+}
+
+/* Info Button */
+.info-btn {
+  background: linear-gradient(135deg, #2196f3, #1976d2);
+}
+
+.info-btn:hover {
+  background: linear-gradient(135deg, #1976d2, #1565c0);
+}
+
+/* Completed Stat Icon */
+.stat-icon.completed {
+  background: linear-gradient(135deg, #4caf50, #45a049);
+}

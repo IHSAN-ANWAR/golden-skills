@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import './TaskHistory.css';
 import { API_ENDPOINTS } from '../../../config/apiConfig';
-import { FaHistory, FaUser, FaEnvelope, FaPhone, FaRupeeSign, FaCheck, FaTimes, FaClock, FaCheckCircle, FaTimesCircle, FaEye, FaTrash } from 'react-icons/fa';
+import { FaHistory, FaUser, FaEnvelope, FaPhone, FaClock, FaCheckCircle, FaTimesCircle, FaEye, FaTrash } from 'react-icons/fa';
 
 const TaskHistory = () => {
   const [submissions, setSubmissions] = useState([]);
@@ -261,7 +261,7 @@ Submitted: ${formatDate(submission.createdAt)}
                   </td>
                   <td>
                     <div className="price-cell">
-                      <FaRupeeSign className="price-icon" />
+                      <span className="price-currency">Rs</span>
                       <span>{submission.planPrice}</span>
                     </div>
                   </td>

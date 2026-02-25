@@ -1,15 +1,18 @@
 import { useState, useEffect, useImperativeHandle, forwardRef } from 'react';
 import './CourseHistory.css';
 import { API_ENDPOINTS } from '../../../config/apiConfig';
-import { FaHistory, FaUser, FaEnvelope, FaLink, FaCalendarAlt, FaSearch, FaTrash, FaExternalLinkAlt } from 'react-icons/fa';
+import { FaHistory, FaUser, FaEnvelope, FaLink, FaCalendarAlt, FaSearch, FaTrash, FaExternalLinkAlt, FaCheckCircle, FaQuestionCircle } from 'react-icons/fa';
 
 const CourseHistory = forwardRef((props, ref) => {
   const [assignments, setAssignments] = useState([]);
   const [allAssignments, setAllAssignments] = useState([]); // Store all assignments for filtering
+  const [completions, setCompletions] = useState([]);
+  const [allCompletions, setAllCompletions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState(''); // Search query state
   const [dateFilter, setDateFilter] = useState('all'); // all, today, yesterday, week, month
   const [categoryFilter, setCategoryFilter] = useState('all'); // all, premium, pro, lite
+  const [viewMode, setViewMode] = useState('assignments'); // 'assignments' or 'completions'
 
   const fetchCourseHistory = async () => {
     try {
@@ -23,12 +26,23 @@ const CourseHistory = forwardRef((props, ref) => {
       }
       
       const headers = { 'Authorization': `Bearer ${token}` };
-      const response = await fetch(`${API_ENDPOINTS.COURSE_LINKS.GET_ALL}`, { headers });
-      const data = await response.json();
+      
+      // Fetch assignments
+      const assignmentsResponse = await fetch(`${API_ENDPOINTS.COURSE_LINKS.GET_ALL}`, { headers });
+      const assignmentsData = await assignmentsResponse.json();
 
-      if (data.success) {
-        const assignmentsData = data.assignments || [];
-        setAllAssignments(assignmentsData);
+      if (assignmentsData.success) {
+        const assignmentsDataList = assignmentsData.assignments || [];
+        setAllAssignments(assignmentsDataList);
+      }
+      
+      // Fetch completions
+      const completionsResponse = await fetch(`${API_ENDPOINTS.USER_COURSE_COMPLETIONS.GET_ALL}?status=approved`, { headers });
+      const completionsData = await completionsResponse.json();
+
+      if (completionsData.success) {
+        const completionsDataList = completionsData.completions || [];
+        setAllCompletions(completionsDataList);
       }
       
     } catch (error) {
@@ -67,66 +81,128 @@ const CourseHistory = forwardRef((props, ref) => {
 
   // Filter assignments based on search query, date filter, and category filter
   useEffect(() => {
-    let filtered = [...allAssignments];
+    if (viewMode === 'assignments') {
+      let filtered = [...allAssignments];
 
-    // Apply category filter
-    if (categoryFilter !== 'all') {
-      filtered = filtered.filter(assignment => assignment.category === categoryFilter);
-    }
-
-    // Apply date filter
-    if (dateFilter !== 'all') {
-      const now = new Date();
-      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      let dateRange = null;
-
-      switch (dateFilter) {
-        case 'today':
-          dateRange = { start: today, end: now };
-          break;
-        case 'yesterday':
-          const yesterday = new Date(today);
-          yesterday.setDate(yesterday.getDate() - 1);
-          const endYesterday = new Date(yesterday);
-          endYesterday.setHours(23, 59, 59, 999);
-          dateRange = { start: yesterday, end: endYesterday };
-          break;
-        case 'week':
-          const weekAgo = new Date(today);
-          weekAgo.setDate(weekAgo.getDate() - 7);
-          dateRange = { start: weekAgo, end: now };
-          break;
-        case 'month':
-          const monthAgo = new Date(today);
-          monthAgo.setMonth(monthAgo.getMonth() - 1);
-          dateRange = { start: monthAgo, end: now };
-          break;
-        default:
-          dateRange = null;
+      // Apply category filter
+      if (categoryFilter !== 'all') {
+        filtered = filtered.filter(assignment => assignment.category === categoryFilter);
       }
 
-      if (dateRange) {
-        filtered = filtered.filter(assignment => {
-          const assignmentDate = new Date(assignment.sentAt);
-          return assignmentDate >= dateRange.start && assignmentDate <= dateRange.end;
-        });
+      // Apply date filter
+      if (dateFilter !== 'all') {
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        let dateRange = null;
+
+        switch (dateFilter) {
+          case 'today':
+            dateRange = { start: today, end: now };
+            break;
+          case 'yesterday':
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            const endYesterday = new Date(yesterday);
+            endYesterday.setHours(23, 59, 59, 999);
+            dateRange = { start: yesterday, end: endYesterday };
+            break;
+          case 'week':
+            const weekAgo = new Date(today);
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            dateRange = { start: weekAgo, end: now };
+            break;
+          case 'month':
+            const monthAgo = new Date(today);
+            monthAgo.setMonth(monthAgo.getMonth() - 1);
+            dateRange = { start: monthAgo, end: now };
+            break;
+          default:
+            dateRange = null;
+        }
+
+        if (dateRange) {
+          filtered = filtered.filter(assignment => {
+            const assignmentDate = new Date(assignment.sentAt);
+            return assignmentDate >= dateRange.start && assignmentDate <= dateRange.end;
+          });
+        }
       }
-    }
 
-    // Apply search filter
-    if (searchQuery.trim()) {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(assignment => 
-        assignment.userName?.toLowerCase().includes(query) ||
-        assignment.userEmail?.toLowerCase().includes(query) ||
-        assignment.userId?.toString().includes(query) ||
-        assignment.courseLink?.toLowerCase().includes(query) ||
-        assignment.category?.toLowerCase().includes(query)
-      );
-    }
+      // Apply search filter
+      if (searchQuery.trim()) {
+        const query = searchQuery.toLowerCase();
+        filtered = filtered.filter(assignment => 
+          assignment.userName?.toLowerCase().includes(query) ||
+          assignment.userEmail?.toLowerCase().includes(query) ||
+          assignment.userId?.toString().includes(query) ||
+          assignment.courseLink?.toLowerCase().includes(query) ||
+          assignment.category?.toLowerCase().includes(query)
+        );
+      }
 
-    setAssignments(filtered);
-  }, [categoryFilter, dateFilter, searchQuery, allAssignments]);
+      setAssignments(filtered);
+    } else {
+      let filtered = [...allCompletions];
+
+      // Apply category filter
+      if (categoryFilter !== 'all') {
+        filtered = filtered.filter(completion => completion.category === categoryFilter);
+      }
+
+      // Apply date filter
+      if (dateFilter !== 'all') {
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        let dateRange = null;
+
+        switch (dateFilter) {
+          case 'today':
+            dateRange = { start: today, end: now };
+            break;
+          case 'yesterday':
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            const endYesterday = new Date(yesterday);
+            endYesterday.setHours(23, 59, 59, 999);
+            dateRange = { start: yesterday, end: endYesterday };
+            break;
+          case 'week':
+            const weekAgo = new Date(today);
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            dateRange = { start: weekAgo, end: now };
+            break;
+          case 'month':
+            const monthAgo = new Date(today);
+            monthAgo.setMonth(monthAgo.getMonth() - 1);
+            dateRange = { start: monthAgo, end: now };
+            break;
+          default:
+            dateRange = null;
+        }
+
+        if (dateRange) {
+          filtered = filtered.filter(completion => {
+            const completionDate = new Date(completion.completedAt);
+            return completionDate >= dateRange.start && completionDate <= dateRange.end;
+          });
+        }
+      }
+
+      // Apply search filter
+      if (searchQuery.trim()) {
+        const query = searchQuery.toLowerCase();
+        filtered = filtered.filter(completion => 
+          completion.userName?.toLowerCase().includes(query) ||
+          completion.userEmail?.toLowerCase().includes(query) ||
+          completion.userId?.toString().includes(query) ||
+          completion.courseLink?.toLowerCase().includes(query) ||
+          completion.category?.toLowerCase().includes(query)
+        );
+      }
+
+      setCompletions(filtered);
+    }
+  }, [categoryFilter, dateFilter, searchQuery, allAssignments, allCompletions, viewMode]);
 
   const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
@@ -214,7 +290,32 @@ const CourseHistory = forwardRef((props, ref) => {
               <p>Lite</p>
             </div>
           </div>
+          <div className="stat-card">
+            <div className="stat-icon completed">
+              <FaCheckCircle />
+            </div>
+            <div className="stat-details">
+              <h3>{allCompletions.length}</h3>
+              <p>Completed Courses</p>
+            </div>
+          </div>
         </div>
+      </div>
+
+      {/* View Mode Toggle */}
+      <div className="view-mode-section">
+        <button 
+          className={viewMode === 'assignments' ? 'active' : ''}
+          onClick={() => setViewMode('assignments')}
+        >
+          <FaLink /> Assignments ({allAssignments.length})
+        </button>
+        <button 
+          className={viewMode === 'completions' ? 'active' : ''}
+          onClick={() => setViewMode('completions')}
+        >
+          <FaCheckCircle /> Completions ({allCompletions.length})
+        </button>
       </div>
 
       {/* Search Section */}
@@ -312,98 +413,198 @@ const CourseHistory = forwardRef((props, ref) => {
         </div>
       </div>
 
-      {/* Assignments Table */}
-      {assignments.length === 0 ? (
-        <div className="no-assignments">
-          <FaHistory size={60} />
-          <h3>No Course Assignments Found</h3>
-          <p>No course assignments found for the selected filters</p>
-        </div>
-      ) : (
-        <div className="assignments-table-container">
-          <table className="assignments-table">
-            <thead>
-              <tr>
-                <th>User ID</th>
-                <th>User Name</th>
-                <th>Email</th>
-                <th>Category</th>
-                <th>Course Link</th>
-                <th>Sent Date</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {assignments.map((assignment) => (
-                <tr key={assignment._id} className="assignment-row">
-                  <td>
-                    <span className="user-id-badge">
-                      #{assignment.userId || 'N/A'}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="user-name-cell">
-                      <div className="user-avatar-small">
-                        <FaUser />
-                      </div>
-                      <span className="user-fullname">{assignment.userName}</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="email-cell">
-                      <FaEnvelope className="email-icon" />
-                      <span>{assignment.userEmail || 'N/A'}</span>
-                    </div>
-                  </td>
-                  <td>
-                    {getCategoryBadge(assignment.category)}
-                  </td>
-                  <td>
-                    <div className="course-link-cell">
-                      <FaLink className="link-icon" />
-                      <a 
-                        href={assignment.courseLink} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="course-link"
-                        title={assignment.courseLink}
-                      >
-                        {assignment.courseLink.length > 50 
-                          ? `${assignment.courseLink.substring(0, 50)}...` 
-                          : assignment.courseLink}
-                        <FaExternalLinkAlt className="external-link-icon" />
-                      </a>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="date-cell">
-                      <FaCalendarAlt className="date-icon" />
-                      <span>{formatDateTime(assignment.sentAt)}</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="action-buttons">
-                      <button 
-                        className="action-btn view-btn"
-                        onClick={() => window.open(assignment.courseLink, '_blank')}
-                        title="Open Course Link"
-                      >
-                        <FaExternalLinkAlt />
-                      </button>
-                      <button 
-                        className="action-btn delete-btn"
-                        onClick={() => handleDeleteAssignment(assignment._id)}
-                        title="Delete Assignment"
-                      >
-                        <FaTrash />
-                      </button>
-                    </div>
-                  </td>
+      {/* Assignments/Completions Table */}
+      {viewMode === 'assignments' ? (
+        assignments.length === 0 ? (
+          <div className="no-assignments">
+            <FaHistory size={60} />
+            <h3>No Course Assignments Found</h3>
+            <p>No course assignments found for the selected filters</p>
+          </div>
+        ) : (
+          <div className="assignments-table-container">
+            <table className="assignments-table">
+              <thead>
+                <tr>
+                  <th>User Name</th>
+                  <th>Email</th>
+                  <th>Category</th>
+                  <th>Course Link</th>
+                  <th>Sent Date</th>
+                  <th>Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {assignments.map((assignment) => (
+                  <tr key={assignment._id} className="assignment-row">
+                    <td>
+                      <div className="user-name-cell">
+                        <div className="user-avatar-small">
+                          <FaUser />
+                        </div>
+                        <span className="user-fullname">{assignment.userName}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="email-cell">
+                        <FaEnvelope className="email-icon" />
+                        <span>{assignment.userEmail || 'N/A'}</span>
+                      </div>
+                    </td>
+                    <td>
+                      {getCategoryBadge(assignment.category)}
+                    </td>
+                    <td>
+                      <div className="course-link-cell">
+                        <FaLink className="link-icon" />
+                        <a 
+                          href={assignment.courseLink} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="course-link"
+                          title={assignment.courseLink}
+                        >
+                          {assignment.courseLink.length > 50 
+                            ? `${assignment.courseLink.substring(0, 50)}...` 
+                            : assignment.courseLink}
+                          <FaExternalLinkAlt className="external-link-icon" />
+                        </a>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="date-cell">
+                        <FaCalendarAlt className="date-icon" />
+                        <span>{formatDateTime(assignment.sentAt)}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="action-buttons">
+                        <button 
+                          className="action-btn view-btn"
+                          onClick={() => window.open(assignment.courseLink, '_blank')}
+                          title="Open Course Link"
+                        >
+                          <FaExternalLinkAlt />
+                        </button>
+                        <button 
+                          className="action-btn delete-btn"
+                          onClick={() => handleDeleteAssignment(assignment._id)}
+                          title="Delete Assignment"
+                        >
+                          <FaTrash />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )
+      ) : (
+        completions.length === 0 ? (
+          <div className="no-assignments">
+            <FaCheckCircle size={60} />
+            <h3>No Course Completions Found</h3>
+            <p>No course completions found for the selected filters</p>
+          </div>
+        ) : (
+          <div className="assignments-table-container">
+            <table className="assignments-table">
+              <thead>
+                <tr>
+                  <th>User Name</th>
+                  <th>Email</th>
+                  <th>Category</th>
+                  <th>Course Link</th>
+                  <th>Score</th>
+                  <th>Status</th>
+                  <th>Completed Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {completions.map((completion) => (
+                  <tr key={completion._id} className="assignment-row">
+                    <td>
+                      <div className="user-name-cell">
+                        <div className="user-avatar-small">
+                          <FaUser />
+                        </div>
+                        <span className="user-fullname">{completion.userName}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="email-cell">
+                        <FaEnvelope className="email-icon" />
+                        <span>{completion.userEmail || 'N/A'}</span>
+                      </div>
+                    </td>
+                    <td>
+                      {getCategoryBadge(completion.category)}
+                    </td>
+                    <td>
+                      <div className="course-link-cell">
+                        <FaLink className="link-icon" />
+                        <a 
+                          href={completion.courseLink} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="course-link"
+                          title={completion.courseLink}
+                        >
+                          {completion.courseLink.length > 50 
+                            ? `${completion.courseLink.substring(0, 50)}...` 
+                            : completion.courseLink}
+                          <FaExternalLinkAlt className="external-link-icon" />
+                        </a>
+                      </div>
+                    </td>
+                    <td>
+                      <span className="score-badge">
+                        {completion.score}/{completion.totalQuestions}
+                      </span>
+                    </td>
+                    <td>
+                      <span className={`status-badge status-${completion.status}`}>
+                        {completion.status}
+                      </span>
+                    </td>
+                    <td>
+                      <div className="date-cell">
+                        <FaCalendarAlt className="date-icon" />
+                        <span>{formatDateTime(completion.completedAt)}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <div className="action-buttons">
+                        <button 
+                          className="action-btn view-btn"
+                          onClick={() => window.open(completion.courseLink, '_blank')}
+                          title="Open Course Link"
+                        >
+                          <FaExternalLinkAlt />
+                        </button>
+                        <button 
+                          className="action-btn info-btn"
+                          onClick={() => {
+                            const answers = completion.quizAnswers.map((a, i) => 
+                              `Q${i+1}: ${a.question}\nAnswer: ${a.userAnswer}\n${a.isCorrect !== undefined ? (a.isCorrect ? '✓ Correct' : '✗ Incorrect') : ''}`
+                            ).join('\n\n');
+                            alert(`Quiz Answers:\n\n${answers}`);
+                          }}
+                          title="View Quiz Answers"
+                        >
+                          <FaQuestionCircle />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )
       )}
     </div>
   );

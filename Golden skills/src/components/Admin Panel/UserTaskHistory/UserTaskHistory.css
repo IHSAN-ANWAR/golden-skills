@@ -61,7 +61,7 @@
 
 .search-input {
   width: 100%;
-  padding: 12px 45px 12px 45px;
+  padding: 12px 45px 12px 15px;
   border: 2px solid #e9ecef;
   border-radius: 8px;
   font-size: 1rem;
@@ -194,7 +194,7 @@
 }
 
 .tasks-table thead {
-  background: linear-gradient(135deg, #390910, #772218);
+  background: linear-gradient(135deg, #390910 0%, #772218 100%);
   color: white;
 }
 
@@ -205,6 +205,7 @@
   font-size: 0.95rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  color: white;
 }
 
 .tasks-table tbody tr {

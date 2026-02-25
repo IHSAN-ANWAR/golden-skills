@@ -9,6 +9,7 @@ import PublicTasks from './components/Tasks';
 import Contact from './components/Contact';
 import UserTaskSubmission from './pages/UserTaskSubmission';
 import UserTaskData from './pages/UserTaskData';
+import UserCourseData from './pages/UserCourseData';
 
 // Shared Components
 import Navbar from './components/Navbar';
@@ -75,6 +76,13 @@ function App() {
           <>
             <Navbar />
             <UserTaskData />
+            <Footer />
+          </>
+        } />
+        <Route path="/my-courses" element={
+          <>
+            <Navbar />
+            <UserCourseData />
             <Footer />
           </>
         } />
