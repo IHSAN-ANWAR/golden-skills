@@ -6,44 +6,21 @@
 
 /* Tabs Navigation */
 .tabs-navigation {
-  background: white;
+  background: transparent;
   border-bottom: 2px solid #e9ecef;
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.tabs-header {
-  padding: 25px 30px 15px 30px;
-  border-bottom: 1px solid #f1f5f9;
-}
-
-.tabs-header h1 {
-  font-size: 2rem;
-  color: #390910;
-  margin: 0 0 8px 0;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.tabs-header h1 svg {
-  font-size: 2rem;
-}
-
-.tabs-header p {
-  color: #6c757d;
-  margin: 0;
-  font-size: 1rem;
+  box-shadow: none;
 }
 
 /* Tabs Buttons */
 .tabs-buttons {
   display: flex;
   gap: 8px;
-  padding: 0 30px 12px 30px;
+  padding: 12px 0;
   overflow-x: auto;
+  background: transparent;
 }
 
 .tab-button {

@@ -169,7 +169,6 @@ const UserTaskHistory = ({ initialFilter = 'all', mode = 'history' }) => {
       );
     }
 
-    console.log('Filter applied:', { mode, filter, totalTasks: allTaskHistory.length, filteredTasks: filtered.length });
     setTaskHistory(filtered);
   }, [filter, searchQuery, allTaskHistory, mode]);
 
@@ -284,7 +283,6 @@ const UserTaskHistory = ({ initialFilter = 'all', mode = 'history' }) => {
       {/* Status Filter - Hidden for pending, review, and history modes */}
       {mode !== 'pending' && mode !== 'review' && mode !== 'history' && (
         <div className="filter-section">
-        <h3>Filter by Status</h3>
         <div className="filter-buttons">
           {mode === 'pending' ? (
             <>

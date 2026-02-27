@@ -14,6 +14,18 @@ const Users = () => {
   const [hasPrevPage, setHasPrevPage] = useState(false);
   const [usersPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [modalMode, setModalMode] = useState('view'); // 'view' or 'edit'
+  const [editForm, setEditForm] = useState({
+    fullName: '',
+    username: '',
+    email: '',
+    age: '',
+    city: '',
+    referralCode: '',
+    isActive: true
+  });
 
   useEffect(() => {
     fetchUsers(currentPage, searchTerm);
@@ -75,9 +87,124 @@ const Users = () => {
     fetchUsers(pageNumber, searchTerm);
   };
 
-  const handleAction = (action, userId) => {
-    console.log(`${action} user: ${userId}`);
-    // Implement actual actions here
+  const handleAction = async (action, userId) => {
+    if (action === 'view') {
+      await viewUser(userId);
+    } else if (action === 'edit') {
+      await editUser(userId);
+    } else if (action === 'delete') {
+      await deleteUser(userId);
+    }
+  };
+
+  const viewUser = async (userId) => {
+    try {
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(API_ENDPOINTS.AUTH.GET_USER(userId), {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await response.json();
+      
+      if (data.success) {
+        setSelectedUser(data.user);
+        setModalMode('view');
+        setShowModal(true);
+      } else {
+        alert(data.message || 'Failed to fetch user details');
+      }
+    } catch (error) {
+      console.error('Error fetching user:', error);
+      alert('Failed to fetch user details');
+    }
+  };
+
+  const editUser = async (userId) => {
+    try {
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(API_ENDPOINTS.AUTH.GET_USER(userId), {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await response.json();
+      
+      if (data.success) {
+        setSelectedUser(data.user);
+        setEditForm({
+          fullName: data.user.fullName,
+          username: data.user.username,
+          email: data.user.email,
+          age: data.user.age,
+          city: data.user.city,
+          referralCode: data.user.referralCode || '',
+          isActive: data.user.isActive !== false
+        });
+        setModalMode('edit');
+        setShowModal(true);
+      } else {
+        alert(data.message || 'Failed to fetch user details');
+      }
+    } catch (error) {
+      console.error('Error fetching user:', error);
+      alert('Failed to fetch user details');
+    }
+  };
+
+  const handleUpdateUser = async (e) => {
+    e.preventDefault();
+    
+    if (!window.confirm('Are you sure you want to update this user?')) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(API_ENDPOINTS.AUTH.UPDATE_USER(selectedUser._id), {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(editForm)
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        alert('User updated successfully!');
+        setShowModal(false);
+        fetchUsers(currentPage, searchTerm);
+      } else {
+        alert(data.message || 'Failed to update user');
+      }
+    } catch (error) {
+      console.error('Error updating user:', error);
+      alert('Failed to update user');
+    }
+  };
+
+  const deleteUser = async (userId) => {
+    if (!window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(API_ENDPOINTS.AUTH.DELETE_USER(userId), {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        alert('User deleted successfully!');
+        fetchUsers(currentPage, searchTerm);
+      } else {
+        alert(data.message || 'Failed to delete user');
+      }
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      alert('Failed to delete user: ' + error.message);
+    }
   };
 
   if (loading) {
@@ -295,6 +422,128 @@ const Users = () => {
             >
               Next
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* User Details Modal */}
+      {showModal && selectedUser && (
+        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>{modalMode === 'view' ? 'User Details' : 'Edit User'}</h2>
+              <button className="modal-close" onClick={() => setShowModal(false)}>×</button>
+            </div>
+            
+            {modalMode === 'view' ? (
+              <div className="modal-body">
+                <div className="user-detail-row">
+                  <strong>Full Name:</strong>
+                  <span>{selectedUser.fullName}</span>
+                </div>
+                <div className="user-detail-row">
+                  <strong>Username:</strong>
+                  <span>@{selectedUser.username}</span>
+                </div>
+                <div className="user-detail-row">
+                  <strong>Email:</strong>
+                  <span>{selectedUser.email}</span>
+                </div>
+                <div className="user-detail-row">
+                  <strong>Age:</strong>
+                  <span>{selectedUser.age} years</span>
+                </div>
+                <div className="user-detail-row">
+                  <strong>City:</strong>
+                  <span>{selectedUser.city}</span>
+                </div>
+                <div className="user-detail-row">
+                  <strong>Referral Code:</strong>
+                  <span>{selectedUser.referralCode || 'N/A'}</span>
+                </div>
+                <div className="user-detail-row">
+                  <strong>Status:</strong>
+                  <span className={`status-badge ${selectedUser.isActive === false ? 'inactive' : 'active'}`}>
+                    {selectedUser.isActive === false ? 'Inactive' : 'Active'}
+                  </span>
+                </div>
+                <div className="user-detail-row">
+                  <strong>Registration Date:</strong>
+                  <span>{formatDate(selectedUser.createdAt)}</span>
+                </div>
+              </div>
+            ) : (
+              <form onSubmit={handleUpdateUser} className="modal-body">
+                <div className="form-group">
+                  <label>Full Name:</label>
+                  <input
+                    type="text"
+                    value={editForm.fullName}
+                    onChange={(e) => setEditForm({...editForm, fullName: e.target.value})}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Username:</label>
+                  <input
+                    type="text"
+                    value={editForm.username}
+                    onChange={(e) => setEditForm({...editForm, username: e.target.value})}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Email:</label>
+                  <input
+                    type="email"
+                    value={editForm.email}
+                    onChange={(e) => setEditForm({...editForm, email: e.target.value})}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Age:</label>
+                  <input
+                    type="number"
+                    value={editForm.age}
+                    onChange={(e) => setEditForm({...editForm, age: e.target.value})}
+                    required
+                    min="13"
+                  />
+                </div>
+                <div className="form-group">
+                  <label>City:</label>
+                  <input
+                    type="text"
+                    value={editForm.city}
+                    onChange={(e) => setEditForm({...editForm, city: e.target.value})}
+                    required
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Referral Code:</label>
+                  <input
+                    type="text"
+                    value={editForm.referralCode}
+                    onChange={(e) => setEditForm({...editForm, referralCode: e.target.value})}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={editForm.isActive}
+                      onChange={(e) => setEditForm({...editForm, isActive: e.target.checked})}
+                    />
+                    Active User
+                  </label>
+                </div>
+                <div className="modal-actions">
+                  <button type="submit" className="btn-save">Save Changes</button>
+                  <button type="button" className="btn-cancel" onClick={() => setShowModal(false)}>Cancel</button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       )}

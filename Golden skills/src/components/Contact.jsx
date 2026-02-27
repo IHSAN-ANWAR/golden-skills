@@ -94,7 +94,6 @@ const Contact = () => {
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       // Handle form submission here
-      console.log('Form submitted:', formData);
       alert('Message sent successfully!');
       
       // Reset form

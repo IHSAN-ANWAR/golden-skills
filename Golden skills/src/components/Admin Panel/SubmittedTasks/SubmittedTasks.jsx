@@ -28,7 +28,6 @@ const SubmittedTasks = () => {
       if (data.success) {
         // Only get tasks with status 'completed' (submitted by users from mobile)
         const completedTasks = (data.userTasks || []).filter(task => task.status === 'completed');
-        console.log('Submitted tasks loaded:', completedTasks.length);
         setSubmittedTasks(completedTasks);
       }
       
@@ -114,9 +113,6 @@ const SubmittedTasks = () => {
       }
       
       const url = `${API_ENDPOINTS.USER_TASKS.UPDATE_STATUS(taskId)}`;
-      console.log('Approving task...');
-      console.log('URL:', url);
-      console.log('Task ID:', taskId);
       
       const response = await fetch(url, {
         method: 'PUT',
@@ -172,9 +168,6 @@ const SubmittedTasks = () => {
       }
 
       const url = `${API_ENDPOINTS.USER_TASKS.UPDATE_STATUS(taskId)}`;
-      console.log('Rejecting task...');
-      console.log('URL:', url);
-      console.log('Task ID:', taskId);
       
       const response = await fetch(url, {
         method: 'PUT',

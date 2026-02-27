@@ -36,12 +36,12 @@
 
 /* Search Section */
 .search-section {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background: transparent;
+  padding: 20px 0;
+  border-radius: 0;
+  box-shadow: none;
   margin-bottom: 25px;
-  border: 1px solid #e9ecef;
+  border: none;
 }
 
 .search-container {
@@ -112,12 +112,12 @@
 
 /* Filter Section */
 .filter-section {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background: transparent;
+  padding: 20px 0;
+  border-radius: 0;
+  box-shadow: none;
   margin-bottom: 25px;
-  border: 1px solid #e9ecef;
+  border: none;
 }
 
 .filter-section h3 {

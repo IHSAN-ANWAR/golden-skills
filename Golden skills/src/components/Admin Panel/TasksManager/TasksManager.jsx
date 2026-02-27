@@ -87,11 +87,6 @@ const TasksManager = () => {
 
       {/* Tab Navigation */}
       <div className="tabs-navigation">
-        <div className="tabs-header">
-          <h1><FaTasks /> Tasks Management</h1>
-          <p>Manage all task-related operations from one place</p>
-        </div>
-        
         <div className="tabs-buttons">
           {tabs.map((tab) => (
             <button

@@ -154,26 +154,12 @@
   box-shadow: 0 4px 8px rgba(57, 9, 16, 0.2);
 }
 
-/* Filter Section */
-.time-filter {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  margin-bottom: 25px;
-  border: 1px solid #e9ecef;
-}
-
-.time-filter h3 {
-  font-size: 1.1rem;
-  color: #390910;
-  margin-bottom: 15px;
-}
-
+/* Filter Buttons */
 .filter-buttons {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
+  margin-bottom: 25px;
 }
 
 .filter-buttons button {
@@ -197,6 +183,7 @@
   color: white;
   border-color: #390910;
 }
+
 
 /* Submissions Table Container */
 .submissions-table-container {

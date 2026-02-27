@@ -7,7 +7,10 @@ export const API_ENDPOINTS = {
     USER_LOGIN: `${API_BASE_URL}/api/auth/user/login`,
     REGISTER: `${API_BASE_URL}/api/auth/user/register`,
     USERS: `${API_BASE_URL}/api/auth/users`,
-    CREATE_USER: `${API_BASE_URL}/api/auth/user/create`
+    CREATE_USER: `${API_BASE_URL}/api/auth/user/create`,
+    GET_USER: (id) => `${API_BASE_URL}/api/auth/user/${id}`,
+    UPDATE_USER: (id) => `${API_BASE_URL}/api/auth/user/${id}`,
+    DELETE_USER: (id) => `${API_BASE_URL}/api/auth/user/${id}`
   },
   PLANS: {
     GET_ALL: `${API_BASE_URL}/api/plans`,
