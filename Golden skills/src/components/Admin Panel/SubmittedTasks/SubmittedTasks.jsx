@@ -26,7 +26,6 @@ const SubmittedTasks = () => {
       const data = await response.json();
 
       if (data.success) {
-        // Only get tasks with status 'completed' (submitted by users from mobile)
         const completedTasks = (data.userTasks || []).filter(task => task.status === 'completed');
         setSubmittedTasks(completedTasks);
       }

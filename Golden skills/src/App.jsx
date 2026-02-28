@@ -4,7 +4,7 @@ import './App.css';
 // Public Pages
 import Home from './pages/Home';
 import About from './components/About';
-import Courses from './components/Courses';
+import CoursesSection from './components/CoursesSection';
 import PublicTasks from './components/Tasks';
 import Contact from './components/Contact';
 import UserTaskSubmission from './pages/UserTaskSubmission';
@@ -47,7 +47,7 @@ function App() {
         <Route path="/courses" element={
           <>
             <Navbar />
-            <Courses />
+            <CoursesSection />
             <Footer />
           </>
         } />
