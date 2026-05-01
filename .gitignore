@@ -10,3 +10,4 @@ coverage/
 .cache
 .vercel
 temp-*.ps1
+load-test/results.json
