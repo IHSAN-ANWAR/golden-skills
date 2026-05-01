@@ -9,10 +9,36 @@ const CourseVerifications = () => {
   const [filter, setFilter] = useState('pending');
   const [showImageModal, setShowImageModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState('');
+  const [counts, setCounts] = useState({ pending: 0, approved: 0, rejected: 0 });
 
   useEffect(() => {
     fetchSubmissions();
   }, [filter]);
+
+  useEffect(() => {
+    fetchCounts();
+  }, []);
+
+  const fetchCounts = async () => {
+    try {
+      const token = localStorage.getItem('adminToken');
+      if (!token) return;
+      const headers = { 'Authorization': `Bearer ${token}` };
+      const [pendingRes, approvedRes, rejectedRes] = await Promise.all([
+        fetch(`${API_ENDPOINTS.COURSE_PLAN_SUBMISSIONS.GET_ALL}?status=pending`, { headers }),
+        fetch(`${API_ENDPOINTS.COURSE_PLAN_SUBMISSIONS.GET_ALL}?status=approved`, { headers }),
+        fetch(`${API_ENDPOINTS.COURSE_PLAN_SUBMISSIONS.GET_ALL}?status=rejected`, { headers }),
+      ]);
+      const [p, a, r] = await Promise.all([pendingRes.json(), approvedRes.json(), rejectedRes.json()]);
+      setCounts({
+        pending: (p.submissions || []).length,
+        approved: (a.submissions || []).length,
+        rejected: (r.submissions || []).length,
+      });
+    } catch (err) {
+      console.error('Error fetching counts:', err);
+    }
+  };
 
   const fetchSubmissions = async () => {
     try {
@@ -61,6 +87,7 @@ const CourseVerifications = () => {
       if (data.success) {
         alert('Course plan application approved successfully!');
         fetchSubmissions();
+        fetchCounts();
       } else {
         alert(data.message || 'Failed to approve application');
       }
@@ -90,6 +117,7 @@ const CourseVerifications = () => {
       if (data.success) {
         alert('Course plan application rejected');
         fetchSubmissions();
+        fetchCounts();
       } else {
         alert(data.message || 'Failed to reject application');
       }
@@ -115,6 +143,7 @@ const CourseVerifications = () => {
       if (data.success) {
         alert('Submission deleted successfully');
         fetchSubmissions();
+        fetchCounts();
       } else {
         alert(data.message || 'Failed to delete submission');
       }
@@ -155,19 +184,19 @@ const CourseVerifications = () => {
           className={`filter-btn ${filter === 'pending' ? 'active' : ''}`}
           onClick={() => setFilter('pending')}
         >
-          Pending
+          Pending ({counts.pending})
         </button>
         <button 
           className={`filter-btn ${filter === 'approved' ? 'active' : ''}`}
           onClick={() => setFilter('approved')}
         >
-          Approved
+          Approved ({counts.approved})
         </button>
         <button 
           className={`filter-btn ${filter === 'rejected' ? 'active' : ''}`}
           onClick={() => setFilter('rejected')}
         >
-          Rejected
+          Rejected ({counts.rejected})
         </button>
       </div>
 

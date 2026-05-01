@@ -136,7 +136,6 @@ User Details:
 - Name: ${submission.userName}
 - Email: ${submission.userEmail || 'Not provided'}
 - Phone: ${submission.userPhone || 'Not provided'}
-- User ID: #${submission.userId}
 
 Plan Details:
 - Plan: ${submission.planTitle}
@@ -190,7 +189,6 @@ Submitted: ${formatDate(submission.createdAt)}
         <table className="submissions-table">
           <thead>
             <tr>
-              <th>User ID</th>
               <th>Name</th>
               <th>Payment Proof</th>
               <th>Email</th>
@@ -205,7 +203,7 @@ Submitted: ${formatDate(submission.createdAt)}
           <tbody>
             {filteredSubmissions.length === 0 ? (
               <tr>
-                <td colSpan="10" className="no-submissions-row">
+                <td colSpan="9" className="no-submissions-row">
                   <div className="no-submissions-content">
                     <FaHistory className="no-submissions-icon" />
                     <h3>No {filter} submissions found</h3>
@@ -216,9 +214,6 @@ Submitted: ${formatDate(submission.createdAt)}
             ) : (
               filteredSubmissions.map((submission) => (
                 <tr key={submission._id} className="submission-row">
-                  <td>
-                    <span className="user-id-badge">#{submission.userId}</span>
-                  </td>
                   <td>
                     <div className="user-name-cell">
                       <div className="user-avatar-small">
