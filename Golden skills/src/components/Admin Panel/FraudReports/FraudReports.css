@@ -1,0 +1,265 @@
+/* FraudReports - reuses Users page classes + extensions */
+
+/* Override stat icon size for FraudReports - make them smaller and visible */
+.users-stats .stat-icon {
+  font-size: 1.4rem !important;
+}
+
+.fr-alert {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  animation: fadeIn 0.3s ease;
+}
+@keyframes fadeIn { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+.fr-alert-success { background:#d4edda; color:#155724; border:1px solid #c3e6cb; }
+.fr-alert-error   { background:#f8d7da; color:#721c24; border:1px solid #f5c6cb; }
+
+/* Tabs */
+.fr-tabs {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.fr-tab {
+  padding: 0.75rem 1.5rem;
+  border: 2px solid #e9ecef;
+  background: white;
+  color: #495057;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+.fr-tab:hover { border-color:#D4AF37; color:#D4AF37; }
+.fr-tab.active {
+  background: linear-gradient(135deg, #390910, #772218);
+  color: white;
+  border-color: #390910;
+  box-shadow: 0 4px 12px rgba(57,9,16,0.3);
+}
+
+/* Empty */
+.fr-empty {
+  padding: 60px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.fr-empty-icon { font-size: 3rem; color: #cbd5e0; }
+.fr-empty h3 { font-size:1.2rem; color:#374151; margin:0; }
+.fr-empty p  { color:#6c757d; margin:0; font-size:0.9rem; }
+
+/* Status badges */
+.fr-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+.fr-badge-pending  { background:#fff3cd; color:#856404; border:1px solid #ffc107; }
+.fr-badge-reviewed { background:#cfe2ff; color:#084298; border:1px solid #9ec5fe; }
+.fr-badge-actioned { background:#d1e7dd; color:#0a3622; border:1px solid #a3cfbb; }
+
+/* Message preview */
+.fr-message-preview {
+  font-size: 0.88rem;
+  color: #495057;
+  display: block;
+  max-width: 200px;
+}
+
+/* Screenshot btn */
+.fr-img-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #e3f2fd;
+  color: #1976d2;
+  border: 1px solid #90caf9;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.fr-img-btn:hover { background:#1976d2; color:white; }
+.fr-no-img { font-size:0.82rem; color:#adb5bd; }
+
+/* Action buttons extras */
+.fr-view-btn { background:#e3f2fd; color:#1976d2; }
+.fr-view-btn:hover { background:#1976d2; color:white; }
+.fr-ok-btn { background:#d1e7dd; color:#0a3622; }
+.fr-ok-btn:hover { background:#28a745; color:white; }
+
+/* Modal */
+.fr-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.fr-modal {
+  background: white;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 620px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+}
+
+.fr-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  background: linear-gradient(135deg, #390910, #772218);
+  border-radius: 14px 14px 0 0;
+  border-bottom: 3px solid #D4AF37;
+}
+
+.fr-modal-header h3 {
+  margin: 0;
+  color: #D4AF37;
+  font-size: 1.1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+}
+
+.fr-modal-close {
+  background: rgba(255,255,255,0.15);
+  border: none;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+.fr-modal-close:hover { background: rgba(255,255,255,0.3); }
+
+.fr-modal-body { padding: 1.5rem; }
+
+.fr-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.fr-detail-row:last-of-type { border-bottom: none; }
+.fr-detail-danger .fr-detail-val { color: #dc3545; }
+
+.fr-detail-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.fr-detail-val {
+  font-size: 0.95rem;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.fr-detail-message {
+  margin-top: 1rem;
+}
+
+.fr-detail-message p {
+  margin-top: 0.5rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1rem;
+  font-size: 0.95rem;
+  color: #374151;
+  line-height: 1.7;
+  border: 1px solid #e9ecef;
+}
+
+.fr-detail-screenshot {
+  margin-top: 1rem;
+}
+
+.fr-detail-screenshot img {
+  width: 100%;
+  border-radius: 8px;
+  border: 2px solid #e9ecef;
+  margin-top: 0.5rem;
+  max-height: 300px;
+  object-fit: contain;
+  background: #f8f9fa;
+}
+
+.fr-modal-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #f0f0f0;
+  flex-wrap: wrap;
+}
+
+.fr-btn-action {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, #390910, #772218);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.fr-btn-action:hover { background: linear-gradient(135deg, #772218, #390910); transform: translateY(-1px); }
+
+.fr-btn-delete {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  background: #ffebee;
+  color: #c62828;
+  border: 1px solid #ef9a9a;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.fr-btn-delete:hover { background: #c62828; color: white; }
+
+@media (max-width: 768px) {
+  .fr-tabs { gap: 0.5rem; }
+  .fr-tab { padding: 0.6rem 1rem; font-size: 0.85rem; }
+  .fr-modal { border-radius: 10px; }
+  .users-table th, .users-table td { padding: 8px 6px; font-size: 0.8rem; }
+}

@@ -1,0 +1,160 @@
+import { Link, useLocation } from 'react-router-dom';
+import { 
+  FaTachometerAlt, 
+  FaUsers, 
+  FaBook, 
+  FaTasks, 
+  FaCheckCircle,
+  FaHistory,
+  FaClipboardList,
+  FaSignOutAlt,
+  FaBullhorn,
+  FaUniversity,
+  FaUserFriends,
+  FaShieldAlt,
+  FaFlag,
+  FaWhatsapp,
+  FaSearchPlus
+} from 'react-icons/fa';
+import logo from '../../assets/golden logo.jpeg';
+import './AdminSidebar.css';
+
+const AdminSidebar = ({ isOpen, toggleSidebar }) => {
+  const location = useLocation();
+
+  const menuItems = [
+    {
+      id: 1,
+      title: 'Dashboard',
+      icon: FaTachometerAlt,
+      path: '/admin/dashboard'
+    },
+    {
+      id: 2,
+      title: 'Users',
+      icon: FaUsers,
+      path: '/admin/users'
+    },
+    {
+      id: 3,
+      title: 'Courses',
+      icon: FaBook,
+      path: '/admin/courses'
+    },
+    {
+      id: 4,
+      title: 'Tasks',
+      icon: FaTasks,
+      path: '/admin/tasks'
+    },
+    {
+      id: 5,
+      title: 'Promotions',
+      icon: FaBullhorn,
+      path: '/admin/promotions'
+    },
+    {
+      id: 6,
+      title: 'Account Details',
+      icon: FaUniversity,
+      path: '/admin/account-details'
+    },
+    {
+      id: 7,
+      title: 'Referral System',
+      icon: FaUserFriends,
+      path: '/admin/referrals'
+    },
+    {
+      id: 8,
+      title: 'Team Management',
+      icon: FaShieldAlt,
+      path: '/admin/team-management'
+    },
+    {
+      id: 9,
+      title: 'Fraud Reports',
+      icon: FaFlag,
+      path: '/admin/fraud-reports'
+    },
+    {
+      id: 10,
+      title: 'Site Settings',
+      icon: FaWhatsapp,
+      path: '/admin/site-settings'
+    },
+    {
+      id: 11,
+      title: 'Search Tracking',
+      icon: FaSearchPlus,
+      path: '/admin/search-tracking'
+    }
+  ];
+
+  const isActive = (path) => {
+    return location.pathname === path;
+  };
+
+  return (
+    <>
+      {/* Overlay for mobile */}
+      {isOpen && (
+        <div className="sidebar-overlay" onClick={toggleSidebar}></div>
+      )}
+      
+      {/* Sidebar */}
+      <div className={`admin-sidebar ${isOpen ? 'open' : ''}`}>
+        {/* Sidebar Header */}
+        <div className="sidebar-header">
+          <div className="logo-container">
+            <div className="logo-circle">
+              <img src={logo} alt="Golden Skills Logo" className="logo-image" />
+            </div>
+            <h2 className="logo-text">Golden Skills</h2>
+          </div>
+          <button className="close-btn" onClick={toggleSidebar}>
+            ×
+          </button>
+        </div>
+
+        {/* Navigation Menu */}
+        <nav className="sidebar-nav">
+          <ul className="admin-nav-menu">
+            {menuItems.map((item) => {
+              const IconComponent = item.icon;
+              return (
+                <li key={item.id} className="admin-nav-item">
+                  <Link
+                    to={item.path}
+                    className={`admin-nav-link ${isActive(item.path) ? 'active' : ''}`}
+                    onClick={() => {
+                      if (window.innerWidth < 992) {
+                        toggleSidebar();
+                      }
+                    }}
+                  >
+                    <IconComponent className="admin-nav-icon" />
+                    <span className="admin-nav-text">{item.title}</span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+
+        {/* Logout Button */}
+        <div className="sidebar-footer">
+          <button className="logout-btn" onClick={() => {
+            localStorage.removeItem('adminToken');
+            window.location.href = '/login';
+          }}>
+            <FaSignOutAlt className="logout-icon" />
+            <span>Logout</span>
+          </button>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default AdminSidebar;

@@ -1,0 +1,220 @@
+/* ═══════════════════════════════════════════════════════
+   NAVBAR  —  Premium Glassmorphism
+═══════════════════════════════════════════════════════ */
+
+.navbar-custom {
+  position: fixed !important;
+  top: var(--alert-banner-height);
+  left: 0; right: 0;
+  z-index: 1030;
+  min-height: var(--navbar-height) !important;
+  padding: 0 !important;
+
+  background: linear-gradient(
+    135deg,
+    rgba(34, 6, 8, 0.96) 0%,
+    rgba(57, 9, 16, 0.94) 50%,
+    rgba(92, 16, 24, 0.92) 100%
+  ) !important;
+  backdrop-filter: blur(24px) saturate(2) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(2) !important;
+
+  border-bottom: 1px solid rgba(212, 175, 55, 0.25) !important;
+  box-shadow:
+    0 1px 0 rgba(212, 175, 55, 0.15) inset,
+    0 8px 40px rgba(0, 0, 0, 0.35) !important;
+  transition: all 0.3s var(--ease) !important;
+}
+
+/* Shimmer line on top */
+.navbar-custom::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1.5px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(212, 175, 55, 0.5) 20%,
+    rgba(244, 208, 63, 1) 50%,
+    rgba(212, 175, 55, 0.5) 80%,
+    transparent 100%);
+  pointer-events: none;
+}
+
+/* ── Container ─────────────────────────── */
+.navbar-custom .container {
+  height: var(--navbar-height);
+  display: flex;
+  align-items: center;
+}
+
+/* ── Logo ──────────────────────────────── */
+.navbar-logo {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(212, 175, 55, 0.6);
+  box-shadow:
+    0 0 0 4px rgba(212, 175, 55, 0.12),
+    0 4px 16px rgba(0, 0, 0, 0.35);
+  transition: all 0.35s var(--ease-spring);
+}
+
+.navbar-logo:hover {
+  transform: scale(1.1) rotate(5deg);
+  border-color: var(--gold-light);
+  box-shadow: 0 0 0 6px rgba(212, 175, 55, 0.2), 0 6px 24px rgba(212, 175, 55, 0.3);
+}
+
+/* ── Brand ─────────────────────────────── */
+.navbar-custom .navbar-brand {
+  font-family: var(--font-head) !important;
+  font-weight: 800 !important;
+  font-size: 1.45rem !important;
+  color: var(--gold) !important;
+  text-decoration: none !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  letter-spacing: -0.3px;
+}
+
+.brand-text {
+  background: linear-gradient(135deg, #D4AF37 0%, #F4D03F 40%, #D4AF37 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: text-shimmer 5s linear infinite;
+}
+
+/* ── Nav Links ─────────────────────────── */
+.navbar-custom .navbar-nav {
+  gap: 2px;
+}
+
+.navbar-custom .nav-link {
+  font-family: var(--font-body) !important;
+  font-weight: 600 !important;
+  font-size: 0.88rem !important;
+  color: rgba(255, 255, 255, 0.82) !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: var(--r-sm) !important;
+  position: relative;
+  transition: all 0.25s var(--ease) !important;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.navbar-custom .nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 4px; left: 50%;
+  width: 0; height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  border-radius: 1px;
+  transition: all 0.3s var(--ease);
+  transform: translateX(-50%);
+}
+
+.navbar-custom .nav-link:hover {
+  color: var(--gold-light) !important;
+  background: rgba(212, 175, 55, 0.1) !important;
+}
+
+.navbar-custom .nav-link:hover::after { width: 65%; }
+
+.navbar-custom .nav-link.active {
+  color: var(--gold) !important;
+  background: rgba(212, 175, 55, 0.12) !important;
+  font-weight: 700 !important;
+}
+
+.navbar-custom .nav-link.active::after { width: 65%; }
+
+/* Report Fraud — special red tint */
+.rf-nav-link {
+  color: rgba(255, 160, 160, 0.9) !important;
+}
+
+.rf-nav-link:hover {
+  color: #ff8080 !important;
+  background: rgba(220, 53, 69, 0.12) !important;
+}
+
+.rf-nav-link::after {
+  background: linear-gradient(90deg, #ff6b6b, #ff4444) !important;
+}
+
+/* ── Download Button ───────────────────── */
+.btn-download-app {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  border: none;
+  color: var(--primary);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 0.6rem 1.4rem;
+  border-radius: var(--r-full);
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(212, 175, 55, 0.4);
+  transition: all 0.3s var(--ease);
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-download-app::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.5s var(--ease);
+}
+
+.btn-download-app:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(212, 175, 55, 0.55); }
+.btn-download-app:hover::after { transform: translateX(100%); }
+
+/* ── Toggler ───────────────────────────── */
+.navbar-custom .navbar-toggler {
+  border: 1.5px solid rgba(212, 175, 55, 0.45) !important;
+  border-radius: var(--r-sm) !important;
+  padding: 6px 10px !important;
+  transition: all 0.25s var(--ease) !important;
+}
+
+.navbar-custom .navbar-toggler:hover {
+  border-color: var(--gold) !important;
+  background: rgba(212, 175, 55, 0.1) !important;
+}
+
+.navbar-custom .navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%23D4AF37' stroke-linecap='round' stroke-width='2.5' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+}
+
+/* ── Mobile Collapse ───────────────────── */
+@media (max-width: 991.98px) {
+  .navbar-custom .navbar-collapse {
+    background: linear-gradient(160deg, rgba(30, 5, 8, 0.98) 0%, rgba(57, 9, 16, 0.98) 100%);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-radius: var(--r-lg);
+    margin-top: 12px;
+    padding: 1.2rem;
+    border: 1px solid rgba(212, 175, 55, 0.18);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
+  }
+
+  .navbar-custom .navbar-nav { flex-direction: column; gap: 2px; margin-bottom: 1rem; }
+  .navbar-custom .nav-link { display: block; width: 100%; padding: 0.65rem 1rem !important; }
+  .btn-download-app { width: 100%; justify-content: center; }
+}
+
+@media (max-width: 767px) {
+  .navbar-logo { width: 46px; height: 46px; }
+  .navbar-custom .navbar-brand { font-size: 1.3rem !important; }
+}

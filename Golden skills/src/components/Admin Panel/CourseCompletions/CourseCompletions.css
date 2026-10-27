@@ -1,0 +1,359 @@
+.course-completions-container {
+  padding: 24px;
+  background: #f4f6fb;
+  min-height: 100vh;
+}
+
+/* ── Header ───────────────────────────────────────────── */
+.completions-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  background: linear-gradient(135deg, #0a0f2e, #1a237e);
+  color: #fff;
+  padding: 24px 28px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(10, 15, 46, 0.25);
+}
+
+.header-icon-wrap {
+  background: rgba(201, 168, 76, 0.2);
+  border: 2px solid #C9A84C;
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.header-icon {
+  color: #C9A84C;
+  font-size: 24px;
+}
+
+.completions-header h2 {
+  margin: 0 0 4px;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.completions-header p {
+  margin: 0;
+  font-size: 13px;
+  color: rgba(255,255,255,0.7);
+}
+
+/* ── Stats bar ────────────────────────────────────────── */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  border-top: 4px solid transparent;
+}
+
+.stat-submitted { border-top-color: #f59e0b; }
+.stat-approved  { border-top-color: #10b981; }
+.stat-rejected  { border-top-color: #ef4444; }
+
+.stat-number {
+  display: block;
+  font-size: 32px;
+  font-weight: 800;
+  color: #1a237e;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ── Filter tabs ──────────────────────────────────────── */
+.filter-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  background: #fff;
+  padding: 6px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.filter-tab {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.filter-tab:hover { background: #f3f4f6; }
+
+.filter-tab.active.tab-submitted { background: #fef3c7; color: #d97706; }
+.filter-tab.active.tab-approved  { background: #d1fae5; color: #059669; }
+.filter-tab.active.tab-rejected  { background: #fee2e2; color: #dc2626; }
+
+.tab-count {
+  background: rgba(0,0,0,0.08);
+  border-radius: 999px;
+  padding: 1px 8px;
+  font-size: 11px;
+}
+
+/* ── Loading / Empty ──────────────────────────────────── */
+.loading-state,
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #9ca3af;
+}
+
+.loading-state p,
+.empty-state h3 { margin: 12px 0 4px; color: #374151; font-size: 18px; }
+.empty-state p { font-size: 14px; }
+
+.spin-icon { animation: spin 1s linear infinite; font-size: 32px; color: #1a237e; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Cards grid ───────────────────────────────────────── */
+.completions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 20px;
+}
+
+.completion-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.completion-card:hover {
+  box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+  transform: translateY(-2px);
+}
+
+.completion-card.approved { border-left: 4px solid #10b981; }
+.completion-card.rejected { border-left: 4px solid #ef4444; }
+.completion-card.submitted { border-left: 4px solid #f59e0b; }
+
+/* ── Card Header ──────────────────────────────────────── */
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.user-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1a237e, #3949ab);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.user-info { flex: 1; min-width: 0; }
+
+.user-name {
+  margin: 0 0 2px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-email {
+  margin: 0;
+  font-size: 12px;
+  color: #6b7280;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.info-icon { color: #9ca3af; font-size: 11px; }
+
+/* ── Status badge ─────────────────────────────────────── */
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.status-pending  { background: #fef3c7; color: #d97706; }
+.status-approved { background: #d1fae5; color: #059669; }
+.status-rejected { background: #fee2e2; color: #dc2626; }
+
+/* ── Card Body ────────────────────────────────────────── */
+.card-body {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.course-info-row,
+.date-row,
+.certificate-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #374151;
+}
+
+.row-icon { color: #6b7280; font-size: 13px; flex-shrink: 0; }
+.approved-icon { color: #10b981 !important; }
+
+.course-title {
+  flex: 1;
+  font-weight: 600;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Category badge ───────────────────────────────────── */
+.category-badge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.cat-premium { background: #fef3c7; color: #b45309; }
+.cat-pro     { background: #dbeafe; color: #1d4ed8; }
+.cat-lite    { background: #f3f4f6; color: #374151; }
+
+/* ── Certificate row ──────────────────────────────────── */
+.certificate-row {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-top: 4px;
+}
+
+.cert-icon { color: #C9A84C; font-size: 16px; }
+.cert-label { flex: 1; font-weight: 600; color: #059669; font-size: 12px; }
+
+.view-cert-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: #C9A84C;
+  color: #fff;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.view-cert-btn:hover { background: #a8893c; }
+
+/* ── Card Actions ─────────────────────────────────────── */
+.card-actions {
+  padding: 14px 20px;
+  border-top: 1px solid #f3f4f6;
+  display: flex;
+  gap: 10px;
+}
+
+.btn-approve,
+.btn-reject {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-approve {
+  flex: 1;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.btn-approve:hover:not(:disabled) { background: linear-gradient(135deg, #059669, #047857); }
+.btn-approve:disabled { opacity: 0.7; cursor: not-allowed; }
+
+.btn-reject {
+  background: #fff;
+  color: #dc2626;
+  border: 1.5px solid #dc2626;
+}
+
+.btn-reject:hover:not(:disabled) { background: #fee2e2; }
+.btn-reject:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.cert-generating {
+  color: #6b7280;
+  font-size: 13px;
+  font-style: italic;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+}
+
+/* ── Responsive ───────────────────────────────────────── */
+@media (max-width: 768px) {
+  .course-completions-container { padding: 16px; }
+  .stats-bar { grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .stat-number { font-size: 24px; }
+  .completions-grid { grid-template-columns: 1fr; }
+  .filter-tabs { flex-direction: column; }
+}

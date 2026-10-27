@@ -1,0 +1,310 @@
+/* PromotionsManager — imports TasksManager styles via shared class names */
+/* All tab styling comes from TasksManager.css shared classes:
+   .tasks-manager-container, .tabs-navigation, .tabs-buttons,
+   .tab-button, .tab-button.active, .tab-content,
+   .floating-plans-button, .floating-icon
+   These are already defined globally via TasksManager.css
+*/
+
+/* Promotions Modal Overlay */
+.promo-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 20px;
+}
+
+.promo-modal-box {
+  background: white;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 680px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.promo-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.promo-modal-header h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.2rem;
+  color: #390910;
+  margin: 0;
+}
+
+.promo-modal-close {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #64748b;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.promo-modal-close:hover {
+  background: #f1f5f9;
+  color: #ef4444;
+}
+
+.promo-modal-body {
+  padding: 20px 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Add Button */
+.promo-add-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #390910 0%, #772218 100%);
+  color: #E6C547;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: all 0.2s;
+}
+
+.promo-add-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(57, 9, 16, 0.3);
+}
+
+/* Promo List */
+.promo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.promo-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #fafafa;
+  transition: all 0.2s;
+}
+
+.promo-item:hover {
+  border-color: #D4AF37;
+  box-shadow: 0 2px 8px rgba(212, 175, 55, 0.15);
+}
+
+.promo-item.inactive {
+  opacity: 0.6;
+}
+
+.promo-item-info {
+  flex: 1;
+}
+
+.promo-item-info h3 {
+  margin: 0 0 4px;
+  font-size: 1rem;
+  color: #390910;
+}
+
+.promo-desc {
+  margin: 0 0 8px;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.promo-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.promo-badge {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.promo-badge.plan {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.promo-badge.reward {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.promo-badge.status.active {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.promo-badge.status.inactive {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.promo-item-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.promo-action-btn {
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.promo-action-btn.toggle {
+  background: #f0fdf4;
+  color: #16a34a;
+}
+
+.promo-action-btn.toggle:hover {
+  background: #dcfce7;
+}
+
+.promo-action-btn.edit {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.promo-action-btn.edit:hover {
+  background: #dbeafe;
+}
+
+.promo-action-btn.delete {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.promo-action-btn.delete:hover {
+  background: #fee2e2;
+}
+
+/* Form */
+.promo-form h3 {
+  margin: 0 0 16px;
+  color: #390910;
+}
+
+.promo-form-group {
+  margin-bottom: 14px;
+}
+
+.promo-form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+.promo-form-group input,
+.promo-form-group textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #1e293b;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.promo-form-group input:focus,
+.promo-form-group textarea:focus {
+  outline: none;
+  border-color: #D4AF37;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+}
+
+.promo-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.promo-form-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.promo-cancel-btn {
+  padding: 10px 20px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: white;
+  color: #374151;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.promo-save-btn {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #390910 0%, #772218 100%);
+  color: #E6C547;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.promo-save-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.promo-loading,
+.promo-empty {
+  text-align: center;
+  color: #64748b;
+  padding: 30px;
+}
+
+@media (max-width: 600px) {
+  .promo-form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .promo-item {
+    flex-direction: column;
+  }
+
+  .promo-item-actions {
+    align-self: flex-end;
+  }
+}

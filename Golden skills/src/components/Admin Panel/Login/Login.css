@@ -1,0 +1,304 @@
+/* ═══════════════════════════════════════════
+   ADMIN LOGIN — Glassmorphism Upgrade
+═══════════════════════════════════════════ */
+
+.login-wrapper {
+  background:
+    linear-gradient(135deg, #390910 0%, #5c1018 40%, #772218 70%, #390910 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 12s ease infinite;
+  position: relative;
+  overflow: hidden;
+}
+
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Ambient light orbs */
+.login-wrapper::before {
+  content: '';
+  position: absolute;
+  top: -120px; right: -120px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.15), transparent 65%);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: float 8s ease-in-out infinite;
+}
+
+.login-wrapper::after {
+  content: '';
+  position: absolute;
+  bottom: -100px; left: -80px;
+  width: 380px; height: 380px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.1), transparent 65%);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: float 10s ease-in-out infinite reverse;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-20px); }
+}
+
+.login-wrapper .container {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+}
+
+/* ── Card — full glassmorphism ────────────── */
+.login-wrapper .card {
+  max-width: 460px;
+  margin: 0 auto;
+  border-radius: 24px !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(24px) saturate(1.8) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(1.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.4),
+    0 8px 24px rgba(0, 0, 0, 0.2),
+    0 1px 0 rgba(255, 255, 255, 0.15) inset !important;
+  animation: fadeInUp 0.7s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Inner glow */
+.login-wrapper .card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  background: linear-gradient(135deg,
+    rgba(255,255,255,0.12) 0%,
+    transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.login-wrapper .card-body {
+  padding: 2.8rem !important;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Title ────────────────────────────────── */
+.text-golden {
+  color: transparent !important;
+  background: linear-gradient(135deg, #D4AF37, #F4D03F, #D4AF37);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer-text 3s linear infinite;
+  font-weight: 800 !important;
+  letter-spacing: -0.5px;
+}
+
+@keyframes shimmer-text {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+/* ── Input Group ──────────────────────────── */
+.input-group {
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+}
+
+.input-group-text {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.input-group-text:first-child {
+  border-radius: 10px 0 0 10px;
+  border-right: none;
+}
+
+.input-group-text:last-child {
+  border-radius: 0 10px 10px 0;
+  border-left: none;
+}
+
+/* ── Inputs ───────────────────────────────── */
+.form-control {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: white !important;
+  border-radius: 0;
+  padding-right: 45px !important;
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  transition: all 0.28s ease;
+}
+
+.form-control::placeholder {
+  color: rgba(255, 255, 255, 0.45) !important;
+}
+
+.form-control:focus {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: rgba(212, 175, 55, 0.7) !important;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2) !important;
+  color: white !important;
+  outline: 0;
+}
+
+.form-control.is-invalid {
+  border-color: rgba(220, 53, 69, 0.7) !important;
+  background-image: none !important;
+  padding-right: 45px !important;
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.2) !important;
+}
+
+.form-control.is-valid {
+  border-color: rgba(40, 167, 69, 0.7) !important;
+  box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15) !important;
+}
+
+/* ── Gold Button ──────────────────────────── */
+.btn-golden {
+  background: linear-gradient(135deg, #D4AF37, #F4D03F, #D4AF37);
+  background-size: 200% auto;
+  border: none;
+  color: #390910 !important;
+  font-weight: 700;
+  font-size: 1.05rem;
+  padding: 0.85rem 1.5rem !important;
+  border-radius: 10px;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow:
+    0 6px 24px rgba(212, 175, 55, 0.45),
+    0 2px 8px rgba(212, 175, 55, 0.2);
+  letter-spacing: 0.3px;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-golden::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn-golden:hover::before { left: 100%; }
+
+.btn-golden:hover {
+  background-position: right center;
+  transform: translateY(-3px);
+  box-shadow:
+    0 10px 32px rgba(212, 175, 55, 0.55),
+    0 4px 12px rgba(212, 175, 55, 0.3);
+  color: #390910 !important;
+}
+
+/* ── Forgot Password Link ─────────────────── */
+.login-wrapper a.text-muted {
+  color: rgba(255, 255, 255, 0.6) !important;
+  text-decoration: none;
+  transition: color 0.25s ease;
+  font-size: 0.9rem;
+}
+
+.login-wrapper a.text-muted:hover {
+  color: var(--accent-color) !important;
+}
+
+/* ── Password Toggle ──────────────────────── */
+.password-input-group {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.password-input-group .input-group-text {
+  border-radius: 10px 0 0 10px;
+  border-right: none;
+}
+
+.password-input-group .form-control {
+  border-radius: 0 10px 10px 0;
+  border-left: none;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.55);
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 5px;
+  border-radius: 50%;
+  transition: all 0.25s ease;
+  z-index: 3;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.password-toggle-btn:hover {
+  color: var(--accent-color);
+  background: rgba(212, 175, 55, 0.15);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.password-toggle-btn.visible { color: var(--accent-color); }
+
+/* ── Validation Feedback ──────────────────── */
+.invalid-feedback {
+  color: rgba(255, 120, 120, 0.9) !important;
+  font-size: 0.82rem;
+}
+
+/* Alert overrides for glass */
+.alert-danger {
+  background: rgba(220, 53, 69, 0.2) !important;
+  border: 1px solid rgba(220, 53, 69, 0.4) !important;
+  color: rgba(255, 180, 180, 0.95) !important;
+  border-radius: 10px !important;
+  backdrop-filter: blur(8px);
+}
+
+/* ── Subtext ──────────────────────────────── */
+.login-wrapper .text-muted {
+  color: rgba(255, 255, 255, 0.55) !important;
+}
+
+/* ── Responsive ───────────────────────────── */
+@media (max-width: 768px) {
+  .login-wrapper .card-body { padding: 2.2rem !important; }
+}
+
+@media (max-width: 576px) {
+  .login-wrapper .card-body { padding: 1.8rem 1.4rem !important; }
+  .login-wrapper .card { border-radius: 18px !important; }
+  .form-control { font-size: 0.92rem; padding-right: 40px !important; }
+  .password-toggle-btn { right: 10px; width: 28px; height: 28px; }
+}

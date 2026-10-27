@@ -1,0 +1,515 @@
+/* User Task Data Container */
+.user-task-data-container {
+  min-height: 100vh;
+  background: linear-gradient(160deg, #F9F6F2 0%, #F0E8DC 50%, #E8DDD0 100%);
+  padding: calc(var(--total-header-height) + 3rem) 2rem 4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.user-task-data-container::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 360px; height: 360px;
+  background: radial-gradient(circle, rgba(212,175,55,0.1), transparent 65%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.task-data-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.task-data-header h1 {
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  font-weight: 800;
+  color: var(--primary-color);
+  margin-bottom: 0.8rem;
+  letter-spacing: -0.3px;
+}
+
+.task-data-header p {
+  font-size: 1.1rem;
+  color: var(--text-light);
+  opacity: 0.88;
+}
+
+/* Search Section */
+.search-section {
+  max-width: 600px;
+  margin: 0 auto 3rem;
+}
+
+.search-form {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.search-input-group {
+  display: flex;
+  gap: 1rem;
+}
+
+.search-input-group input {
+  flex: 1;
+  padding: 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.search-input-group input:focus {
+  outline: none;
+  border-color: #D4AF37;
+  box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1);
+}
+
+.search-input-group button {
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #390910 0%, #772218 100%);
+  color: #D4AF37;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(57, 9, 16, 0.3);
+}
+
+.search-input-group button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(57, 9, 16, 0.4);
+}
+
+.search-input-group button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Loading State */
+.loading-state {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f1f5f9;
+  border-top-color: #390910;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-state p {
+  color: #64748b;
+  font-size: 1.1rem;
+}
+
+/* No Submissions */
+.no-submissions-found {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.no-submissions-found svg {
+  color: #cbd5e1;
+  margin-bottom: 1.5rem;
+}
+
+.no-submissions-found h3 {
+  font-size: 1.8rem;
+  color: #390910;
+  margin-bottom: 1rem;
+}
+
+.no-submissions-found p {
+  color: #64748b;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.no-submissions-found strong {
+  color: #390910;
+}
+
+/* Submissions List */
+.submissions-list {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.submissions-list > h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #390910;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+/* Submissions Grid */
+.submissions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 2rem;
+}
+
+/* Submission Card */
+.submission-card {
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.submission-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  border-color: #D4AF37;
+}
+
+/* Submission Header */
+.submission-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid #f1f5f9;
+}
+
+.user-avatar-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-avatar-section img {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #D4AF37;
+}
+
+.avatar-placeholder {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #390910 0%, #772218 100%);
+  color: #D4AF37;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  font-weight: 700;
+  border: 3px solid #D4AF37;
+}
+
+.user-info h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #390910;
+  margin: 0 0 0.25rem 0;
+}
+
+.user-info p {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Status Badge Large */
+.status-badge-large {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-icon {
+  font-size: 2rem;
+}
+
+.status-icon.pending {
+  color: #f59e0b;
+}
+
+.status-icon.approved {
+  color: #10b981;
+}
+
+.status-icon.rejected {
+  color: #ef4444;
+}
+
+.status-icon.completed {
+  color: #3b82f6;
+}
+
+.status-badge-large span {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Submission Details */
+.submission-details {
+  margin-bottom: 1.5rem;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.detail-item label {
+  font-weight: 600;
+  color: #475569;
+  font-size: 0.9rem;
+}
+
+.detail-item span {
+  color: #334155;
+  font-size: 0.9rem;
+  text-align: right;
+}
+
+.detail-item.notes {
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.detail-item.notes p {
+  color: #64748b;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0.75rem;
+  background: #f8fafc;
+  border-radius: 8px;
+}
+
+.plan-name {
+  font-weight: 700;
+  color: #390910;
+}
+
+.plan-price {
+  font-weight: 700;
+  color: #D4AF37;
+  font-size: 1.1rem;
+}
+
+/* Submission Footer */
+.submission-footer {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid #f1f5f9;
+}
+
+.info-message {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.info-message svg {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.info-message.pending {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #92400e;
+}
+
+.info-message.approved {
+  background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+  color: #065f46;
+}
+
+.info-message.rejected {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  color: #991b1b;
+}
+
+.info-message.completed {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  color: #1e40af;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .user-task-data-container {
+    padding: 2rem 1rem;
+  }
+
+  .task-data-header h1 {
+    font-size: 2rem;
+  }
+
+  .task-data-header p {
+    font-size: 1rem;
+  }
+
+  .search-form {
+    padding: 1.5rem;
+  }
+
+  .search-input-group {
+    flex-direction: column;
+  }
+
+  .search-input-group button {
+    width: 100%;
+  }
+
+  .submissions-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .submission-header {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .status-badge-large {
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .detail-item {
+    flex-direction: column;
+    gap: 0.25rem;
+    align-items: flex-start;
+  }
+
+  .detail-item span {
+    text-align: left;
+  }
+}
+
+/* ── Total Earnings Card ─────────────────────────────────── */
+.earnings-summary-card {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  max-width: 480px;
+  margin: 0 auto 2rem;
+  padding: 1.4rem 2rem;
+  background: linear-gradient(135deg, #b8860b 0%, #d4a017 60%, #c8960c 100%);
+  border-radius: 16px;
+  box-shadow: 0 6px 24px rgba(184, 134, 11, 0.35);
+  color: #fff;
+}
+
+.earnings-icon {
+  font-size: 2.2rem;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.earnings-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.earnings-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.85;
+}
+
+.earnings-amount {
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.earnings-sub {
+  font-size: 0.78rem;
+  opacity: 0.8;
+}
+
+/* ── Earnings card — plan + tax rows ──────────────────── */
+.earnings-plan-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-bottom: 0.6rem;
+  margin-bottom: 0.6rem;
+  border-bottom: 1px solid rgba(255,255,255,0.25);
+}
+
+.earnings-plan-name {
+  font-size: 0.88rem;
+  font-weight: 700;
+  opacity: 0.95;
+}
+
+.earnings-tax-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.earnings-plan-price {
+  font-size: 0.78rem;
+  opacity: 0.85;
+}
+
+.earnings-tax-badge {
+  font-size: 0.75rem;
+  background: rgba(220,38,38,0.25);
+  border: 1px solid rgba(220,38,38,0.4);
+  border-radius: 6px;
+  padding: 1px 7px;
+  font-weight: 600;
+}
+
+.earnings-net-badge {
+  font-size: 0.75rem;
+  background: rgba(22,163,74,0.25);
+  border: 1px solid rgba(22,163,74,0.4);
+  border-radius: 6px;
+  padding: 1px 7px;
+  font-weight: 700;
+}
