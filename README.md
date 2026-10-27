@@ -1,6 +1,6 @@
-# 🎓 Golden Skills — Learning Management System
+# � Golden Skills — Learning & Earning Platform
 
-A full-stack learning management platform with course management, task assignments, team verification, fraud detection, promotion system with rank badges, and a complete admin dashboard.
+A full-stack **learning and earning platform** where users complete real-world tasks, earn rewards, and grow their skills — all managed through a powerful admin dashboard and a mobile app.
 
 [![Node.js](https://img.shields.io/badge/Node.js-v22+-green.svg)](https://nodejs.org/)
 [![React](https://img.shields.io/badge/React-v18-blue.svg)](https://reactjs.org/)
@@ -29,7 +29,8 @@ A full-stack learning management platform with course management, task assignmen
 
 ### **For Users**
 - 🎓 Course enrollment and management
-- 📝 Task submissions and tracking
+- 📝 Task assignments — complete tasks, earn real rewards (Rs.)
+- 💰 **Total Earnings Dashboard** — see all approved task earnings in one place
 - 🏆 Promotion system with rewards
 - 🏅 Rank / Badge system (Gold, Silver, Diamond, Platinum, etc.)
 - 👥 Referral program with automatic progress tracking
@@ -42,7 +43,8 @@ A full-stack learning management platform with course management, task assignmen
 - 👨‍💼 Complete user management
 - 📚 Course and task creation with optional YouTube tutorial links
 - 📤 Send task to one user OR all approved users at once (bulk send)
-- ✅ Submission approval workflow
+- ✅ Submission approval workflow — **set reward amount per task on approval**
+- 💳 **Plan Tax Management** — set custom tax per plan, net amount auto-calculated
 - 🏅 Rank assignment after promotion reward approval
 - 📋 Plan management with tutorial video URLs
 - 🔍 Search tracking & suspicious activity detection (dual condition)
@@ -239,6 +241,7 @@ Production: https://goldenskills.online/api
 |--------|----------|-------------|------|
 | POST | `/user-tasks/assign` | Assign task to one user | Admin |
 | POST | `/user-tasks/assign-all` | **Bulk: send task to ALL approved users** | Admin |
+| GET | `/user-tasks/earnings/:email` | **Get total task earnings for a user** | Public |
 | GET | `/user-tasks/my-tasks` | Get my tasks | User JWT |
 | POST | `/user-tasks/:id/submit` | Submit task | User JWT |
 | POST | `/user-tasks/:id/sync-referral-progress` | Sync referral count | User JWT |
@@ -247,8 +250,8 @@ Production: https://goldenskills.online/api
 | Method | Endpoint | Description | Auth |
 |--------|----------|-------------|------|
 | GET | `/plans` | Get all active plans | No |
-| POST | `/plans` | Create plan (with optional tutorialVideoUrl) | Admin |
-| PUT | `/plans/:id` | Update plan | Admin |
+| POST | `/plans` | Create plan (with `taxAmount` + optional `tutorialVideoUrl`) | Admin |
+| PUT | `/plans/:id` | Update plan (with `taxAmount`) | Admin |
 | DELETE | `/plans/:id` | Delete plan | Admin |
 
 ### **Promotions**
@@ -449,13 +452,20 @@ systemctl status mongod
 
 ## 🆕 Changelog
 
-### **Latest Updates**
-- ✅ **FBR NTN Number Feature** — Admin can now manage NTN number from Site Settings in the admin dashboard sidebar. NTN number is fetched dynamically and displayed in the footer's FBR Registered Company badge instead of being hardcoded.
-- ✅ **CORS Fix** — Both `localhost:5173` (development) and `goldenskills.online` (production) are now allowed.
-- ✅ **Admin Login UX** — Removed browser `alert()` popups; errors now shown inline in the login form.
-- ✅ **Rate Limiter Relaxed** — Auth rate limit changed from 5 attempts/15min to 20 attempts/1min for better usability.
-- ✅ **Email Updated** — OTP and notification emails updated (configured via `.env`).
-- ✅ **MongoDB Atlas Support** — Application now supports both local MongoDB and Atlas cloud connection.
+### **Latest Updates — Task Reward & Tax System**
+- ✅ **Task Reward System** — Admin sets reward amount (Rs.) when approving a task. User sees total approved earnings on their dashboard.
+- ✅ **Plan Tax Feature** — Each plan has a custom `taxAmount` field. Admin sets tax per plan (e.g. Rs. 97). Net amount = Plan Price − Tax. Both shown on user dashboard.
+- ✅ **Total Earnings API** — New public endpoint `GET /api/user-tasks/earnings/:email` returns total approved task earnings + plan tax breakdown.
+- ✅ **Earnings Dashboard Card** — `/my-tasks` page shows a gold card with plan info, tax deduction, net amount, and total task earnings.
+- ✅ **Submitted Tasks Full Width** — Admin submitted tasks module now uses full screen width.
+- ✅ **CSS Import Fix** — Bootstrap import moved before Google Fonts to fix PostCSS warning.
+
+### **Previous Updates**
+- ✅ **FBR NTN Number Feature** — Admin can now manage NTN number from Site Settings. Shown live in footer.
+- ✅ **CORS Fix** — Both `localhost:5173` and `goldenskills.online` allowed.
+- ✅ **Admin Login UX** — Removed browser `alert()` popups; errors shown inline.
+- ✅ **Rate Limiter Relaxed** — Auth rate limit changed from 5/15min to 20/1min.
+- ✅ **MongoDB Atlas Support** — Supports both local MongoDB and Atlas cloud.
 
 ---
 
