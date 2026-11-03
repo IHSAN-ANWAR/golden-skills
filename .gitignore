@@ -44,3 +44,11 @@ backend/certificates/*.png
 
 # PM2
 .pm2/
+
+# Deploy archives
+*.tar.gz
+*.zip
+
+# Nginx local configs
+nginx-goldenskills.conf
+nginx-goldenskills.online.conf
