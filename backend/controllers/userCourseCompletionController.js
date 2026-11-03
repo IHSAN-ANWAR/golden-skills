@@ -39,6 +39,14 @@ export const submitCourseCompletion = async (req, res) => {
       });
     }
 
+    // BOLA fix: verify ke ye assignment is user ki hai
+    if (assignment.userId.toString() !== req.user.id) {
+      return res.status(403).json({
+        success: false,
+        message: 'Access denied. This course is not assigned to you.'
+      });
+    }
+
     // Already submitted check
     const existingCompletion = await UserCourseCompletion.findOne({ courseLinkAssignmentId });
     if (existingCompletion) {
@@ -122,6 +130,14 @@ export const getUserCourseCompletions = async (req, res) => {
   try {
     const { userId } = req.params;
 
+    // BOLA fix: sirf apna data dekh sakta hai
+    if (req.user.id !== userId) {
+      return res.status(403).json({
+        success: false,
+        message: 'Access denied. You can only view your own course completions.'
+      });
+    }
+
     const completions = await UserCourseCompletion.find({ userId })
       .sort({ completedAt: -1 })
       .lean();
@@ -144,18 +160,43 @@ export const getUserAssignedCourses = async (req, res) => {
   try {
     const { userId } = req.params;
 
+    // BOLA fix: sirf apna data dekh sakta hai
+    if (req.user.id !== userId) {
+      return res.status(403).json({
+        success: false,
+        message: 'Access denied. You can only view your own assigned courses.'
+      });
+    }
+
     const assignments = await CourseLinkAssignment.find({ userId })
       .sort({ sentAt: -1 })
       .lean();
 
-    const completions = await UserCourseCompletion.find({ userId }).select('courseLinkAssignmentId');
-    const completedIds = completions.map(c => c.courseLinkAssignmentId.toString());
+    const completions = await UserCourseCompletion.find({ userId })
+      .select('courseLinkAssignmentId status')
+      .lean();
 
-    const pendingCourses = assignments.filter(
-      a => !completedIds.includes(a._id.toString())
-    );
+    // Map: assignmentId → completion status
+    const completionMap = {};
+    completions.forEach(c => {
+      completionMap[c.courseLinkAssignmentId.toString()] = c.status;
+    });
 
-    return res.json({ success: true, courses: pendingCourses });
+    // Sab assignments return karo — status ke saath
+    // status: 'completed' agar CourseLinkAssignment.status === 'completed' ya completion approved hai
+    const courses = assignments.map(a => {
+      const completionStatus = completionMap[a._id.toString()];
+      return {
+        ...a,
+        status: a.status === 'completed' || completionStatus === 'approved'
+          ? 'completed'
+          : completionStatus === 'submitted'
+          ? 'submitted'
+          : 'active'
+      };
+    });
+
+    return res.json({ success: true, courses });
   } catch (err) {
     console.error('Get user assigned courses error:', err);
     return res.status(500).json({
@@ -268,6 +309,14 @@ export const updateCourseCompletionStatus = async (req, res) => {
     }
 
     await completion.save();
+
+    // ── Jab approved ho to CourseLinkAssignment status 'completed' karo ──
+    if (status === 'approved' && completion.courseLinkAssignmentId) {
+      await CourseLinkAssignment.findByIdAndUpdate(
+        completion.courseLinkAssignmentId,
+        { status: 'completed' }
+      );
+    }
 
     // Invalidate dashboard cache
     if (completion.userEmail) {

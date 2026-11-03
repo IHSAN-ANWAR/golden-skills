@@ -1,14 +1,20 @@
 import { useState, useEffect } from 'react';
 import './UserTaskHistory.css';
 import { API_ENDPOINTS } from '../../../config/apiConfig';
-import { FaHistory, FaUser, FaEnvelope, FaTasks, FaCalendarAlt, FaClock, FaCheckCircle, FaTimesCircle, FaHourglassHalf, FaTrash, FaSearch, FaUserShield } from 'react-icons/fa';
+import { adminFetch } from '../../../config/adminApi';
+import { FaHistory, FaUser, FaEnvelope, FaTasks, FaCalendarAlt, FaClock, FaCheckCircle, FaTimesCircle, FaHourglassHalf, FaTrash, FaSearch, FaUserShield, FaEdit, FaTimes, FaSave } from 'react-icons/fa';
 
 const UserTaskHistory = ({ initialFilter = 'all', mode = 'history' }) => {
   const [taskHistory, setTaskHistory] = useState([]);
-  const [allTaskHistory, setAllTaskHistory] = useState([]); // Store all tasks for filtering
+  const [allTaskHistory, setAllTaskHistory] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState(initialFilter || 'all'); // all, assigned, in-progress, completed, overdue
-  const [searchQuery, setSearchQuery] = useState(''); // Search query state
+  const [filter, setFilter] = useState(initialFilter || 'all');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Edit modal state
+  const [editTask, setEditTask] = useState(null);
+  const [editForm, setEditForm] = useState({});
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     fetchTaskHistory();
@@ -16,39 +22,17 @@ const UserTaskHistory = ({ initialFilter = 'all', mode = 'history' }) => {
 
   const fetchTaskHistory = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
-      
-      if (!token) {
-        alert('Please login first');
-        window.location.href = '/admin/login';
-        return;
-      }
-      
-      const headers = { 'Authorization': `Bearer ${token}` };
-      const response = await fetch(`${API_ENDPOINTS.USER_TASKS.GET_ALL}`, { headers });
+      const response = await adminFetch(`${API_ENDPOINTS.USER_TASKS.GET_ALL}`);
+      if (!response) return;
       const data = await response.json();
 
       if (data.success) {
         let tasks = data.userTasks || [];
-        
-        // For pending mode, ONLY show assigned and overdue tasks
-        if (mode === 'pending') {
-          tasks = tasks.filter(task => task.status === 'assigned' || task.status === 'overdue');
-        }
-        
-        // For review mode, ONLY show completed tasks (submitted by users)
-        if (mode === 'review') {
-          tasks = tasks.filter(task => task.status === 'completed');
-        }
-        
-        // For history mode, ONLY show approved tasks
-        if (mode === 'history') {
-          tasks = tasks.filter(task => task.status === 'approved');
-        }
-        
+        if (mode === 'pending') tasks = tasks.filter(t => t.status === 'assigned' || t.status === 'overdue');
+        if (mode === 'review')  tasks = tasks.filter(t => t.status === 'completed');
+        if (mode === 'history') tasks = tasks.filter(t => t.status === 'approved');
         setAllTaskHistory(tasks);
       }
-      
     } catch (error) {
       console.error('Error fetching task history:', error);
       alert('Failed to load task history: ' + error.message);
@@ -58,21 +42,11 @@ const UserTaskHistory = ({ initialFilter = 'all', mode = 'history' }) => {
   };
 
   const handleDeleteTask = async (taskId) => {
-    if (!window.confirm('Are you sure you want to delete this task assignment?')) {
-      return;
-    }
-
+    if (!window.confirm('Are you sure you want to delete this task assignment?')) return;
     try {
-      const token = localStorage.getItem('adminToken');
-      const response = await fetch(`${API_ENDPOINTS.USER_TASKS.UPDATE_STATUS(taskId)}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
+      const response = await adminFetch(`${API_ENDPOINTS.USER_TASKS.UPDATE_STATUS(taskId)}`, { method: 'DELETE' });
+      if (!response) return;
       const data = await response.json();
-
       if (data.success) {
         alert('Task deleted successfully');
         fetchTaskHistory();
@@ -87,20 +61,13 @@ const UserTaskHistory = ({ initialFilter = 'all', mode = 'history' }) => {
 
   const updateTaskStatus = async (taskId, newStatus, adminNotes = '') => {
     try {
-      const token = localStorage.getItem('adminToken');
-      const response = await fetch(`${API_ENDPOINTS.USER_TASKS.UPDATE_STATUS(taskId)}`, {
+      const response = await adminFetch(`${API_ENDPOINTS.USER_TASKS.UPDATE_STATUS(taskId)}`, {
         method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
         body: JSON.stringify({ status: newStatus, adminNotes })
       });
-
+      if (!response) return;
       const data = await response.json();
-
       if (data.success) {
-        // Refresh list after status change
         await fetchTaskHistory();
         alert(data.message || 'Task status updated successfully');
       } else {
@@ -109,6 +76,57 @@ const UserTaskHistory = ({ initialFilter = 'all', mode = 'history' }) => {
     } catch (error) {
       console.error('Error updating task status:', error);
       alert('Failed to update task status');
+    }
+  };
+
+  const openEditModal = (task) => {
+    setEditTask(task);
+    setEditForm({
+      taskTitle: task.taskTitle || '',
+      taskDescription: task.taskDescription || '',
+      customTaskMessage: task.customTaskMessage || '',
+      referralTarget: task.referralTarget || 0,
+      taskDeadline: task.taskDeadline
+        ? new Date(task.taskDeadline).toISOString().slice(0, 10)
+        : '',
+      adminNotes: task.adminNotes || ''
+    });
+  };
+
+  const closeEditModal = () => {
+    setEditTask(null);
+    setEditForm({});
+  };
+
+  const handleEditSave = async () => {
+    if (!editTask) return;
+    setSaving(true);
+    try {
+      const res = await adminFetch(API_ENDPOINTS.USER_TASKS.UPDATE_STATUS(editTask._id), {
+        method: 'PUT',
+        body: JSON.stringify({
+          taskTitle: editForm.taskTitle,
+          taskDescription: editForm.taskDescription,
+          customTaskMessage: editForm.customTaskMessage,
+          referralTarget: editForm.referralTarget,
+          taskDeadline: editForm.taskDeadline,
+          adminNotes: editForm.adminNotes
+        })
+      });
+      if (!res) return;
+      const data = await res.json();
+      if (data.success) {
+        alert('✅ Task updated successfully!');
+        closeEditModal();
+        fetchTaskHistory();
+      } else {
+        alert(data.message || 'Failed to update task');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Failed to update task');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -566,13 +584,24 @@ ${task.userNotes || 'No notes provided'}
                         </>
                       )}
                       {mode !== 'review' && (
-                        <button 
-                          className="btn-delete"
-                          onClick={() => handleDeleteTask(task._id)}
-                          title="Delete Task"
-                        >
-                          <FaTrash />
-                        </button>
+                        <>
+                          {(mode === 'pending') && (
+                            <button
+                              className="btn-edit-task"
+                              onClick={() => openEditModal(task)}
+                              title="Edit Task"
+                            >
+                              <FaEdit /> Edit
+                            </button>
+                          )}
+                          <button 
+                            className="btn-delete"
+                            onClick={() => handleDeleteTask(task._id)}
+                            title="Delete Task"
+                          >
+                            <FaTrash />
+                          </button>
+                        </>
                       )}
                     </div>
                   </td>
@@ -580,6 +609,91 @@ ${task.userNotes || 'No notes provided'}
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {/* ── Edit Task Modal ──────────────────────────────────────────── */}
+      {editTask && (
+        <div className="edit-task-modal-overlay" onClick={closeEditModal}>
+          <div className="edit-task-modal" onClick={e => e.stopPropagation()}>
+            <div className="edit-modal-header">
+              <h2><FaEdit /> Edit Task</h2>
+              <button className="edit-modal-close" onClick={closeEditModal}><FaTimes /></button>
+            </div>
+
+            <div className="edit-modal-body">
+              <div className="edit-user-info">
+                <FaUser /> <strong>{editTask.userName}</strong> — {editTask.userEmail}
+              </div>
+
+              <div className="edit-form-group">
+                <label>Task Title</label>
+                <input
+                  type="text"
+                  value={editForm.taskTitle}
+                  onChange={e => setEditForm(p => ({ ...p, taskTitle: e.target.value }))}
+                />
+              </div>
+
+              <div className="edit-form-group">
+                <label>Task Description</label>
+                <textarea
+                  rows="3"
+                  value={editForm.taskDescription}
+                  onChange={e => setEditForm(p => ({ ...p, taskDescription: e.target.value }))}
+                />
+              </div>
+
+              <div className="edit-form-group">
+                <label>Instructions (shown to user)</label>
+                <textarea
+                  rows="3"
+                  value={editForm.customTaskMessage}
+                  onChange={e => setEditForm(p => ({ ...p, customTaskMessage: e.target.value }))}
+                />
+              </div>
+
+              {editTask.isReferralTask && (
+                <div className="edit-form-group">
+                  <label>Referral Target (number of people)</label>
+                  <input
+                    type="number"
+                    min="1"
+                    value={editForm.referralTarget}
+                    onChange={e => setEditForm(p => ({ ...p, referralTarget: parseInt(e.target.value) || 0 }))}
+                  />
+                </div>
+              )}
+
+              <div className="edit-form-group">
+                <label>Deadline</label>
+                <input
+                  type="date"
+                  value={editForm.taskDeadline}
+                  onChange={e => setEditForm(p => ({ ...p, taskDeadline: e.target.value }))}
+                />
+              </div>
+
+              <div className="edit-form-group">
+                <label>Admin Notes</label>
+                <textarea
+                  rows="2"
+                  value={editForm.adminNotes}
+                  onChange={e => setEditForm(p => ({ ...p, adminNotes: e.target.value }))}
+                  placeholder="Internal notes..."
+                />
+              </div>
+            </div>
+
+            <div className="edit-modal-footer">
+              <button className="btn-cancel-edit" onClick={closeEditModal}>
+                <FaTimes /> Cancel
+              </button>
+              <button className="btn-save-edit" onClick={handleEditSave} disabled={saving}>
+                {saving ? 'Saving...' : <><FaSave /> Save Changes</>}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

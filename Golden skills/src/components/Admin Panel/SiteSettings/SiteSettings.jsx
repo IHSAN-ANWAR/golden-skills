@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaWhatsapp, FaSave, FaToggleOn, FaToggleOff, FaFacebook, FaInstagram, FaYoutube, FaTiktok, FaTwitter, FaLinkedin, FaShareAlt, FaFileInvoice } from 'react-icons/fa';
 import { API_ENDPOINTS } from '../../../config/apiConfig';
-import axios from 'axios';
+import { adminFetch } from '../../../config/adminApi';
 import './SiteSettings.css';
 
 const SiteSettings = () => {
@@ -24,23 +24,22 @@ const SiteSettings = () => {
 
   useEffect(() => { fetchSettings(); fetchSocialLinks(); fetchNtn(); }, []);
 
-  const getAuthConfig = () => {
-    const token = localStorage.getItem('adminToken');
-    return { headers: { Authorization: `Bearer ${token}` } };
-  };
+  const getAuthConfig = () => {};  // unused — replaced by adminFetch
 
   const showMessage = (type, text) => {
     setMessage({ type, text });
     setTimeout(() => setMessage({ type: '', text: '' }), 3000);
   };
 
+  // GET requests for settings are public (no auth needed)
   const fetchSettings = async () => {
     try {
-      const res = await axios.get(API_ENDPOINTS.SETTINGS.GET_WHATSAPP);
-      if (res.data.success) {
-        setWhatsappNumber(res.data.whatsappNumber || '');
-        setWhatsappMessage(res.data.whatsappMessage || 'Hello! I am interested in Golden Skills.');
-        setWhatsappEnabled(res.data.whatsappEnabled ?? true);
+      const res = await fetch(API_ENDPOINTS.SETTINGS.GET_WHATSAPP);
+      const data = await res.json();
+      if (data.success) {
+        setWhatsappNumber(data.whatsappNumber || '');
+        setWhatsappMessage(data.whatsappMessage || 'Hello! I am interested in Golden Skills.');
+        setWhatsappEnabled(data.whatsappEnabled ?? true);
       }
     } catch (err) {
       console.error('Error fetching settings:', err);
@@ -49,15 +48,12 @@ const SiteSettings = () => {
 
   const fetchSocialLinks = async () => {
     try {
-      const res = await axios.get(API_ENDPOINTS.SETTINGS.GET_SOCIAL_LINKS);
-      if (res.data.success) {
-        setSocialLinks(res.data.socialLinks || {
-          facebook: '',
-          instagram: '',
-          youtube: '',
-          tiktok: '',
-          twitter: '',
-          linkedin: ''
+      const res = await fetch(API_ENDPOINTS.SETTINGS.GET_SOCIAL_LINKS);
+      const data = await res.json();
+      if (data.success) {
+        setSocialLinks(data.socialLinks || {
+          facebook: '', instagram: '', youtube: '',
+          tiktok: '', twitter: '', linkedin: ''
         });
       }
     } catch (err) {
@@ -67,57 +63,53 @@ const SiteSettings = () => {
 
   const fetchNtn = async () => {
     try {
-      const res = await axios.get(API_ENDPOINTS.SETTINGS.GET_NTN);
-      if (res.data.success) {
-        setNtnNumber(res.data.ntnNumber || '');
-      }
+      const res = await fetch(API_ENDPOINTS.SETTINGS.GET_NTN);
+      const data = await res.json();
+      if (data.success) setNtnNumber(data.ntnNumber || '');
     } catch (err) {
       console.error('Error fetching NTN number:', err);
     }
   };
 
   const handleSave = async () => {
-    if (!whatsappNumber.trim()) {
-      showMessage('error', 'Please enter a WhatsApp number');
-      return;
-    }
+    if (!whatsappNumber.trim()) { showMessage('error', 'Please enter a WhatsApp number'); return; }
     setLoading(true);
     try {
-      await axios.put(API_ENDPOINTS.SETTINGS.UPDATE_WHATSAPP, {
-        whatsappNumber: whatsappNumber.trim(),
-        whatsappMessage: whatsappMessage.trim(),
-        whatsappEnabled
-      }, getAuthConfig());
-      showMessage('success', 'WhatsApp settings saved successfully');
-    } catch (err) {
-      showMessage('error', err.response?.data?.message || 'Failed to save settings');
-    } finally {
-      setLoading(false);
-    }
+      const res = await adminFetch(API_ENDPOINTS.SETTINGS.UPDATE_WHATSAPP, {
+        method: 'PUT',
+        body: JSON.stringify({ whatsappNumber: whatsappNumber.trim(), whatsappMessage: whatsappMessage.trim(), whatsappEnabled })
+      });
+      if (!res) return;
+      const data = await res.json();
+      data.success ? showMessage('success', 'WhatsApp settings saved successfully') : showMessage('error', data.message || 'Failed to save settings');
+    } catch { showMessage('error', 'Failed to save settings'); }
+    finally { setLoading(false); }
   };
 
   const handleSocialSave = async () => {
     setSocialLoading(true);
     try {
-      await axios.put(API_ENDPOINTS.SETTINGS.UPDATE_SOCIAL_LINKS, socialLinks, getAuthConfig());
+      const res = await adminFetch(API_ENDPOINTS.SETTINGS.UPDATE_SOCIAL_LINKS, {
+        method: 'PUT',
+        body: JSON.stringify(socialLinks)
+      });
+      if (!res) return;
       showMessage('success', 'Social media links saved successfully');
-    } catch (err) {
-      showMessage('error', err.response?.data?.message || 'Failed to save social links');
-    } finally {
-      setSocialLoading(false);
-    }
+    } catch { showMessage('error', 'Failed to save social links'); }
+    finally { setSocialLoading(false); }
   };
 
   const handleNtnSave = async () => {
     setNtnLoading(true);
     try {
-      await axios.put(API_ENDPOINTS.SETTINGS.UPDATE_NTN, { ntnNumber }, getAuthConfig());
+      const res = await adminFetch(API_ENDPOINTS.SETTINGS.UPDATE_NTN, {
+        method: 'PUT',
+        body: JSON.stringify({ ntnNumber })
+      });
+      if (!res) return;
       showMessage('success', 'NTN number saved successfully');
-    } catch (err) {
-      showMessage('error', err.response?.data?.message || 'Failed to save NTN number');
-    } finally {
-      setNtnLoading(false);
-    }
+    } catch { showMessage('error', 'Failed to save NTN number'); }
+    finally { setNtnLoading(false); }
   };
 
   const handleSocialChange = (platform, value) => {

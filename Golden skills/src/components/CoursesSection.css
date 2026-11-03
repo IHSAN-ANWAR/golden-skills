@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════
    COURSES SECTION — Full Glassmorphism
 ═══════════════════════════════════════════ */
 
@@ -568,4 +568,149 @@
   .public-how-it-works       { padding: 36px 18px; }
   .public-certificate-content { padding: 28px 18px; }
   .public-certificate-btn    { font-size: 0.95rem; padding: 13px 28px; }
+}
+
+
+/* ── Stats Row ────────────────────────────── */
+.public-courses-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-top: 48px;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  border-radius: 20px;
+  padding: 28px 40px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+  max-width: 860px;
+  margin-left: auto;
+  margin-right: auto;
+  flex-wrap: wrap;
+}
+
+.public-stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 150px;
+}
+
+.public-stat-number {
+  font-family: var(--heading-font);
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: var(--primary-color);
+  background: linear-gradient(135deg, var(--accent-color), var(--accent-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+
+.public-stat-label {
+  font-family: var(--body-font);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.public-stat-divider {
+  width: 1px;
+  height: 48px;
+  background: rgba(212, 175, 55, 0.25);
+  flex-shrink: 0;
+}
+
+/* ── Why Choose Us ────────────────────────── */
+.public-why-section {
+  text-align: center;
+  margin-bottom: 100px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  z-index: 1;
+}
+
+.public-why-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
+  margin-top: 48px;
+}
+
+.public-why-card {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 24px;
+  padding: 2.2rem 1.8rem;
+  text-align: center;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+
+.public-why-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 48px rgba(0,0,0,0.12), 0 0 0 1px rgba(212,175,55,0.3);
+  border-color: rgba(212,175,55,0.4);
+}
+
+.public-why-icon {
+  width: 72px;
+  height: 72px;
+  background: linear-gradient(135deg, var(--accent-color), var(--accent-light));
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.4rem;
+  box-shadow: 0 6px 20px rgba(212,175,55,0.35);
+  transition: transform 0.3s ease;
+}
+
+.public-why-card:hover .public-why-icon {
+  transform: scale(1.1) rotate(-5deg);
+}
+
+.public-why-icon i {
+  font-size: 1.8rem;
+  color: var(--primary-color);
+}
+
+.public-why-card h4 {
+  font-family: var(--heading-font);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 0.8rem;
+  margin-top: 0;
+}
+
+.public-why-card p {
+  font-family: var(--body-font);
+  font-size: 0.92rem;
+  color: var(--text-light);
+  line-height: 1.7;
+  margin: 0;
+  opacity: 0.88;
+}
+
+@media (max-width: 1024px) {
+  .public-why-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .public-why-grid { grid-template-columns: 1fr; gap: 20px; }
+  .public-courses-stats { padding: 20px 24px; gap: 16px; }
+  .public-stat-divider { display: none; }
+  .public-stat-item { min-width: 120px; }
 }

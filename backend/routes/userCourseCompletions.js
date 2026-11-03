@@ -11,7 +11,7 @@ import {
   getAllSubmittedCourses,
   updateCourseCompletionStatus
 } from '../controllers/userCourseCompletionController.js';
-import { authenticateAdmin } from '../middleware/authMiddleware.js';
+import { authenticateAdmin, authenticateUser } from '../middleware/authMiddleware.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -48,9 +48,9 @@ const upload = multer({
 });
 
 // User routes
-router.post('/submit', submitCourseCompletion);
-router.get('/user/:userId/assigned', getUserAssignedCourses);
-router.get('/user/:userId', getUserCourseCompletions);
+router.post('/submit', authenticateUser, submitCourseCompletion);
+router.get('/user/:userId/assigned', authenticateUser, getUserAssignedCourses);
+router.get('/user/:userId', authenticateUser, getUserCourseCompletions);
 
 // Admin routes
 router.get('/all', authenticateAdmin, getAllCourseCompletions);

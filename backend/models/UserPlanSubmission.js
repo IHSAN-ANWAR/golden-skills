@@ -3,7 +3,6 @@ import mongoose from 'mongoose';
 const userPlanSubmissionSchema = new mongoose.Schema({
   userId: {
     type: String,
-    unique: true,
     sparse: true
   },
   planId: {

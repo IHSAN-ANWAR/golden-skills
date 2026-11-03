@@ -1,8 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { API_ENDPOINTS } from '../../../config/apiConfig';
+import { adminFetch } from '../../../config/adminApi';
 import {
   FaCheckCircle, FaBan, FaUser, FaCalendarAlt,
-  FaGraduationCap, FaCertificate, FaExternalLinkAlt, FaSpinner
+  FaGraduationCap, FaCertificate, FaExternalLinkAlt, FaSpinner,
+  FaUpload, FaFilePdf
 } from 'react-icons/fa';
 import './CourseCompletions.css';
 
@@ -13,19 +15,21 @@ const CourseCompletions = () => {
   const [approvingId, setApprovingId] = useState(null);
   const [counts, setCounts] = useState({ submitted: 0, approved: 0, rejected: 0 });
 
+  // PDF upload state — har card ke liye alag file track karo
+  const [selectedFiles, setSelectedFiles] = useState({}); // { [completionId]: File }
+  const fileInputRefs = useRef({});                        // hidden input refs
+
   useEffect(() => { fetchCompletions(); }, [filter]);
   useEffect(() => { fetchCounts(); }, []);
 
   const fetchCounts = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
-      const headers = { Authorization: `Bearer ${token}` };
-
       const [sRes, aRes, rRes] = await Promise.all([
-        fetch(`${API_ENDPOINTS.USER_COURSE_COMPLETIONS.GET_ALL}?status=submitted`, { headers }),
-        fetch(`${API_ENDPOINTS.USER_COURSE_COMPLETIONS.GET_ALL}?status=approved`, { headers }),
-        fetch(`${API_ENDPOINTS.USER_COURSE_COMPLETIONS.GET_ALL}?status=rejected`, { headers })
+        adminFetch(`${API_ENDPOINTS.USER_COURSE_COMPLETIONS.GET_ALL}?status=submitted`),
+        adminFetch(`${API_ENDPOINTS.USER_COURSE_COMPLETIONS.GET_ALL}?status=approved`),
+        adminFetch(`${API_ENDPOINTS.USER_COURSE_COMPLETIONS.GET_ALL}?status=rejected`)
       ]);
+      if (!sRes || !aRes || !rRes) return;
       const [s, a, r] = await Promise.all([sRes.json(), aRes.json(), rRes.json()]);
       setCounts({
         submitted: (s.completions || []).length,
@@ -40,11 +44,9 @@ const CourseCompletions = () => {
   const fetchCompletions = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('adminToken');
-      if (!token) { window.location.href = '/admin/login'; return; }
-
       const url = `${API_ENDPOINTS.USER_COURSE_COMPLETIONS.GET_ALL}?status=${filter}`;
-      const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+      const res = await adminFetch(url);
+      if (!res) return;
       const data = await res.json();
       if (data.success) setCompletions(data.completions || []);
     } catch (err) {
@@ -55,24 +57,43 @@ const CourseCompletions = () => {
   };
 
   const handleApprove = async (completionId, userName, courseTitle) => {
+    const file = selectedFiles[completionId];
+
+    // File select nahi ki to block karo
+    if (!file) {
+      alert('Pehle certificate PDF file select karo, phir approve karo.');
+      return;
+    }
+
     if (!window.confirm(
-      `Approve course completion for "${userName}"?\n\nCourse: ${courseTitle}\n\nA certificate PDF will be automatically generated.`
+      `Approve course completion for "${userName}"?\n\nCourse: ${courseTitle}\n\nCertificate PDF upload hoga.`
     )) return;
 
     setApprovingId(completionId);
     try {
-      const token = localStorage.getItem('adminToken');
-      const res = await fetch(API_ENDPOINTS.USER_COURSE_COMPLETIONS.UPDATE_STATUS(completionId), {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({ status: 'approved' })
-      });
+      // multipart/form-data — file + status dono bhejo
+      const formData = new FormData();
+      formData.append('status', 'approved');
+      formData.append('certificate', file);
+
+      // adminFetch FormData detect karke Content-Type khud set karta hai
+      const res = await adminFetch(
+        API_ENDPOINTS.USER_COURSE_COMPLETIONS.UPDATE_STATUS(completionId),
+        {
+          method: 'PUT',
+          body: formData
+        }
+      );
+      if (!res) return;
       const data = await res.json();
       if (data.success) {
-        alert(`✅ Approved! Certificate generated successfully.`);
+        alert(`✅ Approved! Certificate uploaded successfully.`);
+        // Is card ki selected file clear karo
+        setSelectedFiles(prev => {
+          const updated = { ...prev };
+          delete updated[completionId];
+          return updated;
+        });
         fetchCompletions();
         fetchCounts();
       } else {
@@ -90,15 +111,11 @@ const CourseCompletions = () => {
     if (!window.confirm('Are you sure you want to reject this course completion?')) return;
 
     try {
-      const token = localStorage.getItem('adminToken');
-      const res = await fetch(API_ENDPOINTS.USER_COURSE_COMPLETIONS.UPDATE_STATUS(completionId), {
+      const res = await adminFetch(API_ENDPOINTS.USER_COURSE_COMPLETIONS.UPDATE_STATUS(completionId), {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
         body: JSON.stringify({ status: 'rejected' })
       });
+      if (!res) return;
       const data = await res.json();
       if (data.success) {
         alert('Course completion rejected');
@@ -260,24 +277,58 @@ const CourseCompletions = () => {
               {/* Actions */}
               {item.status === 'submitted' && (
                 <div className="card-actions">
-                  <button
-                    className="btn-approve"
-                    onClick={() => handleApprove(item._id, item.userName, item.courseTitle)}
-                    disabled={approvingId === item._id}
-                  >
-                    {approvingId === item._id ? (
-                      <><FaSpinner className="spin-icon" /> Generating...</>
-                    ) : (
-                      <><FaCheckCircle /> Approve & Generate Certificate</>
-                    )}
-                  </button>
-                  <button
-                    className="btn-reject"
-                    onClick={() => handleReject(item._id)}
-                    disabled={approvingId === item._id}
-                  >
-                    <FaBan /> Reject
-                  </button>
+                  {/* PDF upload area */}
+                  <div className="upload-section">
+                    <input
+                      type="file"
+                      accept="application/pdf"
+                      ref={el => fileInputRefs.current[item._id] = el}
+                      style={{ display: 'none' }}
+                      onChange={e => {
+                        const file = e.target.files[0];
+                        if (file) {
+                          if (file.size > 5 * 1024 * 1024) {
+                            alert('File size 5MB se zyada nahi honi chahiye.');
+                            e.target.value = '';
+                            return;
+                          }
+                          setSelectedFiles(prev => ({ ...prev, [item._id]: file }));
+                        }
+                      }}
+                    />
+                    <button
+                      className="btn-upload-pdf"
+                      onClick={() => fileInputRefs.current[item._id]?.click()}
+                      disabled={approvingId === item._id}
+                    >
+                      <FaFilePdf />
+                      {selectedFiles[item._id]
+                        ? <span className="file-name-text">📄 {selectedFiles[item._id].name}</span>
+                        : <span>Select Certificate PDF</span>
+                      }
+                    </button>
+
+                    <div className="action-btns-row">
+                      <button
+                        className="btn-approve"
+                        onClick={() => handleApprove(item._id, item.userName, item.courseTitle)}
+                        disabled={approvingId === item._id || !selectedFiles[item._id]}
+                      >
+                        {approvingId === item._id ? (
+                          <><FaSpinner className="spin-icon" /> Uploading...</>
+                        ) : (
+                          <><FaUpload /> Approve & Upload Certificate</>
+                        )}
+                      </button>
+                      <button
+                        className="btn-reject"
+                        onClick={() => handleReject(item._id)}
+                        disabled={approvingId === item._id}
+                      >
+                        <FaBan /> Reject
+                      </button>
+                    </div>
+                  </div>
                 </div>
               )}
 

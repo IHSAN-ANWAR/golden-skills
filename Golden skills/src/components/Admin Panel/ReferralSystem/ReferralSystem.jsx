@@ -5,6 +5,7 @@ import {
   FaUserPlus, FaUser, FaEnvelope, FaTag, FaLink
 } from 'react-icons/fa';
 import { API_ENDPOINTS } from '../../../config/apiConfig';
+import { adminFetch } from '../../../config/adminApi';
 import './ReferralSystem.css';
 
 const PAGE_SIZE = 20;
@@ -27,10 +28,10 @@ const ReferralSystem = () => {
   const fetchUsers = useCallback(async (page = 1, search = '') => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('adminToken');
       const searchParam = search ? `&search=${encodeURIComponent(search)}` : '';
       const url = `${API_ENDPOINTS.ADMIN.REFERRAL_TREE}?page=${page}&limit=${PAGE_SIZE}${searchParam}`;
-      const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+      const res = await adminFetch(url);
+      if (!res) return;
       const data = await res.json();
 
       if (data.success) {

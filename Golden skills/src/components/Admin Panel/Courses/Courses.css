@@ -2550,3 +2550,163 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* ── Course Completions Upload Cards ─────────────────────────────── */
+.completions-upload-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.completion-upload-card {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  overflow: hidden;
+}
+
+.cu-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: linear-gradient(135deg, #390910, #6b1a1a);
+  color: white;
+}
+
+.cu-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.cu-user-info { flex: 1; }
+.cu-user-info h3 { margin: 0 0 3px; font-size: 14px; display: flex; align-items: center; gap: 5px; }
+.cu-user-info p  { margin: 0; font-size: 12px; opacity: 0.85; display: flex; align-items: center; gap: 5px; }
+
+.cu-category-badge {
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.cat-premium { background: #fef3c7; color: #92400e; }
+.cat-pro     { background: #dbeafe; color: #1e40af; }
+.cat-lite    { background: #dcfce7; color: #166534; }
+
+.cu-card-body {
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.cu-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #374151;
+}
+
+.cu-icon { color: #6b1a1a; font-size: 12px; flex-shrink: 0; }
+
+.cu-card-actions {
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cu-btn-select-pdf {
+  width: 100%;
+  padding: 9px 14px;
+  border: 2px dashed #cbd5e1;
+  border-radius: 8px;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+.cu-btn-select-pdf:hover { border-color: #6b1a1a; color: #6b1a1a; background: #fff5f5; }
+
+.cu-action-row {
+  display: flex;
+  gap: 8px;
+}
+
+.cu-btn-approve {
+  flex: 1;
+  padding: 9px 14px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #15803d, #16a34a);
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: opacity 0.2s;
+}
+.cu-btn-approve:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.cu-btn-reject {
+  padding: 9px 14px;
+  border: none;
+  border-radius: 8px;
+  background: #fee2e2;
+  color: #dc2626;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: opacity 0.2s;
+}
+.cu-btn-reject:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.spin-icon { animation: spin 1s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* ── Inline PDF select button in table ───────────────────────────── */
+.cu-btn-select-pdf-inline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border: 1.5px dashed #cbd5e1;
+  border-radius: 6px;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: all 0.2s;
+}
+.cu-btn-select-pdf-inline:hover {
+  border-color: #6b1a1a;
+  color: #6b1a1a;
+  background: #fff5f5;
+}

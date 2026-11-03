@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaExclamationTriangle, FaPhone, FaUser, FaTrash, FaEye, FaCheck, FaTimes, FaImage, FaShieldAlt, FaClock, FaCheckCircle } from 'react-icons/fa';
 import { API_ENDPOINTS } from '../../../config/apiConfig';
-import axios from 'axios';
+import { adminFetch } from '../../../config/adminApi';
 import './FraudReports.css';
 
 const FraudReports = () => {
@@ -14,22 +14,14 @@ const FraudReports = () => {
 
   useEffect(() => { fetchReports(); }, [activeTab]);
 
-  const getAuthConfig = () => {
-    const token = localStorage.getItem('adminToken');
-    return { headers: { Authorization: `Bearer ${token}` } };
-  };
-
-  const showMessage = (type, text) => {
-    setMessage({ type, text });
-    setTimeout(() => setMessage({ type: '', text: '' }), 3000);
-  };
-
   const fetchReports = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${API_ENDPOINTS.FRAUD.GET_ALL}?status=${activeTab}`, getAuthConfig());
-      setReports(res.data.reports || []);
-      setCounts(res.data.counts || {});
+      const res = await adminFetch(`${API_ENDPOINTS.FRAUD.GET_ALL}?status=${activeTab}`);
+      if (!res) return;
+      const data = await res.json();
+      setReports(data.reports || []);
+      setCounts(data.counts || {});
     } catch (err) {
       console.error('Error fetching reports:', err);
     } finally {
@@ -39,7 +31,11 @@ const FraudReports = () => {
 
   const handleUpdateStatus = async (id, status) => {
     try {
-      await axios.put(API_ENDPOINTS.FRAUD.UPDATE(id), { status }, getAuthConfig());
+      const res = await adminFetch(API_ENDPOINTS.FRAUD.UPDATE(id), {
+        method: 'PUT',
+        body: JSON.stringify({ status }),
+      });
+      if (!res) return;
       showMessage('success', `Report marked as ${status}`);
       setSelectedReport(null);
       fetchReports();
@@ -51,7 +47,8 @@ const FraudReports = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this fraud report?')) return;
     try {
-      await axios.delete(API_ENDPOINTS.FRAUD.DELETE(id), getAuthConfig());
+      const res = await adminFetch(API_ENDPOINTS.FRAUD.DELETE(id), { method: 'DELETE' });
+      if (!res) return;
       showMessage('success', 'Report deleted');
       setSelectedReport(null);
       fetchReports();

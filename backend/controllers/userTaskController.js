@@ -119,7 +119,11 @@ export const assignTaskToUser = async (req, res) => {
     }
 
     // Check for duplicate assignment
-    const existingAssignmentQuery = { userPlanSubmissionId };
+    // approved aur rejected tasks ignore karo — taake dobara assign ho sake
+    const existingAssignmentQuery = {
+      userPlanSubmissionId,
+      status: { $nin: ['approved', 'rejected'] }  // sirf active records check karo
+    };
     if (isCustom || isReferral) {
       existingAssignmentQuery.taskTitle = taskData.taskTitle;
       if (isReferral) existingAssignmentQuery.isReferralTask = true;
@@ -145,6 +149,23 @@ export const assignTaskToUser = async (req, res) => {
       });
     }
 
+    // ── Referral snapshot — task assign hone ke waqt ka total ref count save karo ──
+    // Isse dobara task milne pe pehle wale refs count nahi honge
+    // progress = currentTotalRefs - referralBaseCount
+    let referralBaseCount = 0;
+    if (isReferral) {
+      const taskUser = await User.findOne({
+        email: userPlanSubmission.userEmail.toLowerCase()
+      }).select('_id').lean();
+
+      if (taskUser) {
+        referralBaseCount = await User.countDocuments({
+          referredBy: taskUser._id,
+          hasActivatedPlan: true
+        });
+      }
+    }
+
     // Create user task assignment
     const userTask = new UserTask({
       userId: userPlanSubmission._id,
@@ -163,6 +184,7 @@ export const assignTaskToUser = async (req, res) => {
       referralReward: isReferral ? String(referralReward).trim() : '',
       referralPackagePrice: isReferral && referralPackagePrice ? String(referralPackagePrice).trim() : '',
       referralProgress: 0,
+      referralBaseCount,   // ← snapshot
       customTaskMessage: customTaskMessage || '',
       taskDeadline: taskData.taskDeadline,
       taskPoints: taskData.taskPoints,
@@ -285,7 +307,8 @@ export const getAllUserTasks = async (req, res) => {
 export const updateUserTaskStatus = async (req, res) => {
   try {
     const { id } = req.params;
-    const { status, userNotes, adminNotes, submissionData, rewardAmount } = req.body;
+    const { status, userNotes, adminNotes, submissionData, rewardAmount,
+            taskTitle, taskDescription, referralTarget, taskDeadline, customTaskMessage } = req.body;
 
     console.log('Updating task:', id, 'to status:', status);
 
@@ -299,6 +322,24 @@ export const updateUserTaskStatus = async (req, res) => {
 
     // Prepare update object
     const updateData = {};
+
+    // ── Edit fields (admin can update these anytime) ──────────────────
+    if (typeof taskTitle === 'string' && taskTitle.trim()) {
+      updateData.taskTitle = taskTitle.trim();
+    }
+    if (typeof taskDescription === 'string' && taskDescription.trim()) {
+      updateData.taskDescription = taskDescription.trim();
+    }
+    if (typeof customTaskMessage === 'string') {
+      updateData.customTaskMessage = customTaskMessage;
+    }
+    if (referralTarget !== undefined && Number(referralTarget) > 0) {
+      updateData.referralTarget = Number(referralTarget);
+    }
+    if (taskDeadline) {
+      updateData.taskDeadline = new Date(taskDeadline);
+    }
+    // ─────────────────────────────────────────────────────────────────
 
     // Handle status updates
     if (status === 'in-progress') {
@@ -352,8 +393,10 @@ export const updateUserTaskStatus = async (req, res) => {
 
     res.json({
       success: true,
-      message: status === 'rejected' 
-        ? 'Task rejected and moved back to pending' 
+      message: !status
+        ? 'Task updated successfully'
+        : status === 'rejected'
+        ? 'Task rejected and moved back to pending'
         : status === 'approved'
         ? 'Task approved successfully'
         : 'User task status updated successfully',
@@ -548,10 +591,12 @@ export const assignTaskToAll = async (req, res) => {
 
     for (const submission of approvedSubmissions) {
       try {
-        // Skip if same task title already assigned to this user
+        // Skip if same task title already ACTIVELY assigned to this user
+        // (approved/rejected tasks skip nahi honge — dobara assign ho sakti hain)
         const alreadyAssigned = await UserTask.findOne({
           userPlanSubmissionId: submission._id,
           taskTitle: customTaskTitle.trim(),
+          status: { $nin: ['approved', 'rejected'] },  // sirf active tasks block karein
           ...(isReferral ? { isReferralTask: true } : {})
         });
 

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { API_ENDPOINTS } from '../../../config/apiConfig';
+import { adminFetch } from '../../../config/adminApi';
 import { FaBullhorn, FaTimes, FaPlus, FaEdit, FaTrash, FaToggleOn, FaToggleOff } from 'react-icons/fa';
 
 const PromotionsModal = ({ onClose }) => {
@@ -22,10 +23,8 @@ const PromotionsModal = ({ onClose }) => {
 
   const fetchPromotions = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
-      const res = await fetch(API_ENDPOINTS.PROMOTIONS.GET_ALL, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await adminFetch(API_ENDPOINTS.PROMOTIONS.GET_ALL);
+      if (!res) return;
       const data = await res.json();
       if (data.success) setPromotions(data.promotions || []);
     } catch (err) {
@@ -59,17 +58,12 @@ const PromotionsModal = ({ onClose }) => {
     }
     setSaving(true);
     try {
-      const token = localStorage.getItem('adminToken');
       const url = editingPromotion
         ? API_ENDPOINTS.PROMOTIONS.UPDATE(editingPromotion._id)
         : API_ENDPOINTS.PROMOTIONS.CREATE;
       const method = editingPromotion ? 'PUT' : 'POST';
-
-      const res = await fetch(url, {
-        method,
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify(form)
-      });
+      const res = await adminFetch(url, { method, body: JSON.stringify(form) });
+      if (!res) return;
       const data = await res.json();
       if (data.success) {
         alert(editingPromotion ? 'Promotion updated!' : 'Promotion created!');
@@ -87,34 +81,24 @@ const PromotionsModal = ({ onClose }) => {
 
   const handleToggle = async (promo) => {
     try {
-      const token = localStorage.getItem('adminToken');
-      const res = await fetch(API_ENDPOINTS.PROMOTIONS.UPDATE(promo._id), {
+      const res = await adminFetch(API_ENDPOINTS.PROMOTIONS.UPDATE(promo._id), {
         method: 'PUT',
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ isActive: !promo.isActive })
       });
+      if (!res) return;
       const data = await res.json();
       if (data.success) fetchPromotions();
-    } catch (err) {
-      alert('Error toggling promotion');
-    }
+    } catch (err) { alert('Error toggling promotion'); }
   };
 
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this promotion?')) return;
     try {
-      const token = localStorage.getItem('adminToken');
-      const res = await fetch(API_ENDPOINTS.PROMOTIONS.DELETE(id), {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await adminFetch(API_ENDPOINTS.PROMOTIONS.DELETE(id), { method: 'DELETE' });
+      if (!res) return;
       const data = await res.json();
-      if (data.success) {
-        setPromotions(prev => prev.filter(p => p._id !== id));
-      }
-    } catch (err) {
-      alert('Error deleting promotion');
-    }
+      if (data.success) setPromotions(prev => prev.filter(p => p._id !== id));
+    } catch (err) { alert('Error deleting promotion'); }
   };
 
   return (

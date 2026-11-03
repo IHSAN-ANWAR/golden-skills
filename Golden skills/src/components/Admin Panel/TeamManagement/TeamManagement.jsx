@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaUserShield, FaExclamationTriangle, FaTrash, FaUserClock, FaUsers, FaBan, FaEnvelope, FaPhone } from 'react-icons/fa';
 import { API_ENDPOINTS } from '../../../config/apiConfig';
-import axios from 'axios';
+import { adminFetch } from '../../../config/adminApi';
 import './TeamManagement.css';
 
 const TeamManagement = () => {
@@ -21,21 +21,18 @@ const TeamManagement = () => {
     setTimeout(() => setMessage({ type: '', text: '' }), 3000);
   };
 
-  const getAuthConfig = () => {
-    const token = localStorage.getItem('adminToken');
-    return { headers: { Authorization: `Bearer ${token}` } };
-  };
-
   const fetchData = async () => {
     try {
-      const config = getAuthConfig();
       const [membersRes, blacklistRes] = await Promise.all([
-        axios.get(API_ENDPOINTS.TEAM.GET_ALL_MEMBERS, config),
-        axios.get(API_ENDPOINTS.TEAM.GET_BLACKLIST, config)
+        adminFetch(API_ENDPOINTS.TEAM.GET_ALL_MEMBERS),
+        adminFetch(API_ENDPOINTS.TEAM.GET_BLACKLIST)
       ]);
-      setTeamMembers(membersRes.data.teamMembers || []);
-      setBlacklistedUsers(blacklistRes.data.blacklistedUsers || []);
-      setUnverifiedUsers(membersRes.data.unverifiedUsers || []);
+      if (!membersRes || !blacklistRes) return;
+      const membersData = await membersRes.json();
+      const blacklistData = await blacklistRes.json();
+      setTeamMembers(membersData.teamMembers || []);
+      setBlacklistedUsers(blacklistData.blacklistedUsers || []);
+      setUnverifiedUsers(membersData.unverifiedUsers || []);
     } catch (err) { console.error('Error fetching data:', err); }
   };
 
@@ -45,41 +42,46 @@ const TeamManagement = () => {
     setLoading(true);
     setMessage({ type: '', text: '' });
     try {
-      const config = getAuthConfig();
-
       if (status === 'blacklisted') {
-        // Direct blacklist - works for BOTH registered and unregistered users
-        await axios.post(API_ENDPOINTS.TEAM.ADD_TO_BLACKLIST, {
-          phoneNumber: phoneNumber.trim(),
-          name: 'Unknown',
-          reason: 'Reported for fraudulent activities using our company name'
-        }, config);
+        const res = await adminFetch(API_ENDPOINTS.TEAM.ADD_TO_BLACKLIST, {
+          method: 'POST',
+          body: JSON.stringify({
+            phoneNumber: phoneNumber.trim(),
+            name: 'Unknown',
+            reason: 'Reported for fraudulent activities using our company name'
+          }),
+        });
+        if (!res) return;
         showMessage('success', 'Number blacklisted successfully');
-        setActiveTab('blacklisted');  
+        setActiveTab('blacklisted');
         setPhoneNumber('');
         await fetchData();
-
       } else {
-        // Verified / Unverified - needs registered user
-        const verifyRes = await axios.post(API_ENDPOINTS.TEAM.VERIFY, { phoneNumber: phoneNumber.trim() });
+        // Verify user — public endpoint, plain fetch
+        const verifyRes = await fetch(API_ENDPOINTS.TEAM.VERIFY, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phoneNumber: phoneNumber.trim() }),
+        });
+        const verifyData = await verifyRes.json();
 
-        // userId can come from any status (verified, unverified, blacklisted, unknown won't have it)
-        const userId =
-          verifyRes.data.teamMember?._id ||
-          verifyRes.data.alert?._id;
-
+        const userId = verifyData.teamMember?._id || verifyData.alert?._id;
         if (!userId) {
           showMessage('error', 'User not found with this phone number. Only blacklisting works without a registered account.');
           setLoading(false);
           return;
         }
 
-        await axios.put(API_ENDPOINTS.TEAM.UPDATE_MEMBER(userId), {
-          isTeamMember: status === 'verified',
-          isBlacklisted: false,
-          teamRole: status === 'verified' ? 'Team Member' : '',
-          blacklistReason: ''
-        }, config);
+        const updateRes = await adminFetch(API_ENDPOINTS.TEAM.UPDATE_MEMBER(userId), {
+          method: 'PUT',
+          body: JSON.stringify({
+            isTeamMember: status === 'verified',
+            isBlacklisted: false,
+            teamRole: status === 'verified' ? 'Team Member' : '',
+            blacklistReason: ''
+          }),
+        });
+        if (!updateRes) return;
 
         showMessage('success', status === 'verified' ? 'Team member added successfully' : 'User status reset to unverified');
         setActiveTab(status === 'verified' ? 'verified' : 'unverified');
@@ -87,14 +89,17 @@ const TeamManagement = () => {
         await fetchData();
       }
     } catch (err) {
-      showMessage('error', err.response?.data?.message || 'Failed to update status');
+      showMessage('error', 'Failed to update status');
     } finally { setLoading(false); }
   };
 
   const handleDeleteTeamMember = async (userId) => {
     if (!window.confirm('Remove this team member?')) return;
     try {
-      await axios.put(API_ENDPOINTS.TEAM.UPDATE_MEMBER(userId), { isTeamMember: false, teamRole: '' }, getAuthConfig());
+      await adminFetch(API_ENDPOINTS.TEAM.UPDATE_MEMBER(userId), {
+        method: 'PUT',
+        body: JSON.stringify({ isTeamMember: false, teamRole: '' }),
+      });
       showMessage('success', 'Team member removed');
       await fetchData();
     } catch { showMessage('error', 'Failed to remove team member'); }
@@ -103,7 +108,7 @@ const TeamManagement = () => {
   const handleDeleteBlacklisted = async (id) => {
     if (!window.confirm('Remove this number from blacklist?')) return;
     try {
-      await axios.delete(API_ENDPOINTS.TEAM.REMOVE_FROM_BLACKLIST(id), getAuthConfig());
+      await adminFetch(API_ENDPOINTS.TEAM.REMOVE_FROM_BLACKLIST(id), { method: 'DELETE' });
       showMessage('success', 'Removed from blacklist');
       await fetchData();
     } catch { showMessage('error', 'Failed to remove from blacklist'); }

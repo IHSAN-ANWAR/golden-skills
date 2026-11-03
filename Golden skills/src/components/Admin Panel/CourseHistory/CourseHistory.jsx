@@ -1,6 +1,7 @@
 import { useState, useEffect, useImperativeHandle, forwardRef } from 'react';
 import './CourseHistory.css';
 import { API_ENDPOINTS } from '../../../config/apiConfig';
+import { adminFetch } from '../../../config/adminApi';
 import { FaHistory, FaUser, FaEnvelope, FaLink, FaCalendarAlt, FaSearch, FaTrash, FaExternalLinkAlt, FaCheckCircle, FaQuestionCircle } from 'react-icons/fa';
 
 const CourseHistory = forwardRef((props, ref) => {
@@ -17,34 +18,17 @@ const CourseHistory = forwardRef((props, ref) => {
   const fetchCourseHistory = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('adminToken');
-      
-      if (!token) {
-        alert('Please login first');
-        window.location.href = '/admin/login';
-        return;
-      }
-      
-      const headers = { 'Authorization': `Bearer ${token}` };
-      
-      // Fetch assignments
-      const assignmentsResponse = await fetch(`${API_ENDPOINTS.COURSE_LINKS.GET_ALL}`, { headers });
-      const assignmentsData = await assignmentsResponse.json();
-
-      if (assignmentsData.success) {
-        const assignmentsDataList = assignmentsData.assignments || [];
-        setAllAssignments(assignmentsDataList);
-      }
-      
-      // Fetch completions
-      const completionsResponse = await fetch(`${API_ENDPOINTS.USER_COURSE_COMPLETIONS.GET_ALL}?status=approved`, { headers });
-      const completionsData = await completionsResponse.json();
-
-      if (completionsData.success) {
-        const completionsDataList = completionsData.completions || [];
-        setAllCompletions(completionsDataList);
-      }
-      
+      const [assignmentsResponse, completionsResponse] = await Promise.all([
+        adminFetch(`${API_ENDPOINTS.COURSE_LINKS.GET_ALL}`),
+        adminFetch(`${API_ENDPOINTS.USER_COURSE_COMPLETIONS.GET_ALL}?status=approved`)
+      ]);
+      if (!assignmentsResponse || !completionsResponse) return;
+      const [assignmentsData, completionsData] = await Promise.all([
+        assignmentsResponse.json(),
+        completionsResponse.json()
+      ]);
+      if (assignmentsData.success) setAllAssignments(assignmentsData.assignments || []);
+      if (completionsData.success) setAllCompletions(completionsData.completions || []);
     } catch (error) {
       console.error('Error fetching course history:', error);
       alert('Failed to load course history: ' + error.message);

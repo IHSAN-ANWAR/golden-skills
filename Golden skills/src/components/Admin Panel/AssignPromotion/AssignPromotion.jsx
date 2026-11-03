@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import './AssignPromotion.css';
 import { API_ENDPOINTS } from '../../../config/apiConfig';
+import { adminFetch } from '../../../config/adminApi';
 import { FaUser, FaPaperPlane, FaEnvelope, FaPhone, FaCalendarAlt, FaTimes, FaPlus, FaTrash } from 'react-icons/fa';
 
 const AssignPromotion = () => {
@@ -55,14 +56,8 @@ const AssignPromotion = () => {
 
   const fetchApprovedUsers = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
-      if (!token) {
-        alert('Please login first');
-        window.location.href = '/admin/login';
-        return;
-      }
-      const headers = { Authorization: `Bearer ${token}` };
-      const res = await fetch(`${API_ENDPOINTS.USER_PROMOTIONS.GET_ALL}?paymentStatus=approved`, { headers });
+      const res = await adminFetch(`${API_ENDPOINTS.USER_PROMOTIONS.GET_ALL}?paymentStatus=approved`);
+      if (!res) return;
       const data = await res.json();
       if (data.success) setApprovedUsers(data.userPromotions || []);
     } catch (err) {
@@ -128,12 +123,11 @@ const AssignPromotion = () => {
 
     setSending(true);
     try {
-      const token = localStorage.getItem('adminToken');
-      const res = await fetch(API_ENDPOINTS.USER_PROMOTIONS.ASSIGN_TASKS(selectedUser._id), {
+      const res = await adminFetch(API_ENDPOINTS.USER_PROMOTIONS.ASSIGN_TASKS(selectedUser._id), {
         method: 'POST',
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ tasks })
       });
+      if (!res) return;
       const data = await res.json();
       if (data.success) {
         alert(`${tasks.length} task(s) assigned to ${selectedUser.userName} successfully!`);

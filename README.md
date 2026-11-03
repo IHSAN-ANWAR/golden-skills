@@ -316,9 +316,13 @@ Production: https://goldenskills.online/api
 | Fraud Reports | 7 submissions | 1 hour |
 | Admin | 200 requests | 15 min |
 
----
+### **JWT Token Expiry**
+| Role | Storage | Expiry |
+|------|---------|--------|
+| Admin | httpOnly cookie (`adminToken`) | 1 hour |
+| User | Response body → frontend localStorage | 6 hours |
 
-## 🚢 Deployment
+---
 
 ### **Server: KVM2 Hostinger VPS**
 - **IP:** `<SERVER_IP>`
@@ -452,7 +456,8 @@ systemctl status mongod
 
 ## 🆕 Changelog
 
-### **Latest Updates — Task Reward & Tax System**
+### **Latest Updates — JWT Token Expiry + Task Reward & Tax System**
+- ✅ **JWT Token Expiry Updated** — Admin token reduced from 2h to 1h (security). User token increased from 15m to 6h (users can watch course videos and complete tasks without re-login).
 - ✅ **Task Reward System** — Admin sets reward amount (Rs.) when approving a task. User sees total approved earnings on their dashboard.
 - ✅ **Plan Tax Feature** — Each plan has a custom `taxAmount` field. Admin sets tax per plan (e.g. Rs. 97). Net amount = Plan Price − Tax. Both shown on user dashboard.
 - ✅ **Total Earnings API** — New public endpoint `GET /api/user-tasks/earnings/:email` returns total approved task earnings + plan tax breakdown.

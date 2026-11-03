@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { FaUsers, FaEnvelope, FaMapMarkerAlt, FaIdCard, FaTrash } from 'react-icons/fa';
 import { API_ENDPOINTS } from '../../../config/apiConfig';
+import { adminFetch } from '../../../config/adminApi';
 import './Users.css';
 
 const Users = () => {
@@ -23,12 +24,9 @@ const Users = () => {
     try {
       setLoading(true);
       const searchParam = search ? `&search=${encodeURIComponent(search)}` : '';
-      const token = localStorage.getItem('adminToken');
-
       const url = `${API_ENDPOINTS.AUTH.USERS}?page=${page}&limit=${usersPerPage}${searchParam}`;
-      const response = await fetch(url, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
+      const response = await adminFetch(url);
+      if (!response) return;
 
       const data = await response.json();
 
@@ -41,10 +39,6 @@ const Users = () => {
         setHasPrevPage(data.hasPrevPage);
       } else {
         setError(data.message);
-        if (response.status === 401 || response.status === 403) {
-          localStorage.removeItem('adminToken');
-          window.location.href = '/login';
-        }
       }
     } catch (err) {
       setError('Failed to fetch users');
@@ -73,11 +67,10 @@ const Users = () => {
     }
 
     try {
-      const token = localStorage.getItem('adminToken');
-      const response = await fetch(API_ENDPOINTS.AUTH.DELETE_USER(userId), {
+      const response = await adminFetch(API_ENDPOINTS.AUTH.DELETE_USER(userId), {
         method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
       });
+      if (!response) return;
 
       const data = await response.json();
 

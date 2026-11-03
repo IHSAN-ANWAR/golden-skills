@@ -186,12 +186,22 @@ export const updateSubmissionStatus = async (req, res) => {
                 status: { $in: ['assigned', 'in-progress'] }
               });
 
+              // Referrer ki current total referral count nikaalo (live)
+              const referrerUser = await User.findById(activatedUser.referredBy).select('_id').lean();
+              const totalReferredAndPurchased = referrerUser
+                ? await User.countDocuments({ referredBy: referrerUser._id, hasActivatedPlan: true })
+                : 0;
+
               for (const rTask of referralTasks) {
-                rTask.referralProgress = (rTask.referralProgress || 0) + 1;
+                // Snapshot-based progress: sirf nayi referrals count hongi
+                // referralBaseCount = task assign hone ke waqt ka snapshot
+                const base = rTask.referralBaseCount || 0;
+                const actualProgress = Math.max(0, totalReferredAndPurchased - base);
+                rTask.referralProgress = actualProgress;
 
                 // ❌ Auto-complete REMOVED — user manually submits via button
-                // Sirf in-progress mark karo, completed NAHI karo
-                if (rTask.status === 'assigned') {
+                // Sirf in-progress mark karo agar progress shuru hua, completed NAHI karo
+                if (rTask.status === 'assigned' && actualProgress > 0) {
                   rTask.status = 'in-progress';
                   rTask.startedAt = rTask.startedAt || new Date();
                 }

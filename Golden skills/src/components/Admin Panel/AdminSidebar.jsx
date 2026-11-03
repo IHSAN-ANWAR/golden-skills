@@ -18,6 +18,7 @@ import {
 } from 'react-icons/fa';
 import logo from '../../assets/golden logo.jpeg';
 import './AdminSidebar.css';
+import { API_ENDPOINTS } from '../../config/apiConfig';
 
 const AdminSidebar = ({ isOpen, toggleSidebar }) => {
   const location = useLocation();
@@ -144,8 +145,12 @@ const AdminSidebar = ({ isOpen, toggleSidebar }) => {
 
         {/* Logout Button */}
         <div className="sidebar-footer">
-          <button className="logout-btn" onClick={() => {
-            localStorage.removeItem('adminToken');
+          <button className="logout-btn" onClick={async () => {
+            // Server se cookie clear + token blacklist
+            await fetch(API_ENDPOINTS.AUTH.ADMIN_LOGOUT, {
+              method: 'POST',
+              credentials: 'include',
+            }).catch(() => {});
             window.location.href = '/login';
           }}>
             <FaSignOutAlt className="logout-icon" />

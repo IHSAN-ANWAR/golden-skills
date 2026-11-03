@@ -1,7 +1,9 @@
 import express from 'express';
 import {
   adminLogin,
+  adminLogout,
   userLogin,
+  userLogout,
   userRegister,
   getAllUsers,
   createUserManually,
@@ -26,7 +28,9 @@ const router = express.Router();
 
 // Admin and user login routes - rate limiting temporarily disabled
 router.post('/login', adminLogin);
+router.post('/logout', adminLogout);            // Admin logout — cookie clear + blacklist
 router.post('/user/login', userLogin);
+router.post('/user/logout', authenticateUser, userLogout);  // User logout — token blacklist
 router.get('/users', authenticateAdmin, getAllUsers);
 
 // User registration route

@@ -92,6 +92,13 @@ const userTaskSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  // Snapshot — task assign hone ke waqt ka total ref count
+  // Progress = currentTotalRefs - referralBaseCount
+  // Isse dobara task milne pe pehle wale refs count nahi hote
+  referralBaseCount: {
+    type: Number,
+    default: 0
+  },
   // ────────────────────────────────────────────────────────────────────────
 
   status: {

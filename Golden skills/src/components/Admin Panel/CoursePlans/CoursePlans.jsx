@@ -6,6 +6,7 @@ import {
   FaPenNib, FaShoppingCart, FaGlobe, FaRobot, FaLayerGroup
 } from 'react-icons/fa';
 import { API_ENDPOINTS } from '../../../config/apiConfig';
+import { adminFetch } from '../../../config/adminApi';
 import './CoursePlans.css';
 
 // 15 education-related icons with labels
@@ -58,14 +59,10 @@ const CoursePlans = () => {
   const fetchPlans = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('adminToken');
-      const res = await fetch(API_ENDPOINTS.COURSE_PLANS.GET_ALL, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
+      const res = await adminFetch(API_ENDPOINTS.COURSE_PLANS.GET_ALL);
+      if (!res) return;
       const data = await res.json();
-      if (data.success) {
-        setPlans(data.plans || []);
-      }
+      if (data.success) setPlans(data.plans || []);
     } catch (err) {
       console.error('Failed to fetch course plans:', err);
       alert('Failed to load course plans');
@@ -107,11 +104,8 @@ const CoursePlans = () => {
   const handleDeletePlan = async (planId) => {
     if (!window.confirm('Are you sure you want to delete this course plan?')) return;
     try {
-      const token = localStorage.getItem('adminToken');
-      const res = await fetch(API_ENDPOINTS.COURSE_PLANS.DELETE(planId), {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
+      const res = await adminFetch(API_ENDPOINTS.COURSE_PLANS.DELETE(planId), { method: 'DELETE' });
+      if (!res) return;
       const data = await res.json();
       if (data.success) {
         alert('Course plan deleted successfully');
@@ -129,17 +123,12 @@ const CoursePlans = () => {
     e.preventDefault();
     const filteredFeatures = formData.features.filter(f => f.trim() !== '');
     try {
-      const token = localStorage.getItem('adminToken');
       const url = modalMode === 'add'
         ? API_ENDPOINTS.COURSE_PLANS.CREATE
         : API_ENDPOINTS.COURSE_PLANS.UPDATE(selectedPlan._id);
 
-      const res = await fetch(url, {
+      const res = await adminFetch(url, {
         method: modalMode === 'add' ? 'POST' : 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
         body: JSON.stringify({ ...formData, features: filteredFeatures })
       });
 

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import './AssignTask.css';
 import { API_ENDPOINTS } from '../../../config/apiConfig';
+import { adminFetch } from '../../../config/adminApi';
 import { FaUser, FaPaperPlane, FaEnvelope, FaPhone, FaCalendarAlt, FaTimes, FaClipboardList, FaBullseye, FaClock, FaCheckCircle, FaUsers } from 'react-icons/fa';
 
 const AssignTask = () => {
@@ -47,19 +48,40 @@ const AssignTask = () => {
 
   const fetchData = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
-      if (!token) { window.location.href = '/admin/login'; return; }
+      // Approved submissions aur all active tasks dono saath fetch karo
+      const [usersResponse, tasksResponse] = await Promise.all([
+        adminFetch(`${API_ENDPOINTS.SUBMISSIONS.GET_ALL}?status=approved`),
+        adminFetch(API_ENDPOINTS.USER_TASKS.GET_ALL)
+      ]);
+      if (!usersResponse || !tasksResponse) return;
 
-      const usersResponse = await fetch(
-        `${API_ENDPOINTS.SUBMISSIONS.GET_ALL}?status=approved`,
-        { headers: { 'Authorization': `Bearer ${token}` } }
-      );
-      const usersData = await usersResponse.json();
+      const [usersData, tasksData] = await Promise.all([
+        usersResponse.json(),
+        tasksResponse.json()
+      ]);
 
       if (usersData.success) {
         const subs = usersData.submissions || [];
         subs.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-        setApprovedUsers(subs);
+
+        // Har user ke liye check karo ke active task hai ya nahi
+        const activeTasks = (tasksData.userTasks || []).filter(t =>
+          ['assigned', 'in-progress', 'completed'].includes(t.status)
+        );
+
+        // submissionId → active task map banao
+        const activeTaskMap = {};
+        activeTasks.forEach(t => {
+          activeTaskMap[t.userPlanSubmissionId?.toString()] = t;
+        });
+
+        // Har submission mein activeTask inject karo
+        const enrichedSubs = subs.map(sub => ({
+          ...sub,
+          activeTask: activeTaskMap[sub._id?.toString()] || null
+        }));
+
+        setApprovedUsers(enrichedSubs);
       }
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -145,13 +167,11 @@ const AssignTask = () => {
 
     setSending(true);
     try {
-      const token = localStorage.getItem('adminToken');
       const deadline = new Date();
       deadline.setDate(deadline.getDate() + parseInt(taskDeadline));
 
-      const res = await fetch(API_ENDPOINTS.USER_TASKS.ASSIGN, {
+      const res = await adminFetch(API_ENDPOINTS.USER_TASKS.ASSIGN, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({
           userPlanSubmissionId: selectedUser._id,
           isReferralTask: true,
@@ -167,7 +187,7 @@ const AssignTask = () => {
           tutorialVideoUrl: tutorialVideoUrl.trim() || ''
         })
       });
-
+      if (!res) return;
       const data = await res.json();
       if (data.success) {
         alert(`Task "${taskTitle}" sent to ${selectedUser.userName} successfully!`);
@@ -207,13 +227,11 @@ const AssignTask = () => {
     setSendingAll(true);
     setSendAllResult(null);
     try {
-      const token = localStorage.getItem('adminToken');
       const deadline = new Date();
       deadline.setDate(deadline.getDate() + parseInt(taskDeadline));
 
-      const res = await fetch(API_ENDPOINTS.USER_TASKS.ASSIGN_ALL, {
+      const res = await adminFetch(API_ENDPOINTS.USER_TASKS.ASSIGN_ALL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({
           isReferralTask: true,
           customTaskTitle: taskTitle,
@@ -227,7 +245,7 @@ const AssignTask = () => {
           tutorialVideoUrl: tutorialVideoUrl.trim() || ''
         })
       });
-
+      if (!res) return;
       const data = await res.json();
       if (data.success) {
         setSendAllResult(data.summary);
@@ -423,9 +441,19 @@ const AssignTask = () => {
                     </div>
                   </td>
                   <td>
-                    <button className="btn-send-message" onClick={() => openModal(user)}>
-                      <FaPaperPlane /> Send Task
-                    </button>
+                    {user.activeTask ? (
+                      <div className="task-assigned-badge">
+                        <FaCheckCircle className="badge-icon" />
+                        <span>
+                          {user.activeTask.status === 'completed' ? 'Under Review' :
+                           user.activeTask.status === 'in-progress' ? 'In Progress' : 'Task Assigned'}
+                        </span>
+                      </div>
+                    ) : (
+                      <button className="btn-send-message" onClick={() => openModal(user)}>
+                        <FaPaperPlane /> Send Task
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}

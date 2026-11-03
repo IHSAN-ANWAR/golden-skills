@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import './Tasks.css';
 import { API_ENDPOINTS } from '../../../config/apiConfig';
+import { adminFetch } from '../../../config/adminApi';
 import { FaTasks, FaPlus, FaTrash, FaCheckCircle, FaBox } from 'react-icons/fa';
 
 const PlansModal = ({ onClose }) => {
@@ -36,14 +37,8 @@ const PlansModal = ({ onClose }) => {
     e.preventDefault();
     if (customPlan.title && customPlan.price) {
       try {
-        const token = localStorage.getItem('adminToken');
-        
-        const response = await fetch(API_ENDPOINTS.PLANS.CREATE, {
+        const response = await adminFetch(API_ENDPOINTS.PLANS.CREATE, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
           body: JSON.stringify({
             title: customPlan.title,
             price: `${customPlan.price} RS`,
@@ -72,14 +67,7 @@ const PlansModal = ({ onClose }) => {
   const handleDeletePlan = async (planId) => {
     if (window.confirm('Are you sure you want to delete this plan?')) {
       try {
-        const token = localStorage.getItem('adminToken');
-        
-        const response = await fetch(API_ENDPOINTS.PLANS.DELETE(planId), {
-          method: 'DELETE',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
+        const response = await adminFetch(API_ENDPOINTS.PLANS.DELETE(planId), { method: 'DELETE' });
 
         const data = await response.json();
         

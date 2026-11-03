@@ -660,3 +660,23 @@ a/* Assign Task Container */
 .btn-send-all:active {
   transform: translateY(0);
 }
+
+/* ── Task Assigned Badge ──────────────────────────────── */
+.task-assigned-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  background: #f0fdf4;
+  border: 1.5px solid #86efac;
+  border-radius: 8px;
+  color: #16a34a;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.task-assigned-badge .badge-icon {
+  font-size: 13px;
+  color: #16a34a;
+}

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { API_ENDPOINTS } from '../../../config/apiConfig';
+import { adminFetch } from '../../../config/adminApi';
 import { FaCheckCircle, FaBan, FaTrash, FaUser, FaPhone, FaMoneyBillWave, FaCalendarAlt } from 'react-icons/fa';
 import './CourseVerifications.css';
 
@@ -21,14 +22,12 @@ const CourseVerifications = () => {
 
   const fetchCounts = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
-      if (!token) return;
-      const headers = { 'Authorization': `Bearer ${token}` };
       const [pendingRes, approvedRes, rejectedRes] = await Promise.all([
-        fetch(`${API_ENDPOINTS.COURSE_PLAN_SUBMISSIONS.GET_ALL}?status=pending`, { headers }),
-        fetch(`${API_ENDPOINTS.COURSE_PLAN_SUBMISSIONS.GET_ALL}?status=approved`, { headers }),
-        fetch(`${API_ENDPOINTS.COURSE_PLAN_SUBMISSIONS.GET_ALL}?status=rejected`, { headers }),
+        adminFetch(`${API_ENDPOINTS.COURSE_PLAN_SUBMISSIONS.GET_ALL}?status=pending`),
+        adminFetch(`${API_ENDPOINTS.COURSE_PLAN_SUBMISSIONS.GET_ALL}?status=approved`),
+        adminFetch(`${API_ENDPOINTS.COURSE_PLAN_SUBMISSIONS.GET_ALL}?status=rejected`),
       ]);
+      if (!pendingRes || !approvedRes || !rejectedRes) return;
       const [p, a, r] = await Promise.all([pendingRes.json(), approvedRes.json(), rejectedRes.json()]);
       setCounts({
         pending: (p.submissions || []).length,
@@ -43,18 +42,9 @@ const CourseVerifications = () => {
   const fetchSubmissions = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('adminToken');
-      if (!token) {
-        window.location.href = '/admin/login';
-        return;
-      }
-
       const url = `${API_ENDPOINTS.COURSE_PLAN_SUBMISSIONS.GET_ALL}?status=${filter}`;
-
-      const res = await fetch(url, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-
+      const res = await adminFetch(url);
+      if (!res) return;
       const data = await res.json();
       if (data.success) {
         setSubmissions(data.submissions || []);
@@ -73,16 +63,11 @@ const CourseVerifications = () => {
     }
 
     try {
-      const token = localStorage.getItem('adminToken');
-      const res = await fetch(API_ENDPOINTS.COURSE_PLAN_SUBMISSIONS.UPDATE_STATUS(submissionId), {
+      const res = await adminFetch(API_ENDPOINTS.COURSE_PLAN_SUBMISSIONS.UPDATE_STATUS(submissionId), {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
         body: JSON.stringify({ status: 'approved' })
       });
-
+      if (!res) return;
       const data = await res.json();
       if (data.success) {
         alert('Course plan application approved successfully!');
@@ -98,21 +83,13 @@ const CourseVerifications = () => {
   };
 
   const handleReject = async (submissionId) => {
-    if (!window.confirm('Are you sure you want to reject this course plan application?')) {
-      return;
-    }
-
+    if (!window.confirm('Are you sure you want to reject this course plan application?')) return;
     try {
-      const token = localStorage.getItem('adminToken');
-      const res = await fetch(API_ENDPOINTS.COURSE_PLAN_SUBMISSIONS.UPDATE_STATUS(submissionId), {
+      const res = await adminFetch(API_ENDPOINTS.COURSE_PLAN_SUBMISSIONS.UPDATE_STATUS(submissionId), {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
         body: JSON.stringify({ status: 'rejected' })
       });
-
+      if (!res) return;
       const data = await res.json();
       if (data.success) {
         alert('Course plan application rejected');
@@ -128,17 +105,12 @@ const CourseVerifications = () => {
   };
 
   const handleDelete = async (submissionId) => {
-    if (!window.confirm('Are you sure you want to delete this submission?')) {
-      return;
-    }
-
+    if (!window.confirm('Are you sure you want to delete this submission?')) return;
     try {
-      const token = localStorage.getItem('adminToken');
-      const res = await fetch(API_ENDPOINTS.COURSE_PLAN_SUBMISSIONS.DELETE(submissionId), {
+      const res = await adminFetch(API_ENDPOINTS.COURSE_PLAN_SUBMISSIONS.DELETE(submissionId), {
         method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
       });
-
+      if (!res) return;
       const data = await res.json();
       if (data.success) {
         alert('Submission deleted successfully');

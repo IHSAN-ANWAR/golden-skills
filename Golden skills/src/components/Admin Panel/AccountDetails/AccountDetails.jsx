@@ -10,6 +10,7 @@ import {
   FaCreditCard
 } from 'react-icons/fa';
 import { API_ENDPOINTS } from '../../../config/apiConfig';
+import { adminFetch } from '../../../config/adminApi';
 import './AccountDetails.css';
 
 const ACCOUNT_TYPE_LABELS = {
@@ -46,16 +47,11 @@ const AccountDetails = () => {
   const [deletingId, setDeletingId] = useState(null);
   const [success, setSuccess] = useState('');
 
-  const token = localStorage.getItem('adminToken');
-  const authHeaders = {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${token}`
-  };
-
   const fetchAccounts = async () => {
     setLoading(true);
     try {
-      const res = await fetch(API_ENDPOINTS.ACCOUNT_DETAILS.GET_ALL, { headers: authHeaders });
+      const res = await adminFetch(API_ENDPOINTS.ACCOUNT_DETAILS.GET_ALL);
+      if (!res) return;
       const data = await res.json();
       if (data.success) setAccounts(data.accounts);
     } catch { /* silent */ } finally {
@@ -114,7 +110,8 @@ const AccountDetails = () => {
         isActive: true
       };
 
-      const res = await fetch(url, { method, headers: authHeaders, body: JSON.stringify(payload) });
+      const res = await adminFetch(url, { method, body: JSON.stringify(payload) });
+      if (!res) return;
       const data = await res.json();
       if (data.success) {
         setSuccess(editingId ? 'Account updated!' : 'Account added!');
@@ -130,9 +127,8 @@ const AccountDetails = () => {
     if (!window.confirm('Delete this account?')) return;
     setDeletingId(id);
     try {
-      const res = await fetch(API_ENDPOINTS.ACCOUNT_DETAILS.DELETE(id), {
-        method: 'DELETE', headers: authHeaders
-      });
+      const res = await adminFetch(API_ENDPOINTS.ACCOUNT_DETAILS.DELETE(id), { method: 'DELETE' });
+      if (!res) return;
       const data = await res.json();
       if (data.success) { setSuccess('Account deleted!'); fetchAccounts(); }
     } catch { /* silent */ } finally {

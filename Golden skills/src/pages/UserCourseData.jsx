@@ -151,15 +151,21 @@ const UserCourseData = () => {
                     </div>
 
                     <div className="course-card-footer">
-                      <button
-                        className="complete-btn"
-                        onClick={() => handleMarkComplete(course)}
-                        disabled={markingId === course._id}
-                      >
-                        {markingId === course._id
-                          ? <><FaSpinner className="spin" /> Submitting...</>
-                          : <><FaCheckCircle /> Mark as Complete</>}
-                      </button>
+                      {course.status === 'completed' ? (
+                        <div className="course-completed-badge">
+                          <FaCheckCircle /> Course Completed
+                        </div>
+                      ) : (
+                        <button
+                          className="complete-btn"
+                          onClick={() => handleMarkComplete(course)}
+                          disabled={markingId === course._id}
+                        >
+                          {markingId === course._id
+                            ? <><FaSpinner className="spin" /> Submitting...</>
+                            : <><FaCheckCircle /> Mark as Complete</>}
+                        </button>
+                      )}
                     </div>
                   </div>
                 ))}

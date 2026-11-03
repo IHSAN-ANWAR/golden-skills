@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════════════
    ABOUT  —  Premium Section
 ═══════════════════════════════════════════════════════ */
 
@@ -533,4 +533,361 @@
 
 .fbr-highlight:hover {
   background: rgba(212,175,55,0.12);
+}
+
+
+/* ═══════════════════════════════════════════════════════
+   OUR STORY & TIMELINE
+═══════════════════════════════════════════════════════ */
+
+.about-story-section {
+  margin-bottom: 5rem;
+}
+
+.about-story-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.about-story-title {
+  font-family: var(--font-head);
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  font-weight: 900;
+  color: var(--primary);
+  margin: 1rem 0 0;
+  letter-spacing: -0.5px;
+}
+
+.about-story-desc {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  color: var(--ink-soft);
+  line-height: 1.85;
+  max-width: 760px;
+  margin: 1.5rem auto 0;
+}
+
+/* ── Timeline ─────────────────────────── */
+.about-timeline {
+  position: relative;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem 0;
+}
+
+/* Vertical line */
+.about-timeline::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom,
+    transparent 0%,
+    rgba(212,175,55,0.4) 5%,
+    rgba(212,175,55,0.6) 50%,
+    rgba(212,175,55,0.4) 95%,
+    transparent 100%);
+  transform: translateX(-50%);
+}
+
+.timeline-item {
+  display: grid;
+  grid-template-columns: 1fr 60px 1fr;
+  gap: 0;
+  align-items: center;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.timeline-item:nth-child(odd) .timeline-card {
+  grid-column: 1;
+  grid-row: 1;
+  text-align: right;
+}
+
+.timeline-item:nth-child(odd) .timeline-year {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.timeline-item:nth-child(odd) .timeline-dot {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.timeline-item:nth-child(even) .timeline-card {
+  grid-column: 3;
+  grid-row: 1;
+  text-align: left;
+}
+
+.timeline-item:nth-child(even) .timeline-year {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.timeline-dot {
+  width: 18px;
+  height: 18px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  border-radius: 50%;
+  border: 3px solid #FAF7F2;
+  box-shadow: 0 0 0 3px rgba(212,175,55,0.3), 0 4px 12px rgba(212,175,55,0.35);
+  margin: 0 auto;
+  z-index: 2;
+  position: relative;
+  justify-self: center;
+  transition: all 0.35s var(--ease);
+}
+
+.timeline-item:hover .timeline-dot {
+  transform: scale(1.3);
+  box-shadow: 0 0 0 6px rgba(212,175,55,0.2), 0 6px 16px rgba(212,175,55,0.45);
+}
+
+.timeline-dot-gold {
+  width: 24px;
+  height: 24px;
+  box-shadow: 0 0 0 5px rgba(212,175,55,0.25), 0 6px 20px rgba(212,175,55,0.5);
+  animation: pulse-ring 2.5s ease infinite;
+}
+
+.timeline-year {
+  font-family: var(--font-head);
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--gold-dark);
+  text-align: center;
+  letter-spacing: 0.5px;
+  margin-top: 0.5rem;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: calc(100% + 4px);
+  white-space: nowrap;
+}
+
+.timeline-year-gold {
+  color: var(--gold);
+}
+
+.timeline-card {
+  background: var(--glass-white);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-lg);
+  padding: 1.6rem 1.8rem;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.35s var(--ease);
+  margin: 0 1.5rem;
+}
+
+.timeline-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(212,175,55,0.3);
+}
+
+.timeline-card-gold {
+  background: rgba(212,175,55,0.08);
+  border-color: rgba(212,175,55,0.3);
+}
+
+.timeline-card h4 {
+  font-family: var(--font-head);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin: 0 0 0.6rem;
+}
+
+.timeline-card p {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  line-height: 1.65;
+  margin: 0;
+}
+
+.timeline-item-last {
+  margin-bottom: 0;
+}
+
+/* ── Timeline Responsive ──────────────── */
+@media (max-width: 768px) {
+  .about-timeline::before {
+    left: 20px;
+  }
+
+  .timeline-item {
+    grid-template-columns: 40px 1fr;
+    grid-template-rows: auto auto;
+    gap: 0 1rem;
+    align-items: start;
+    padding-bottom: 1rem;
+  }
+
+  .timeline-dot,
+  .timeline-dot-gold {
+    grid-column: 1;
+    grid-row: 1;
+    margin-top: 1rem;
+  }
+
+  .timeline-item:nth-child(odd) .timeline-card,
+  .timeline-item:nth-child(even) .timeline-card {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    text-align: left;
+    margin: 0;
+  }
+
+  .timeline-year,
+  .timeline-year-gold {
+    position: static;
+    transform: none;
+    grid-column: 1;
+    grid-row: 2;
+    font-size: 0.72rem;
+    text-align: center;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   WHY CHOOSE — NEW FEATURES GRID (6 cards, 3x2)
+═══════════════════════════════════════════════════════ */
+
+.why-choose-subtitle {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  color: var(--ink-soft);
+  max-width: 640px;
+  margin: 1rem auto 3.5rem;
+  line-height: 1.75;
+  text-align: center;
+}
+
+.features-grid-new {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.feature-card-new {
+  background: #fff;
+  border-radius: 20px;
+  padding: 2.2rem 2rem;
+  border: 1px solid rgba(212,175,55,0.15);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  transition: all 0.38s var(--ease);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Gold top bar on hover */
+.feature-card-new::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.38s var(--ease);
+}
+
+.feature-card-new:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 24px 56px rgba(0,0,0,0.12), 0 0 0 1px rgba(212,175,55,0.25);
+  border-color: rgba(212,175,55,0.3);
+}
+
+.feature-card-new:hover::before {
+  transform: scaleX(1);
+}
+
+.feature-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.feature-icon-new {
+  width: 58px;
+  height: 58px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: var(--primary);
+  box-shadow: 0 4px 16px rgba(212,175,55,0.35), 0 0 0 6px rgba(212,175,55,0.08);
+  transition: all 0.38s var(--ease-spring);
+  flex-shrink: 0;
+}
+
+.feature-card-new:hover .feature-icon-new {
+  transform: scale(1.12) rotate(-8deg);
+  box-shadow: 0 8px 24px rgba(212,175,55,0.5), 0 0 0 9px rgba(212,175,55,0.12);
+}
+
+.feature-card-num {
+  font-family: var(--font-head);
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: rgba(212,175,55,0.12);
+  line-height: 1;
+  letter-spacing: -1px;
+  transition: color 0.38s var(--ease);
+}
+
+.feature-card-new:hover .feature-card-num {
+  color: rgba(212,175,55,0.22);
+}
+
+.feature-title-new {
+  font-family: var(--font-head);
+  font-size: 1.12rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin: 0 0 0.75rem;
+  letter-spacing: -0.2px;
+}
+
+.feature-desc-new {
+  font-family: var(--font-body);
+  font-size: 0.93rem;
+  color: var(--ink-soft);
+  line-height: 1.75;
+  margin: 0;
+}
+
+/* Left gold accent bar */
+.feature-card-new::after {
+  content: '';
+  position: absolute;
+  left: 0; top: 20%; bottom: 20%;
+  width: 3px;
+  background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+  border-radius: 2px;
+  opacity: 0;
+  transition: opacity 0.38s var(--ease);
+}
+
+.feature-card-new:hover::after {
+  opacity: 1;
+}
+
+@media (max-width: 1024px) {
+  .features-grid-new { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .features-grid-new { grid-template-columns: 1fr; gap: 1.4rem; }
+  .feature-card-new { padding: 1.8rem 1.5rem; }
 }

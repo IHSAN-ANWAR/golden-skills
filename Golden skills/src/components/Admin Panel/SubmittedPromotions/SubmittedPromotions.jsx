@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import './SubmittedPromotions.css';
 import { API_ENDPOINTS } from '../../../config/apiConfig';
+import { adminFetch } from '../../../config/adminApi';
 import { FaUser, FaEnvelope, FaTasks, FaCalendarAlt, FaCheckCircle, FaTimesCircle, FaEye, FaClipboardList, FaInfoCircle, FaMoneyBillWave, FaMedal } from 'react-icons/fa';
 
 const SubmittedPromotions = () => {
@@ -22,14 +23,8 @@ const SubmittedPromotions = () => {
 
   const fetchSubmittedTasks = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
-      if (!token) {
-        alert('Please login first');
-        window.location.href = '/admin/login';
-        return;
-      }
-      const headers = { Authorization: `Bearer ${token}` };
-      const res = await fetch(API_ENDPOINTS.USER_PROMOTIONS.GET_ALL, { headers });
+      const res = await adminFetch(API_ENDPOINTS.USER_PROMOTIONS.GET_ALL);
+      if (!res) return;
       const data = await res.json();
 
       if (data.success) {
@@ -110,12 +105,11 @@ const SubmittedPromotions = () => {
     const notes = window.prompt('Add approval notes (optional):', '') ;
     if (notes === null) return;
     try {
-      const token = localStorage.getItem('adminToken');
-      const res = await fetch(API_ENDPOINTS.USER_PROMOTIONS.UPDATE_TASK(task._promoId, task._id), {
+      const res = await adminFetch(API_ENDPOINTS.USER_PROMOTIONS.UPDATE_TASK(task._promoId, task._id), {
         method: 'PUT',
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'approved', adminNotes: notes || 'Task approved by admin' })
       });
+      if (!res) return;
       const data = await res.json();
       if (data.success) {
         alert('Task approved successfully!');
@@ -135,12 +129,11 @@ const SubmittedPromotions = () => {
       return;
     }
     try {
-      const token = localStorage.getItem('adminToken');
-      const res = await fetch(API_ENDPOINTS.USER_PROMOTIONS.UPDATE_TASK(task._promoId, task._id), {
+      const res = await adminFetch(API_ENDPOINTS.USER_PROMOTIONS.UPDATE_TASK(task._promoId, task._id), {
         method: 'PUT',
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'rejected', adminNotes: reason })
       });
+      if (!res) return;
       const data = await res.json();
       if (data.success) {
         alert('Task rejected');
@@ -157,16 +150,14 @@ const SubmittedPromotions = () => {
     const notes = window.prompt('Add reward payment notes (optional):', '');
     if (notes === null) return;
     try {
-      const token = localStorage.getItem('adminToken');
-      const res = await fetch(API_ENDPOINTS.USER_PROMOTIONS.APPROVE_REWARD(task._promoId), {
+      const res = await adminFetch(API_ENDPOINTS.USER_PROMOTIONS.APPROVE_REWARD(task._promoId), {
         method: 'PUT',
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ rewardStatus: 'approved', rewardNotes: notes })
       });
+      if (!res) return;
       const data = await res.json();
       if (data.success) {
         alert('Reward approved successfully!');
-        // Wait for list to refresh, then open rank modal with stable promoId
         await fetchSubmittedTasks();
         openRankModal(task);
       } else {
@@ -199,16 +190,15 @@ const SubmittedPromotions = () => {
 
     setAssigningRank(true);
     try {
-      const token = localStorage.getItem('adminToken');
-      const res = await fetch(API_ENDPOINTS.USER_PROMOTIONS.ASSIGN_RANK(rankTask._promoId), {
+      const res = await adminFetch(API_ENDPOINTS.USER_PROMOTIONS.ASSIGN_RANK(rankTask._promoId), {
         method: 'POST',
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
           rank: rankInput.trim(),
           rankStartDate: rankStartDate,
           rankExpiresAt: rankNoExpiry ? null : rankEndDate
         })
       });
+      if (!res) return;
       const data = await res.json();
       if (data.success) {
         alert(`✅ Rank "${rankInput}" assigned to ${rankTask._userName} successfully!`);

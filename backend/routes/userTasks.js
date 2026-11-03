@@ -288,13 +288,15 @@ router.get('/my-tasks', authenticateUser, async (req, res) => {
       });
     }
 
-    // Inject live progress into referral tasks
+    // Inject live progress into referral tasks — snapshot-based
     const enrichTask = (t) => {
       if (!t.isReferralTask) return t;
+      const base = t.referralBaseCount || 0;
+      const actualProgress = Math.max(0, liveReferralCount - base);
       return {
         ...t,
-        referralProgress: liveReferralCount,
-        remaining: Math.max(0, t.referralTarget - liveReferralCount),
+        referralProgress: actualProgress,
+        remaining: Math.max(0, t.referralTarget - actualProgress),
         liveProgressSynced: true
       };
     };
@@ -632,32 +634,36 @@ router.post('/:id/sync-referral-progress', authenticateUser, async (req, res) =>
       hasActivatedPlan: true
     });
 
+    // ── Snapshot-based progress ──────────────────────────────────────────
+    // referralBaseCount = task assign hone ke waqt ka count (snapshot)
+    // Actual progress = total - base → sirf naye refs count honge
+    const base = task.referralBaseCount || 0;
+    const actualProgress = Math.max(0, referredAndPurchased - base);
+
     const previousProgress = task.referralProgress;
-    task.referralProgress = referredAndPurchased;
+    task.referralProgress = actualProgress;
 
     // Sirf in-progress mark karo agar progress shuru hua — COMPLETED NAHI KARO
-    if (referredAndPurchased > 0 && task.status === 'assigned') {
+    if (actualProgress > 0 && task.status === 'assigned') {
       task.status = 'in-progress';
       task.startedAt = task.startedAt || new Date();
     }
 
-    // ❌ task.status = 'completed' — REMOVED (user manually submit karega)
-
     await task.save();
 
-    const remaining = Math.max(0, task.referralTarget - referredAndPurchased);
-    const readyToSubmit = referredAndPurchased >= task.referralTarget;
+    const remaining = Math.max(0, task.referralTarget - actualProgress);
+    const readyToSubmit = actualProgress >= task.referralTarget;
 
     res.json({
       success: true,
       message: readyToSubmit
-        ? `🎉 Target complete! ${referredAndPurchased}/${task.referralTarget} referrals done. Ab Submit button dabao.`
-        : `Progress updated: ${referredAndPurchased}/${task.referralTarget} referrals done. ${remaining} baaki hain.`,
-      progressChanged: referredAndPurchased !== previousProgress,
-      referralProgress: referredAndPurchased,
+        ? `🎉 Target complete! ${actualProgress}/${task.referralTarget} referrals done. Ab Submit button dabao.`
+        : `Progress updated: ${actualProgress}/${task.referralTarget} referrals done. ${remaining} baaki hain.`,
+      progressChanged: actualProgress !== previousProgress,
+      referralProgress: actualProgress,
       referralTarget: task.referralTarget,
       remaining,
-      readyToSubmit,   // ← mobile app is flag se Submit button enable/disable kare
+      readyToSubmit,
       task
     });
 
@@ -727,7 +733,7 @@ router.post('/:id/submit', authenticateUser, async (req, res) => {
         success: false,
         canSubmit: false,
         reason: 'already_submitted',
-        message: 'Task already submitted. Admin review ka wait karo.',
+        message: 'Task already submitted. Please wait for admin review.',
         task
       });
     }
@@ -749,15 +755,17 @@ router.post('/:id/submit', authenticateUser, async (req, res) => {
         hasActivatedPlan: true
       });
 
-      // Progress sync karo
-      task.referralProgress = referredAndPurchased;
+      // ── Snapshot-based progress ────────────────────────────────────────
+      const base = task.referralBaseCount || 0;
+      const actualProgress = Math.max(0, referredAndPurchased - base);
 
-      const remaining = task.referralTarget - referredAndPurchased;
+      task.referralProgress = actualProgress;
+
+      const remaining = task.referralTarget - actualProgress;
 
       // Target poora nahi — BLOCK
-      if (referredAndPurchased < task.referralTarget) {
-        // in-progress mark karo agar shuru hua
-        if (referredAndPurchased > 0 && task.status === 'assigned') {
+      if (actualProgress < task.referralTarget) {
+        if (actualProgress > 0 && task.status === 'assigned') {
           task.status = 'in-progress';
           task.startedAt = task.startedAt || new Date();
         }
@@ -767,8 +775,8 @@ router.post('/:id/submit', authenticateUser, async (req, res) => {
           success: false,
           canSubmit: false,
           reason: 'referral_incomplete',
-          message: `Pehle task complete karo. ${remaining} aur log refer karo jo package purchase karein.`,
-          referralProgress: referredAndPurchased,
+          message: `Please complete the task first. You need ${remaining} more referral(s) who must purchase a package.`,
+          referralProgress: actualProgress,
           referralTarget: task.referralTarget,
           remaining,
           task
@@ -798,7 +806,7 @@ router.post('/:id/submit', authenticateUser, async (req, res) => {
           success: false,
           canSubmit: false,
           reason: 'task_not_started',
-          message: 'Pehle task complete karo, phir submit karo.',
+          message: 'Please complete the task first before submitting.',
           task
         });
       }

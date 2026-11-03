@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import './UserPromotionHistory.css';
 import { API_ENDPOINTS } from '../../../config/apiConfig';
+import { adminFetch } from '../../../config/adminApi';
 import { FaHistory, FaUser, FaEnvelope, FaTasks, FaCalendarAlt, FaClock, FaCheckCircle, FaTimesCircle, FaHourglassHalf, FaTrash, FaSearch, FaBullhorn, FaMoneyBillWave } from 'react-icons/fa';
 
 const UserPromotionHistory = ({ filter: initialFilter = 'active', mode = 'pending' }) => {
@@ -15,24 +16,15 @@ const UserPromotionHistory = ({ filter: initialFilter = 'active', mode = 'pendin
 
   const fetchTaskHistory = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
-      if (!token) {
-        alert('Please login first');
-        window.location.href = '/admin/login';
-        return;
-      }
-      const headers = { Authorization: `Bearer ${token}` };
-
-      // Build query
       const params = new URLSearchParams();
       if (mode === 'pending') params.append('status', 'active');
       if (mode === 'history') params.append('status', 'completed');
 
-      const res = await fetch(`${API_ENDPOINTS.USER_PROMOTIONS.GET_ALL}?${params}`, { headers });
+      const res = await adminFetch(`${API_ENDPOINTS.USER_PROMOTIONS.GET_ALL}?${params}`);
+      if (!res) return;
       const data = await res.json();
 
       if (data.success) {
-        // Flatten: one row per task
         const rows = [];
         for (const promo of data.userPromotions || []) {
           for (const task of promo.tasks || []) {
@@ -64,11 +56,8 @@ const UserPromotionHistory = ({ filter: initialFilter = 'active', mode = 'pendin
   const handleDeletePromotion = async (promoId) => {
     if (!window.confirm('Are you sure you want to delete this promotion record?')) return;
     try {
-      const token = localStorage.getItem('adminToken');
-      const res = await fetch(API_ENDPOINTS.USER_PROMOTIONS.DELETE(promoId), {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await adminFetch(API_ENDPOINTS.USER_PROMOTIONS.DELETE(promoId), { method: 'DELETE' });
+      if (!res) return;
       const data = await res.json();
       if (data.success) {
         alert('Deleted successfully');

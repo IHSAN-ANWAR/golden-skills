@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import './SubmittedTasks.css';
 import { API_ENDPOINTS } from '../../../config/apiConfig';
+import { adminFetch } from '../../../config/adminApi';
 import { FaUser, FaEnvelope, FaTasks, FaCalendarAlt, FaCheckCircle, FaTimesCircle, FaEye, FaClipboardList, FaInfoCircle, FaUsers, FaShoppingCart, FaBullseye } from 'react-icons/fa';
 
 const SubmittedTasks = () => {
@@ -15,10 +16,8 @@ const SubmittedTasks = () => {
 
   const fetchSubmittedTasks = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
-      if (!token) { window.location.href = '/admin/login'; return; }
-      const headers = { 'Authorization': `Bearer ${token}` };
-      const response = await fetch(`${API_ENDPOINTS.USER_TASKS.GET_ALL}?status=completed`, { headers });
+      const response = await adminFetch(`${API_ENDPOINTS.USER_TASKS.GET_ALL}?status=completed`);
+      if (!response) return;
       const data = await response.json();
       if (data.success) {
         const completedTasks = (data.userTasks || []).filter(task => task.status === 'completed');
@@ -32,15 +31,12 @@ const SubmittedTasks = () => {
     }
   };
 
-  // ── Referral task verification modal ──────────────────────────────────────
   const openReferralVerification = async (task) => {
     setVerifyLoading(true);
     setVerifyModal({ loading: true, task });
     try {
-      const token = localStorage.getItem('adminToken');
-      const res = await fetch(API_ENDPOINTS.USER_TASKS.REFERRAL_VERIFICATION(task._id), {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
+      const res = await adminFetch(API_ENDPOINTS.USER_TASKS.REFERRAL_VERIFICATION(task._id));
+      if (!res) return;
       const data = await res.json();
       if (data.success) {
         setVerifyModal({ loading: false, data });
@@ -108,22 +104,19 @@ const SubmittedTasks = () => {
 
   const handleApprove = async (taskId) => {
     const rewardAmount = window.prompt('Reward Amount (Rs.) — leave blank if no reward:', '');
-    if (rewardAmount === null) return; // user pressed Cancel
-
+    if (rewardAmount === null) return;
     const notes = window.prompt('Approval notes (optional):', '');
     if (notes === null) return;
-
     try {
-      const token = localStorage.getItem('adminToken');
-      const response = await fetch(`${API_ENDPOINTS.USER_TASKS.UPDATE_STATUS(taskId)}`, {
+      const response = await adminFetch(`${API_ENDPOINTS.USER_TASKS.UPDATE_STATUS(taskId)}`, {
         method: 'PUT',
-        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
           status: 'approved',
           adminNotes: notes || 'Task approved by admin',
           rewardAmount: rewardAmount ? rewardAmount.trim() : ''
         })
       });
+      if (!response) return;
       const data = await response.json();
       if (data.success) {
         alert('Task approved successfully!');
@@ -139,17 +132,13 @@ const SubmittedTasks = () => {
 
   const handleReject = async (taskId) => {
     const reason = window.prompt('Reason for rejection:', '');
-    if (reason === null || !reason.trim()) {
-      if (reason !== null) alert('Please provide a reason');
-      return;
-    }
+    if (reason === null || !reason.trim()) { if (reason !== null) alert('Please provide a reason'); return; }
     try {
-      const token = localStorage.getItem('adminToken');
-      const response = await fetch(`${API_ENDPOINTS.USER_TASKS.UPDATE_STATUS(taskId)}`, {
+      const response = await adminFetch(`${API_ENDPOINTS.USER_TASKS.UPDATE_STATUS(taskId)}`, {
         method: 'PUT',
-        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'rejected', adminNotes: reason })
       });
+      if (!response) return;
       const data = await response.json();
       if (data.success) {
         alert('Task rejected and sent back to pending');

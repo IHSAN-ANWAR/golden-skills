@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaSearch, FaTrash, FaEye, FaTimes, FaPhone, FaExclamationTriangle } from 'react-icons/fa';
 import { API_ENDPOINTS } from '../../../config/apiConfig';
-import axios from 'axios';
+import { adminFetch } from '../../../config/adminApi';
 import './SearchTracking.css';
 
 const SearchTracking = () => {
@@ -14,23 +14,15 @@ const SearchTracking = () => {
 
   useEffect(() => { fetchRecords(); }, [activeTab]);
 
-  const getAuthConfig = () => {
-    const token = localStorage.getItem('adminToken');
-    return { headers: { Authorization: `Bearer ${token}` } };
-  };
-
-  const showMessage = (type, text) => {
-    setMessage({ type, text });
-    setTimeout(() => setMessage({ type: '', text: '' }), 3000);   
-  };
-
   const fetchRecords = async () => {
     setLoading(true);
     try {
       const url = `${API_ENDPOINTS.TEAM.GET_SEARCH_TRACKING}?filter=${activeTab}`;
-      const res = await axios.get(url, getAuthConfig());
-      setRecords(res.data.records || []);
-      setCounts(res.data.counts || { all: 0, suspicious: 0 });
+      const res = await adminFetch(url);
+      if (!res) return;
+      const data = await res.json();
+      setRecords(data.records || []);
+      setCounts(data.counts || { all: 0, suspicious: 0 });
     } catch (err) {
       console.error('Error fetching tracking:', err);
     } finally {
@@ -41,7 +33,7 @@ const SearchTracking = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this tracking record?')) return;
     try {
-      await axios.delete(API_ENDPOINTS.TEAM.DELETE_SEARCH_TRACKING(id), getAuthConfig());
+      await adminFetch(API_ENDPOINTS.TEAM.DELETE_SEARCH_TRACKING(id), { method: 'DELETE' });
       showMessage('success', 'Record deleted');
       setSelectedRecord(null);
       fetchRecords();

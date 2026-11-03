@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import './SubmittedCourses.css';
 import { API_ENDPOINTS } from '../../../config/apiConfig';
+import { adminFetch } from '../../../config/adminApi';
 import { FaUser, FaEnvelope, FaGraduationCap, FaCalendarAlt, FaCheckCircle, FaBan, FaEye, FaLink, FaQuestionCircle, FaInfoCircle } from 'react-icons/fa';
 
 const SubmittedCourses = () => {
@@ -13,24 +14,13 @@ const SubmittedCourses = () => {
 
   const fetchSubmittedCourses = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
-      
-      if (!token) {
-        alert('Please login first');
-        window.location.href = '/admin/login';
-        return;
-      }
-      
-      const headers = { 'Authorization': `Bearer ${token}` };
-      const response = await fetch(`${API_ENDPOINTS.USER_COURSE_COMPLETIONS.GET_ALL}?status=submitted`, { headers });
+      const response = await adminFetch(`${API_ENDPOINTS.USER_COURSE_COMPLETIONS.GET_ALL}?status=submitted`);
+      if (!response) return;
       const data = await response.json();
-
       if (data.success) {
         const submitted = (data.completions || []).filter(c => c.status === 'submitted');
-        console.log('Submitted courses loaded:', submitted.length);
         setSubmittedCourses(submitted);
       }
-      
     } catch (error) {
       console.error('Error fetching submitted courses:', error);
       alert('Failed to load submitted courses: ' + error.message);
@@ -114,38 +104,13 @@ const SubmittedCourses = () => {
     }
 
     try {
-      const token = localStorage.getItem('adminToken');
-      
-      if (!token) {
-        alert('Admin token not found. Please login again.');
-        window.location.href = '/admin/login';
-        return;
-      }
-      
       const url = `${API_ENDPOINTS.USER_COURSE_COMPLETIONS.UPDATE_STATUS(courseId)}`;
-      console.log('Approving course...');
-      console.log('URL:', url);
-      
-      const response = await fetch(url, {
+      const response = await adminFetch(url, {
         method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
         body: JSON.stringify({ status: 'approved' })
       });
-
-      console.log('Response status:', response.status);
-      
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Response error:', errorText);
-        throw new Error(`HTTP ${response.status}: ${errorText}`);
-      }
-
+      if (!response) return;
       const data = await response.json();
-      console.log('Response data:', data);
-
       if (data.success) {
         alert('Course completion approved! It will now appear in Course History.');
         fetchSubmittedCourses();
@@ -161,44 +126,18 @@ const SubmittedCourses = () => {
   const handleReject = async (courseId) => {
     const reason = window.prompt('Explain why the course completion is rejected:', '');
     if (reason === null || !reason.trim()) {
-      if (reason !== null) {
-        alert('Please provide a reason for rejection');
-      }
+      if (reason !== null) alert('Please provide a reason for rejection');
       return;
     }
 
     try {
-      const token = localStorage.getItem('adminToken');
-      
-      if (!token) {
-        alert('Admin token not found. Please login again.');
-        window.location.href = '/admin/login';
-        return;
-      }
-
       const url = `${API_ENDPOINTS.USER_COURSE_COMPLETIONS.UPDATE_STATUS(courseId)}`;
-      console.log('Rejecting course...');
-      console.log('URL:', url);
-      
-      const response = await fetch(url, {
+      const response = await adminFetch(url, {
         method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
         body: JSON.stringify({ status: 'rejected' })
       });
-
-      console.log('Response status:', response.status);
-      
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Response error:', errorText);
-        throw new Error(`HTTP ${response.status}: ${errorText}`);
-      }
-
+      if (!response) return;
       const data = await response.json();
-      console.log('Response data:', data);
 
       if (data.success) {
         alert('Course completion rejected');

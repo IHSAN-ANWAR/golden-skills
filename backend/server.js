@@ -1,6 +1,7 @@
 
 import express from "express";
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import compression from 'compression';
@@ -14,7 +15,9 @@ import { generalLimiter, adminLimiter } from './middleware/rateLimiter.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Pehle .env load karo, phir .env.local override kare (local dev ke liye)
 dotenv.config();
+dotenv.config({ path: '.env.local', override: true });
 
 // Import routes
 import redis from './config/redis.js';
@@ -107,6 +110,7 @@ if (process.env.NODE_ENV === 'development') {
 app.use(compression());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(cookieParser()); // httpOnly cookies parse karne ke liye
 
 // Serve static files
 app.use('/certificates', express.static(path.join(__dirname, 'certificates')));

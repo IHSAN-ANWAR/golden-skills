@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import './PromotionHistory.css';
 import { API_ENDPOINTS } from '../../../config/apiConfig';
+import { adminFetch } from '../../../config/adminApi';
 import { FaUser, FaEnvelope, FaPhone, FaEye, FaCheckCircle, FaTimesCircle, FaTrash, FaBullhorn } from 'react-icons/fa';
 
 const PromotionHistory = () => {
@@ -32,10 +33,8 @@ const PromotionHistory = () => {
 
   const fetchSubmissions = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
-      const res = await fetch(API_ENDPOINTS.USER_PROMOTIONS.GET_ALL, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await adminFetch(API_ENDPOINTS.USER_PROMOTIONS.GET_ALL);
+      if (!res) return;
       const data = await res.json();
       if (data.success) setAllSubmissions(data.userPromotions || []);
     } catch (err) {
@@ -48,12 +47,11 @@ const PromotionHistory = () => {
 
   const updatePaymentStatus = async (id, paymentStatus, notes = '') => {
     try {
-      const token = localStorage.getItem('adminToken');
-      const res = await fetch(API_ENDPOINTS.USER_PROMOTIONS.UPDATE_PAYMENT(id), {
+      const res = await adminFetch(API_ENDPOINTS.USER_PROMOTIONS.UPDATE_PAYMENT(id), {
         method: 'PUT',
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({ paymentStatus, paymentNotes: notes })
       });
+      if (!res) return;
       const data = await res.json();
       if (data.success) {
         setAllSubmissions(prev =>
@@ -81,11 +79,10 @@ const PromotionHistory = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this submission?')) return;
     try {
-      const token = localStorage.getItem('adminToken');
-      const res = await fetch(API_ENDPOINTS.USER_PROMOTIONS.DELETE(id), {
+      const res = await adminFetch(API_ENDPOINTS.USER_PROMOTIONS.DELETE(id), {
         method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` }
       });
+      if (!res) return;
       const data = await res.json();
       if (data.success) setAllSubmissions(prev => prev.filter(s => s._id !== id));
     } catch (err) {

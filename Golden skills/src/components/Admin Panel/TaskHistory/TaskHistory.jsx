@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import './TaskHistory.css';
 import { API_ENDPOINTS } from '../../../config/apiConfig';
+import { adminFetch } from '../../../config/adminApi';
 import { FaHistory, FaUser, FaEnvelope, FaPhone, FaClock, FaCheckCircle, FaTimesCircle, FaEye, FaTrash } from 'react-icons/fa';
 
 const TaskHistory = () => {
@@ -15,15 +16,11 @@ const TaskHistory = () => {
 
   const fetchSubmissions = async () => {
     try {
-      const token = localStorage.getItem('adminToken');
-      const headers = { 'Authorization': `Bearer ${token}` };
-      
-      const response = await fetch(`${API_ENDPOINTS.SUBMISSIONS.GET_ALL}`, { headers });
+      const response = await adminFetch(`${API_ENDPOINTS.SUBMISSIONS.GET_ALL}`);
+      if (!response) return;
       const data = await response.json();
-      
       if (data.success) {
         const subs = data.submissions || [];
-        // Latest submission on top
         subs.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         setAllSubmissions(subs);
       }
@@ -37,23 +34,14 @@ const TaskHistory = () => {
 
   const updateSubmissionStatus = async (id, status, notes = '') => {
     try {
-      const token = localStorage.getItem('adminToken');
-      const headers = { 
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      };
-      
-      const response = await fetch(`${API_ENDPOINTS.SUBMISSIONS.UPDATE_STATUS(id)}`, {
+      const response = await adminFetch(`${API_ENDPOINTS.SUBMISSIONS.UPDATE_STATUS(id)}`, {
         method: 'PUT',
-        headers,
         body: JSON.stringify({ status, notes })
       });
-      
+      if (!response) return;
       const data = await response.json();
-      
       if (data.success) {
-        // Update local state
-        setAllSubmissions(prev => prev.map(sub => 
+        setAllSubmissions(prev => prev.map(sub =>
           sub._id === id ? { ...sub, status, notes } : sub
         ));
         alert(`Submission ${status} successfully!`);
@@ -67,21 +55,11 @@ const TaskHistory = () => {
   };
 
   const deleteSubmission = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this submission?')) {
-      return;
-    }
-    
+    if (!window.confirm('Are you sure you want to delete this submission?')) return;
     try {
-      const token = localStorage.getItem('adminToken');
-      const headers = { 'Authorization': `Bearer ${token}` };
-      
-      const response = await fetch(`${API_ENDPOINTS.SUBMISSIONS.DELETE(id)}`, {
-        method: 'DELETE',
-        headers
-      });
-      
+      const response = await adminFetch(`${API_ENDPOINTS.SUBMISSIONS.DELETE(id)}`, { method: 'DELETE' });
+      if (!response) return;
       const data = await response.json();
-      
       if (data.success) {
         setAllSubmissions(prev => prev.filter(sub => sub._id !== id));
         alert('Submission deleted successfully!');

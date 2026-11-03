@@ -14,6 +14,7 @@ const Courses = () => {
           Golden Skills offers a variety of skill-focused courses designed to prepare users for real-world challenges.
         </p>
       </div>
+      
 
       {/* Courses Grid */}
       <div className="courses-grid">

@@ -111,8 +111,10 @@ export const getUserCourseDashboard = async (req, res) => {
         return {
           assignmentId: a._id,
           courseLink: a.courseLink,
+          courseContents: a.courseContents || [],
           category: a.category,
           sentAt: a.sentAt,
+          status: a.status || 'active',   // ← 'active' ya 'completed'
           planDetails: a.coursePlanId || null,
           quizSubmitted: !!submittedCompletion,
           quizSubmission: submittedCompletion
@@ -243,6 +245,17 @@ export const getCourseStatus = async (req, res) => {
       });
     }
 
+    // ── State: Rejected ──────────────────────────────────────────────────────
+    if (submission.status === 'rejected') {
+      return res.json({
+        success: true,
+        status: 'rejected',
+        displayMessage: 'Your payment was not approved. Please contact support.',
+        displayColor: 'red',
+        ...base
+      });
+    }
+
     // ── State 2 & 3: Approved — check assignment + completion ────────────────
     if (submission.status === 'approved' || submission.status === 'completed') {
 
@@ -260,24 +273,44 @@ export const getCourseStatus = async (req, res) => {
         });
       }
 
-      // Check completion
-      const completion = await UserCourseCompletion.findOne({
+      // Check approved completion first
+      const approvedCompletion = await UserCourseCompletion.findOne({
         userId,
         courseLinkAssignmentId: assignment._id,
         status: 'approved'
       }).lean();
 
-      // ── State 3: Completed ───────────────────────────────────────────────
-      if (completion) {
+      // ── State 4: Completed (admin approved + certificate) ────────────────
+      if (approvedCompletion) {
         return res.json({
           success: true,
           status: 'completed',
           displayMessage: 'Congratulations! You have successfully completed this course.',
           displayColor: 'green',
           courseLink: assignment.courseLink,
-          completedAt: completion.completedAt,
-          approvedAt: completion.approvedAt,
-          certificateUrl: completion.certificateUrl || null,
+          completedAt: approvedCompletion.completedAt,
+          approvedAt: approvedCompletion.approvedAt,
+          certificateUrl: approvedCompletion.certificateUrl || null,
+          ...base
+        });
+      }
+
+      // Check submitted completion (user ne mark kiya, admin review pending)
+      const submittedCompletion = await UserCourseCompletion.findOne({
+        userId,
+        courseLinkAssignmentId: assignment._id,
+        status: 'submitted'
+      }).lean();
+
+      // ── State 3: Under Review (user submitted, admin reviewing) ──────────
+      if (submittedCompletion) {
+        return res.json({
+          success: true,
+          status: 'under_review',
+          displayMessage: 'Your course completion is under review. Admin will approve soon.',
+          displayColor: 'yellow',
+          courseLink: assignment.courseLink,
+          submittedAt: submittedCompletion.completedAt,
           ...base
         });
       }
@@ -289,12 +322,13 @@ export const getCourseStatus = async (req, res) => {
         displayMessage: 'Your course is in progress. Keep learning!',
         displayColor: 'blue',
         courseLink: assignment.courseLink,
+        courseContents: assignment.courseContents || [],
         sentAt: assignment.sentAt,
         ...base
       });
     }
 
-    // Fallback (rejected ya koi aur status)
+    // Fallback
     return res.status(404).json({ success: false, message: 'No active enrollment found' });
 
   } catch (err) {

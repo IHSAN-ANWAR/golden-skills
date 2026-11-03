@@ -60,6 +60,12 @@ const courseLinkAssignmentSchema = new mongoose.Schema({
   sentAt: {
     type: Date,
     default: Date.now
+  },
+  // Course status — active jab assign ho, completed jab admin certificate approve kare
+  status: {
+    type: String,
+    enum: ['active', 'completed'],
+    default: 'active'
   }
 });
 

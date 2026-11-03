@@ -17,4 +17,12 @@ export default defineConfig({
     host: '0.0.0.0',  // bahar se access allow karta hai (mobile, macOS)
     port: 5173,
   },
+  build: {
+    cssCodeSplit: false, // Disable CSS code splitting to ensure variables are always loaded
+    rollupOptions: {
+      output: {
+        manualChunks: undefined, // Prevent aggressive code splitting
+      },
+    },
+  },
 })

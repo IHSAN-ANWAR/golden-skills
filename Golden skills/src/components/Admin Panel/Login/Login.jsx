@@ -51,18 +51,18 @@ const Login = () => {
     // If no errors, proceed with login
     if (Object.keys(newErrors).length === 0) {
       try {
+        // credentials: 'include' — server httpOnly cookie set karega
         const response = await fetch(API_ENDPOINTS.AUTH.ADMIN_LOGIN, {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
           body: JSON.stringify({ username, password })
         });
 
         const data = await response.json();
-        
+
         if (response.ok && data.success) {
-          localStorage.setItem('adminToken', data.token);
+          // Token ab cookie mein hai — localStorage mein save NAHI karte
           navigate('/admin/dashboard');
         } else {
           setLoginError(data.message || 'Invalid username or password');

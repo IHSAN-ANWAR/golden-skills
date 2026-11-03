@@ -349,6 +349,54 @@
   width: 100%;
 }
 
+/* ── PDF Upload Section ───────────────────────────────── */
+.upload-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn-upload-pdf {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: #f8faff;
+  border: 2px dashed #93c5fd;
+  border-radius: 8px;
+  color: #1d4ed8;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.btn-upload-pdf:hover:not(:disabled) {
+  background: #eff6ff;
+  border-color: #3b82f6;
+}
+
+.btn-upload-pdf:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.file-name-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #059669;
+}
+
+.action-btns-row {
+  display: flex;
+  gap: 10px;
+}
+
 /* ── Responsive ───────────────────────────────────────── */
 @media (max-width: 768px) {
   .course-completions-container { padding: 16px; }

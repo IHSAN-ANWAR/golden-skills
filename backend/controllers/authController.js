@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import nodemailer from 'nodemailer';
 import User from '../models/User.js';
 import UserTask from '../models/UserTask.js';
-import { getCache, setCache, deleteCachePattern } from '../config/redis.js';
+import { getCache, setCache, deleteCache, deleteCachePattern } from '../config/redis.js';
 
 const USERS_TTL = 30; // cache user lists for 30 seconds
 
@@ -41,17 +41,25 @@ export const adminLogin = async (req, res) => {
   const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
 
   if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-    // Admin login - generate JWT token
+    // Admin login - generate JWT token (2h expiry)
     const token = jwt.sign(
       { username, role: "admin", loginTime: Date.now() },
       process.env.JWT_SECRET,
-      { expiresIn: "2h" }
+      { expiresIn: "1h" }
     );
+
+    // ── httpOnly cookie mein set karo — localStorage se zyada safe ──────────
+    res.cookie('adminToken', token, {
+      httpOnly: true,                                          // JS access band
+      secure: process.env.NODE_ENV === 'production',          // HTTPS only in prod
+      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
+      maxAge: 1 * 60 * 60 * 1000,                            // 1 hour in ms
+    });
 
     return res.json({
       success: true,
       message: "Login successful!",
-      token,
+      // token yahan nahi bhej rahe — cookie mein hai
       user: { username, role: "admin" }
     });
   }
@@ -97,11 +105,12 @@ export const userLogin = async (req, res) => {
       return res.status(401).json({ success: false, message: "Invalid credentials" });
     }
 
-    // Generate JWT token for regular user (valid for 24 hours)
+    // Generate JWT token for regular user
+    // 6 hours — user course videos dekhega aur tasks complete karega
     const token = jwt.sign(
       { id: user._id, username: user.username, role: "user" },
       process.env.JWT_SECRET,
-      { expiresIn: "24h" }
+      { expiresIn: "6h" }
     );
 
     const userResponse = {
@@ -1108,7 +1117,7 @@ export const updateMyProfile = async (req, res) => {
     if (!newPassword && phoneNumber === undefined && !firstName && !lastName) {
       return res.status(400).json({
         success: false,
-        message: "Kuch update karne ke liye newPassword, phoneNumber, firstName ya lastName provide karo"
+        message: "Please provide at least one field to update: newPassword, phoneNumber, firstName or lastName"
       });
     }
 
@@ -1168,7 +1177,7 @@ export const updateMyProfile = async (req, res) => {
       if (phone.length > 0 && !/^\+?[0-9]{7,15}$/.test(phone)) {
         return res.status(400).json({
           success: false,
-          message: "Phone number valid nahi hai (7-15 digits, optional + prefix)"
+          message: "Phone number is invalid (7-15 digits, optional + prefix)"
         });
       }
 
@@ -1285,5 +1294,78 @@ export const getUserById = async (req, res) => {
       message: "Server error while fetching user",
       error: error.message
     });
+  }
+};
+
+// ======================================================
+// USER LOGOUT - Token ko Redis blacklist mein daal do
+// ======================================================
+// Purpose: User logout — token ko remaining TTL tak blacklist karo
+// Endpoint: POST /api/auth/user/logout (requires user auth)
+// Headers: Authorization: Bearer <token>
+// ======================================================
+export const userLogout = async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(400).json({ success: false, message: 'No token provided' });
+    }
+
+    const token = authHeader.split(' ')[1];
+
+    // Token ka remaining TTL nikalo (taake Redis mein unnecessarily zyada na rahe)
+    let ttlSeconds = 15 * 60; // default 15 min (user token ki max age)
+    try {
+      const decoded = jwt.decode(token);
+      if (decoded?.exp) {
+        ttlSeconds = Math.max(decoded.exp - Math.floor(Date.now() / 1000), 1);
+      }
+    } catch (_) {}
+
+    // Redis mein blacklist karo — TTL = token ki baqi umr
+    await setCache(`blacklist:${token}`, '1', ttlSeconds);
+
+    return res.json({ success: true, message: 'Logged out successfully' });
+  } catch (error) {
+    console.error('User logout error:', error);
+    return res.status(500).json({ success: false, message: 'Server error during logout' });
+  }
+};
+
+// ======================================================
+// ADMIN LOGOUT - Cookie clear karo + token blacklist karo
+// ======================================================
+// Purpose: Admin logout — httpOnly cookie clear + blacklist
+// Endpoint: POST /api/auth/logout (requires admin auth via cookie)
+// ======================================================
+export const adminLogout = async (req, res) => {
+  try {
+    const token = req.cookies?.adminToken;
+
+    if (token) {
+      // Token ki baqi umr nikalo
+      let ttlSeconds = 2 * 60 * 60; // default 2h (admin token max age)
+      try {
+        const decoded = jwt.decode(token);
+        if (decoded?.exp) {
+          ttlSeconds = Math.max(decoded.exp - Math.floor(Date.now() / 1000), 1);
+        }
+      } catch (_) {}
+
+      // Redis blacklist
+      await setCache(`blacklist:${token}`, '1', ttlSeconds);
+    }
+
+    // Cookie clear karo — same options se jaise set ki thi
+    res.clearCookie('adminToken', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
+    });
+
+    return res.json({ success: true, message: 'Admin logged out successfully' });
+  } catch (error) {
+    console.error('Admin logout error:', error);
+    return res.status(500).json({ success: false, message: 'Server error during logout' });
   }
 };
