@@ -1,21 +1,21 @@
 import rateLimit from 'express-rate-limit';
 
-// General API rate limit - 100 requests per 15 minutes
+// General API rate limit - 100 requests per minute
 export const generalLimiter = rateLimit({
-  windowMs: 1 * 60 * 1000, // 1 minute (relaxed for development)
-  max: 200,
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 100,                  // 100 requests per minute per IP
   message: {
     success: false,
-    message: 'Too many requests from this IP, please try again after 15 minutes.'
+    message: 'Too many requests from this IP, please try again after a minute.'
   },
   standardHeaders: true,
   legacyHeaders: false
 });
 
-// Auth endpoints - relaxed for development
+// Auth endpoints - strict (brute force protection)
 export const authLimiter = rateLimit({
-  windowMs: 1 * 60 * 1000, // 1 minute
-  max: 20,
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5,                    // 5 login attempts per 15 minutes
   skipSuccessfulRequests: true,
   message: {
     success: false,

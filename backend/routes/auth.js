@@ -26,11 +26,11 @@ import { authLimiter } from '../middleware/rateLimiter.js';
 
 const router = express.Router();
 
-// Admin and user login routes - rate limiting temporarily disabled
-router.post('/login', adminLogin);
-router.post('/logout', adminLogout);            // Admin logout — cookie clear + blacklist
-router.post('/user/login', userLogin);
-router.post('/user/logout', authenticateUser, userLogout);  // User logout — token blacklist
+// Admin and user login routes - rate limited
+router.post('/login', authLimiter, adminLogin);
+router.post('/logout', adminLogout);
+router.post('/user/login', authLimiter, userLogin);
+router.post('/user/logout', authenticateUser, userLogout);
 router.get('/users', authenticateAdmin, getAllUsers);
 
 // User registration route

@@ -52,6 +52,9 @@ const userSchema = new mongoose.Schema({
     // User ka phone number (optional, user update kar sakta hai)
     phoneNumber: { type: String, trim: true, default: null },
 
+    // Profile image — base64 string (mobile app se upload)
+    profileImage: { type: String, default: null },
+
     // Official team member flag (admin set karta hai)
     isTeamMember: { type: Boolean, default: false },
     teamRole: { type: String, trim: true, default: null }, // e.g., "Sales Agent", "Support", "Manager"

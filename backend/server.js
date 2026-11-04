@@ -135,8 +135,8 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Apply rate limiting to API routes - temporarily disabled
-// app.use('/api/', generalLimiter);
+// Apply rate limiting to API routes
+app.use('/api/', generalLimiter);
 
 // Routes with specific rate limits
 app.use('/api/auth', authRoutes);

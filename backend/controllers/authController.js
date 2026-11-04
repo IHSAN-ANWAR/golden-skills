@@ -37,8 +37,15 @@ export const adminLogin = async (req, res) => {
   }
 
   // Check against environment variables for admin credentials
-  const ADMIN_USERNAME = process.env.ADMIN_USERNAME || "admin";
-  const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
+  const ADMIN_USERNAME = process.env.ADMIN_USERNAME;
+  const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+
+  if (!ADMIN_USERNAME || !ADMIN_PASSWORD) {
+    return res.status(500).json({
+      success: false,
+      message: 'Server configuration error'
+    });
+  }
 
   if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
     // Admin login - generate JWT token (2h expiry)
@@ -1065,12 +1072,14 @@ export const getMyProfile = async (req, res) => {
       city:               user.city,
       age:                user.age ?? null,
       username:           user.username ?? null,
+      phoneNumber:        user.phoneNumber ?? null,
+      profileImage:       user.profileImage || null,
 
       // Referral info
-      myReferralCode:     user.myReferralCode,       // apna code — share karo doston ko
-      referralCode:       user.referralCode ?? null, // jis code se register kiya tha
-      referredByName:     referredByName,            // us insaan ka naam jisne refer kiya
-      referredUsersCount: user.referredUsersCount,   // kitne logon ko refer kiya
+      myReferralCode:     user.myReferralCode,
+      referralCode:       user.referralCode ?? null,
+      referredByName:     referredByName,
+      referredUsersCount: user.referredUsersCount,
 
       // Plan status
       hasActivatedPlan:   user.hasActivatedPlan,
@@ -1111,13 +1120,13 @@ export const updateMyProfile = async (req, res) => {
       return res.status(401).json({ success: false, message: "Unauthorized" });
     }
 
-    const { currentPassword, newPassword, phoneNumber, firstName, lastName } = req.body;
+    const { currentPassword, newPassword, phoneNumber, firstName, lastName, profileImage } = req.body;
 
     // Kuch to update karna chahiye
-    if (!newPassword && phoneNumber === undefined && !firstName && !lastName) {
+    if (!newPassword && phoneNumber === undefined && !firstName && !lastName && profileImage === undefined) {
       return res.status(400).json({
         success: false,
-        message: "Please provide at least one field to update: newPassword, phoneNumber, firstName or lastName"
+        message: "Please provide at least one field to update: newPassword, phoneNumber, firstName, lastName or profileImage"
       });
     }
 
@@ -1184,6 +1193,35 @@ export const updateMyProfile = async (req, res) => {
       user.phoneNumber = phone.length > 0 ? phone : null;
     }
 
+    // ── Profile image update (base64) ────────────────────────────────────────
+    if (profileImage !== undefined) {
+      if (profileImage === null || profileImage === '') {
+        // Image remove karo
+        user.profileImage = null;
+      } else {
+        // Validate ke ye valid base64 image hai
+        const isValidBase64 = /^data:image\/(jpeg|jpg|png|gif|webp);base64,/.test(profileImage);
+        if (!isValidBase64) {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid image format. Send base64 string starting with data:image/jpeg;base64, or data:image/png;base64,"
+          });
+        }
+
+        // Size check — base64 string ~1.37x original size — max 2MB image allow karo
+        const sizeInBytes = Buffer.byteLength(profileImage, 'utf8');
+        const sizeInMB = sizeInBytes / (1024 * 1024);
+        if (sizeInMB > 2.5) {
+          return res.status(400).json({
+            success: false,
+            message: "Image size 2MB se zyada nahi honi chahiye"
+          });
+        }
+
+        user.profileImage = profileImage;
+      }
+    }
+
     await user.save();
 
     return res.status(200).json({
@@ -1195,13 +1233,15 @@ export const updateMyProfile = async (req, res) => {
         lastName: user.lastName,
         fullName: user.fullName,
         email: user.email,
-        phoneNumber: user.phoneNumber
+        phoneNumber: user.phoneNumber,
+        profileImage: user.profileImage || null
       },
       updated: {
         ...(newPassword && { passwordChanged: true }),
         ...(firstName && { firstName: true }),
         ...(lastName && { lastName: true }),
-        ...(phoneNumber !== undefined && { phoneNumber: true })
+        ...(phoneNumber !== undefined && { phoneNumber: true }),
+        ...(profileImage !== undefined && { profileImage: true })
       }
     });
 

@@ -275,7 +275,11 @@ router.get('/my-tasks', authenticateUser, async (req, res) => {
     // Tasks ko categories mein split karo
     const activeTasks   = tasks.filter(t => ['assigned', 'in-progress'].includes(t.status));
     const pendingReview = tasks.filter(t => t.status === 'completed');
-    const history       = tasks.filter(t => ['approved', 'rejected'].includes(t.status));
+    const allHistory    = tasks.filter(t => ['approved', 'rejected'].includes(t.status));
+
+    // Agar active ya pending task hai to history hide karo
+    const hasActiveOrPending = activeTasks.length > 0 || pendingReview.length > 0;
+    const history = hasActiveOrPending ? [] : allHistory;
 
     // Referral tasks ke liye real-time progress inject karo
     // User already imported above — reuse karo
@@ -291,6 +295,17 @@ router.get('/my-tasks', authenticateUser, async (req, res) => {
     // Inject live progress into referral tasks — snapshot-based
     const enrichTask = (t) => {
       if (!t.isReferralTask) return t;
+
+      // History tasks (approved/rejected) — frozen, live sync nahi
+      // DB mein jo referralProgress save hai wahi dikhao
+      if (['approved', 'rejected'].includes(t.status)) {
+        return {
+          ...t,
+          liveProgressSynced: false  // mobile app ko pata chale ke ye frozen hai
+        };
+      }
+
+      // Active tasks (assigned/in-progress/completed) — snapshot se calculate karo
       const base = t.referralBaseCount || 0;
       const actualProgress = Math.max(0, liveReferralCount - base);
       return {
@@ -378,7 +393,11 @@ router.get('/user/:email', authenticateUser, async (req, res) => {
     // Split by status — same as /my-tasks
     const activeTasks   = tasks.filter(t => ['assigned', 'in-progress'].includes(t.status));
     const pendingReview = tasks.filter(t => t.status === 'completed');
-    const history       = tasks.filter(t => ['approved', 'rejected'].includes(t.status));
+    const allHistory    = tasks.filter(t => ['approved', 'rejected'].includes(t.status));
+
+    // Agar active ya pending task hai to history hide karo
+    const hasActiveOrPending = activeTasks.length > 0 || pendingReview.length > 0;
+    const history = hasActiveOrPending ? [] : allHistory;
 
     res.json({
       success: true,
